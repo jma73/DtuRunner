@@ -1,8 +1,12 @@
 package dk.dtu.itdiplom.dturunner;
 
 //import android.location.LocationListener;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +20,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.SupportMapFragment;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -110,6 +115,9 @@ public class MainActivity extends AppCompatActivity
         // Kick off the process of building a GoogleApiClient and requesting the LocationServices
         // API.
         buildGoogleApiClient();
+
+
+
     }
 
 
@@ -315,8 +323,39 @@ public class MainActivity extends AppCompatActivity
 //        textViewLocations.append("\n");
     }
 
-    public void testLocationButtonHandler(View view) {
+    public void buttonHandlerTestLocation(View view) {
         // open fragment!
 
+        FragmentShowOnMap fragment = new FragmentShowOnMap();
+        FragmentShowOnMap2 frag = new FragmentShowOnMap2();
+        //Fragment fragment = new FragmentShowOnMap();
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//fragmentTransaction.add(R.id.testFragment, fragment);
+fragmentTransaction.add(R.id.testFragment, frag);
+
+
+        fragmentTransaction.replace(R.id.frameLayout1, new FragmentShowOnMap2());
+
+        fragmentTransaction.commit();
+
+
+        //fragmentTransaction.hide()
+
+
+//        if (savedInstanceState == null) {
+//            Fragment fragment = new FragmentShowOnMap();
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.fragmentindhold, fragment)  // tom container i layout
+//                    .commit();
+//        }
+
+    }
+
+    public void buttonHandlerLoeb(View view) {
+        Intent i = new Intent(getApplicationContext(), MapActivity.class);
+        //StartActivity(i);
+        startActivity(i);
     }
 }

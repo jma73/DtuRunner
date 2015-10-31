@@ -101,6 +101,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/layoutMainButtons"
         android:layout_below="@+id/layoutTextLocation"
         android:background="@color/colorPrimaryDark"
         android:weightSum="5"
@@ -124,6 +125,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/small_margin"
             android:layout_marginStart="@dimen/small_margin"
+            android:onClick="buttonHandlerLoeb"
+
             android:text="Løb" />
 
 
@@ -141,10 +144,41 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/small_margin"
             android:layout_marginStart="@dimen/small_margin"
-            android:onClick="testLocationButtonHandler"
+            android:onClick="buttonHandlerTestLocation"
             android:text="Test placering" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layoutMainButtons"
+        android:background="@color/common_action_bar_splitter"
+        android:weightSum="5"
+        android:orientation="vertical">
+
+        <fragment
+            android:name="dk.dtu.itdiplom.dturunner.FragmentShowOnMap"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/testFragment"
+
+            tools:layout="@layout/abc_screen_simple">
+
+        </fragment>
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/frameLayout1"
+            android:background="#31904f"
+            >
+
+        </FrameLayout>
+
+        </LinearLayout>
+
 
 </RelativeLayout>
 
