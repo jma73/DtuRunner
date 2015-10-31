@@ -256,19 +256,6 @@ public class MainActivity extends AppCompatActivity
         // tjek for googleAPI:
 
 
-        // todo jan... mGoogleApiClient er ikke null... så hvad er der galt?
-//        if(mGoogleApiClient == null) {
-//
-//            try{
-//                mGoogleApiClient.connect();
-//            }
-//            catch (Exception e)
-//            {
-//                mLatitudeTextView.setText(e.getMessage() + e.getStackTrace() );
-//                return;
-//            }
-//        }
-
 
         // The final argument to {@code requestLocationUpdates()} is a LocationListener
         // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
@@ -326,5 +313,10 @@ public class MainActivity extends AppCompatActivity
 //        textViewLocations.append("\n");
 //        textViewLocations.append("size: " + size);
 //        textViewLocations.append("\n");
+    }
+
+    public void testLocationButtonHandler(View view) {
+        // open fragment!
+
     }
 }
