@@ -104,10 +104,11 @@
         android:id="@+id/layoutMainButtons"
         android:layout_below="@+id/layoutTextLocation"
         android:background="@color/colorPrimaryDark"
+
+        android:visibility="gone"
+
         android:weightSum="5"
         android:orientation="vertical">
-
-    >
 
 
         <Button
@@ -136,6 +137,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/small_margin"
             android:layout_marginStart="@dimen/small_margin"
+            android:onClick="buttonHandlerHistory"
             android:text="Historik" />
 
         <Button
@@ -153,6 +155,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/layoutMainButtons"
+        android:id="@+id/layoutTestFragment"
+
         android:background="@color/common_action_bar_splitter"
         android:weightSum="5"
         android:orientation="vertical">
@@ -168,16 +172,20 @@
         </fragment>
 
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/frameLayout1"
-            android:background="#31904f"
-            >
-
-        </FrameLayout>
-
         </LinearLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_below="@+id/layoutTestFragment"
+
+        android:id="@+id/frameLayout1"
+        android:background="#bbbbbb"
+
+
+        >
+
+    </FrameLayout>
 
 
 </RelativeLayout>

@@ -4,9 +4,7 @@ package dk.dtu.itdiplom.dturunner;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Location;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,10 +18,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.SupportMapFragment;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
@@ -108,6 +104,10 @@ public class MainActivity extends AppCompatActivity
 
         mRequestingLocationUpdates = false;
         mLastUpdateTime = "";
+
+
+        addFragmentForsideMenu();
+
 
         // Update values using data stored in the Bundle.
         // updateValuesFromBundle(savedInstanceState);
@@ -335,9 +335,8 @@ public class MainActivity extends AppCompatActivity
 //fragmentTransaction.add(R.id.testFragment, fragment);
 fragmentTransaction.add(R.id.testFragment, frag);
 
-
         fragmentTransaction.replace(R.id.frameLayout1, new FragmentShowOnMap2());
-
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
 
@@ -357,5 +356,32 @@ fragmentTransaction.add(R.id.testFragment, frag);
         Intent i = new Intent(getApplicationContext(), MapActivity.class);
         //StartActivity(i);
         startActivity(i);
+    }
+
+    public void buttonHandlerHistory(View view) {
+        addFragmentForsideMenu();
+
+
+    }
+
+    private void addFragmentForsideMenu() {
+        // todo jan - test med indsæt af Fragment menu!
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        FragmentForside fragmentForside = new FragmentForside();
+        fragmentTransaction.add(R.id.frameLayout1, fragmentForside);
+        fragmentTransaction.addToBackStack("ssstttjan");
+        fragmentTransaction.commit();
+    }
+
+
+    public void buttonHandlerLoeb2(View view) {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.frameLayout1, new FragmentLoeb());
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }
