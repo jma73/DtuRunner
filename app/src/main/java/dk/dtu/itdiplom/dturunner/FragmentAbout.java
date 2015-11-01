@@ -2,12 +2,20 @@ package dk.dtu.itdiplom.dturunner;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import dk.dtu.itdiplom.dturunner.Utils.BuildInfo;
 
 
 /**
@@ -74,8 +82,14 @@ public class FragmentAbout extends Fragment {
         TextView textViewVersion = (TextView) rod.findViewById(R.id.textViewVersionInfo);
 
 
+        String sdkBuildVersion =  "Build.VERSION.SDK_INT: " + Build.VERSION.SDK_INT;
 
-        textViewVersion.setText("0.1.0.0");
+        // SLETTT
+//        SimpleDateFormat df = new SimpleDateFormat("dd MM yyyy, HH:mm");
+//        String date = df.format(Calendar.getInstance().getTime());          // dette giver ikke build date...
+
+
+        textViewVersion.setText("0.1.0.0, " + Main2Activity.buildDate + ", " + sdkBuildVersion + ", ") ;
 
         return rod;
 

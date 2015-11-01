@@ -22,8 +22,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/imageViewLogo"
             android:src="@drawable/dtu_logo"
-            android:maxHeight="80px"
-            android:maxWidth="80px"
+            android:maxHeight="200px"
+            android:maxWidth="200px"
+            android:adjustViewBounds="true"
 
             android:layout_gravity="center_horizontal" />
 
@@ -79,7 +80,7 @@
             android:layout_marginStart="@dimen/small_margin"
             android:onClick="buttonHandlerOm"
             android:text="Om" />
-        
+
     </LinearLayout>
 
 </FrameLayout>

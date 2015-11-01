@@ -2,23 +2,41 @@ package dk.dtu.itdiplom.dturunner;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
-public class Main2Activity extends AppCompatActivity {
+import dk.dtu.itdiplom.dturunner.Utils.BuildInfo;
+
+public class Main2Activity extends AppCompatActivity implements FragmentAbout.OnFragmentInteractionListener
+{
+    // Global variables. skal placeres i singleton klasse???
+    static String buildDate;
+
+
+    private static final String LOGTAG = "Main2Activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        visMainMenu();
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        //toolbar.setVisibility(View.GONE);   // todo jan - toolbar, den skal bare fjernes!!! 1/11-2015
+//        setSupportActionBar(toolbar);
+
+        visMainMenuFragment();
+
+
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -31,7 +49,46 @@ public class Main2Activity extends AppCompatActivity {
         });
     }
 
-    private void visMainMenu() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (Build.VERSION.SDK_INT>=19) menu.add(0, 115, 0, "*Fuldskærm");
+
+        menu.add(0, 102, 0, "*Vælg fil");
+        menu.add(0, 110, 0, "Til hovedskærm...");
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(LOGTAG, " in onOptionsItemSelected " + item.getItemId());
+        if (item.getItemId() == 110) {
+            visMainMenuFragment();
+        }
+    else if (item.getItemId() == 115) {
+    if (Build.VERSION.SDK_INT>=19)
+    {
+        Log.d(LOGTAG, " in onOptionsItemSelected Build.VERSION.SDK_INT: " + Build.VERSION.SDK_INT);
+
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+    }
+
+        } else if (item.getItemId() == 102) {
+            Toast.makeText(this, "Kommer senere!!!", Toast.LENGTH_LONG);
+        }
+
+    return true;    // todo jan: skal der returnes andet?
+    }
+
+
+            private void visMainMenuFragment() {
+        Log.d(LOGTAG, ":: i visMainMenuFragment.");
+
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -41,6 +98,9 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void buttonHandlerLoeb2(View view) {
+
+        Log.d(LOGTAG, ":: i buttonHandlerLoeb2.");
+
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -50,11 +110,23 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void buttonHandlerOm(View view) {
+        
+        Log.d(LOGTAG, ":: i buttonHandlerOm.");
+
+        buildDate = BuildInfo.GetBuildDate(this);
+
+
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentAbout());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        Log.d(LOGTAG, ":: i onFragmentInteraction.");
+
     }
 }
