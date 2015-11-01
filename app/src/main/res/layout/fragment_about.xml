@@ -6,6 +6,23 @@
     <TextView android:layout_width="match_parent" android:layout_height="match_parent"
         android:text="Om DTURunner" />
 
+
+
+    <Button
+        android:id="@+id/buttonPersonInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin"
+
+        android:onClick="buttonHandlerAboutOk"
+
+        android:text="Ok" />
+
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

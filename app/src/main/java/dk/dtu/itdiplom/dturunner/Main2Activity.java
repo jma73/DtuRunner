@@ -37,21 +37,21 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         visMainMenuFragment();
 
 
-
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action (jan)", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        // dette er den floating email... bør bare fjernes.... todo jan. 1/11-2015...
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action (jan)", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (Build.VERSION.SDK_INT>=19) menu.add(0, 115, 0, "*Fuldskærm");
+
+        //if (Build.VERSION.SDK_INT>=19) menu.add(0, 115, 0, "*Fuldskærm");
 
         menu.add(0, 102, 0, "*Vælg fil");
         menu.add(0, 110, 0, "Til hovedskærm...");
@@ -64,21 +64,21 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         if (item.getItemId() == 110) {
             visMainMenuFragment();
         }
-    else if (item.getItemId() == 115) {
-    if (Build.VERSION.SDK_INT>=19)
-    {
-        Log.d(LOGTAG, " in onOptionsItemSelected Build.VERSION.SDK_INT: " + Build.VERSION.SDK_INT);
-
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
-    }
-
-        } else if (item.getItemId() == 102) {
+//    else if (item.getItemId() == 115) {
+//    if (Build.VERSION.SDK_INT>=19)
+//    {
+//        Log.d(LOGTAG, " in onOptionsItemSelected Build.VERSION.SDK_INT: " + Build.VERSION.SDK_INT);
+//
+//        getWindow().getDecorView().setSystemUiVisibility(
+//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+//                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+//                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+//    }
+//        }
+        else if (item.getItemId() == 102) {
             Toast.makeText(this, "Kommer senere!!!", Toast.LENGTH_LONG);
         }
 
@@ -86,7 +86,7 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
     }
 
 
-            private void visMainMenuFragment() {
+    private void visMainMenuFragment() {
         Log.d(LOGTAG, ":: i visMainMenuFragment.");
 
         FragmentManager fragmentManager = getFragmentManager();
@@ -112,9 +112,7 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
     public void buttonHandlerOm(View view) {
         
         Log.d(LOGTAG, ":: i buttonHandlerOm.");
-
         buildDate = BuildInfo.GetBuildDate(this);
-
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -124,9 +122,14 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         fragmentTransaction.commit();
     }
 
+    // denne skulle implementeres ifb. med ...
     @Override
     public void onFragmentInteraction(Uri uri) {
         Log.d(LOGTAG, ":: i onFragmentInteraction.");
 
+    }
+
+    public void buttonHandlerAboutOk(View view) {
+        visMainMenuFragment();
     }
 }
