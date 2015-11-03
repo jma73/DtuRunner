@@ -30,9 +30,9 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        //toolbar.setVisibility(View.GONE);   // todo jan - toolbar, den skal bare fjernes!!! 1/11-2015
-//        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //toolbar.setVisibility(View.GONE);   // todo jan - toolbar, den skal bare fjernes!!! 1/11-2015
+        //setSupportActionBar(toolbar);
 
         visMainMenuFragment();
 
