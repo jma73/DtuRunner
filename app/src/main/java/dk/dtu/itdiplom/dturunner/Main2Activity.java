@@ -35,6 +35,11 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         //toolbar.setVisibility(View.GONE);   // todo jan - toolbar, den skal bare fjernes!!! 1/11-2015
         //setSupportActionBar(toolbar);
 
+
+        // todo jan: skal tjekke på savedInstanceState
+        //  if (savedInstanceState == null) {
+        //  MitFragment_frag fragment = new MitFragment_frag();
+
         visMainMenuFragment();
 
 
@@ -63,9 +68,13 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(LOGTAG, " in onOptionsItemSelected " + item.getItemId());
-        if (item.getItemId() == 110) {
+        if (item.getItemId() == 200) {
             visMainMenuFragment();
         }
+        else if (item.getItemId() == 110) {
+            visMainMenuFragment();
+        }
+
 //    else if (item.getItemId() == 115) {
 //    if (Build.VERSION.SDK_INT>=19)
 //    {
@@ -142,6 +151,10 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
     public void buttonHandlerPersonInfo(View view) {
         Log.d(LOGTAG, ":: i buttonHandlerPersonInfo.");
 
+        visPersonInfo();
+    }
+
+    private void visPersonInfo() {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
