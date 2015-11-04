@@ -1,0 +1,61 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="dk.dtu.itdiplom.dturunner.Utils.FragmentPersonInfo">
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+
+    <TextView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Indtast dine personoplysninger" />
+
+    <LinearLayout android:layout_width="match_parent"
+        android:id="@+id/linearLayout2222"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:text="Studie nummer:"
+        android:id="@+id/textViewStudienummer"
+        />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:id="@+id/editTextStudienummer"
+        android:digits="01256789"
+        android:maxLength="9"
+        android:hint="studienummer"
+
+        />
+</LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent"
+        android:id="@+id/linearLayout1"
+
+        android:layout_gravity="center_vertical"
+
+        android:layout_height="wrap_content">
+
+
+        <EditText android:layout_weight="1"
+            android:id="@+id/editText1"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:hint="you can type here ..."/>
+
+        <Button android:id="@+id/button1"
+            android:layout_height="wrap_content" android:layout_width="wrap_content"
+            android:text="Button" />
+    </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

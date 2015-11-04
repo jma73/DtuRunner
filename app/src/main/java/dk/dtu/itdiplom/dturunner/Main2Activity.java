@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import dk.dtu.itdiplom.dturunner.Utils.BuildInfo;
+import dk.dtu.itdiplom.dturunner.Utils.FragmentPersonInfo;
 
 public class Main2Activity extends AppCompatActivity implements FragmentAbout.OnFragmentInteractionListener
 {
@@ -54,7 +55,8 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         //if (Build.VERSION.SDK_INT>=19) menu.add(0, 115, 0, "*Fuldskærm");
 
         menu.add(0, 102, 0, "*Vælg fil");
-        menu.add(0, 110, 0, "Til hovedskærm...");
+        menu.add(0, 110, 0, "Indtast personoplysninger");
+        menu.add(0, 200, 0, "Til hovedskærm...");
         return true;
     }
 
@@ -131,5 +133,20 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
 
     public void buttonHandlerAboutOk(View view) {
         visMainMenuFragment();
+    }
+
+    public void afslutLoebButtonHandler(View view) {
+        visMainMenuFragment();
+    }
+
+    public void buttonHandlerPersonInfo(View view) {
+        Log.d(LOGTAG, ":: i buttonHandlerPersonInfo.");
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentPersonInfo());
+        fragmentTransaction.addToBackStack("TestJJ");
+        fragmentTransaction.commit();
     }
 }

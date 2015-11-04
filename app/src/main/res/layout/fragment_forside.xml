@@ -36,6 +36,7 @@
 
             android:layout_marginLeft="@dimen/small_margin"
             android:layout_marginStart="@dimen/small_margin"
+            android:onClick="buttonHandlerPersonInfo"
             android:text="Person info" />
 
 
