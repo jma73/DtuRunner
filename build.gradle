@@ -10,34 +10,29 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
-
 allprojects {
     repositories {
         jcenter()
     }
 }
-
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-// todo jan 4/11-2015: Dette (hele android sektionen) skulle ikke være her... må være kommet med ved en fejl i et forsøg på at rette op på manglende .iml fil tidligere.
-//      - den var ikke på den den 'originale' udgave - dette var på min arbejdspc...
-//    - jeg lader foreløbig dette stå her (for at kunne huske problemet):
-//android {
-//    compileSdkVersion 22
-//    buildToolsVersion '22.0.1'
-//    compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_7
-//        targetCompatibility JavaVersion.VERSION_1_7
-//    }
-//    defaultConfig {
-//        minSdkVersion 22
-//        targetSdkVersion 22
-//    }
-//    productFlavors {
-//    }
-//}
-//dependencies {
-//
-//}
+android {
+    compileSdkVersion 23
+    buildToolsVersion '22.0.1'
+    compileOptions {
+    }
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 22
+        applicationId 'dk.dtu.itdiplom.dturunner'
+        versionCode 1
+        versionName '1.0'
+    }
+    productFlavors {
+    }
+}
+dependencies {
+}
