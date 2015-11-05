@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 // Disse imports er til for at kunne anvende fused location:
 import com.google.android.gms.common.ConnectionResult;
@@ -65,6 +66,11 @@ public class FragmentLoeb extends Fragment implements
      */
     protected Location mCurrentLocation;
 
+
+    protected TextView mLastUpdateTimeTextView;
+    protected TextView mLatitudeTextView;
+    protected TextView mLongitudeTextView;
+
     // Labels.
     protected String mLatitudeLabel;
     protected String mLongitudeLabel;
@@ -75,6 +81,7 @@ public class FragmentLoeb extends Fragment implements
 
 
     private Button buttonStartAktivitet;
+    private Button mStopUpdatesButton;
 
     public FragmentLoeb() {
         // Required empty public constructor
@@ -90,6 +97,12 @@ public class FragmentLoeb extends Fragment implements
 
         buttonStartAktivitet = (Button) rod.findViewById(R.id.buttonStartAktivitet);
         buttonStartAktivitet.setOnClickListener(this);
+        mStopUpdatesButton = (Button) rod.findViewById(R.id.buttonStop);
+        mStopUpdatesButton.setOnClickListener(this);
+
+        mLatitudeTextView = (TextView) rod.findViewById(R.id.latitude_text);
+        mLongitudeTextView = (TextView) rod.findViewById(R.id.longitude_text);
+        mLastUpdateTimeTextView = (TextView) rod.findViewById(R.id.last_update_time_text);
 
         // Set labels.
         mLatitudeLabel = ("latitude_label");
@@ -164,6 +177,10 @@ public class FragmentLoeb extends Fragment implements
             // 1) tjek for location enabled
             startLoebsAktivitetOgLocationUpdates();
         }
+        if(v==mStopUpdatesButton)
+        {
+            startLocationUpdates();
+        }
     }
 
     // todo jan old name: startUpdatesButtonHandler. rename til noget mere sigende!!!
@@ -172,7 +189,7 @@ public class FragmentLoeb extends Fragment implements
         if (!mRequestingLocationUpdates)
         {
             mRequestingLocationUpdates = true;
-            //      setButtonsEnabledState();   // todo jan - evt. med senere eller fjern.
+            setButtonsEnabledState();   // todo jan - evt. med senere eller fjern.
             startLocationUpdates();
         }
     }
@@ -204,6 +221,21 @@ public class FragmentLoeb extends Fragment implements
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
     }
 
+    /**
+     * Ensures that only one button is enabled at any time. The Start Updates button is enabled
+     * if the user is not requesting location updates. The Stop Updates button is enabled if the
+     * user is requesting location updates.
+     */
+    private void setButtonsEnabledState() {
+        if (mRequestingLocationUpdates) {
+            buttonStartAktivitet.setEnabled(false);
+            mStopUpdatesButton.setEnabled(true);
+        } else {
+            buttonStartAktivitet.setEnabled(true);
+            mStopUpdatesButton.setEnabled(false);
+        }
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -214,7 +246,11 @@ public class FragmentLoeb extends Fragment implements
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged " + location.getLatitude());
-        // todo jan
+        // todo jan - her skal bla gemmes placeringen. og laves beregninger...
+
+
+
+        updateUI();
     }
 
     //region Connection Callbacks
@@ -255,12 +291,12 @@ public class FragmentLoeb extends Fragment implements
                 mCurrentLocation.getLatitude()));
 
 
-//        mLatitudeTextView.setText(String.format("%s: %f", mLatitudeLabel,
-//                mCurrentLocation.getLatitude()));
-//        mLongitudeTextView.setText(String.format("%s: %f", mLongitudeLabel,
-//                mCurrentLocation.getLongitude()));
-//        mLastUpdateTimeTextView.setText(String.format("%s: %s", mLastUpdateTimeLabel,
-//                mLastUpdateTime));
+        mLatitudeTextView.setText(String.format("%s: %f", mLatitudeLabel,
+                mCurrentLocation.getLatitude()));
+        mLongitudeTextView.setText(String.format("%s: %f", mLongitudeLabel,
+                mCurrentLocation.getLongitude()));
+        mLastUpdateTimeTextView.setText(String.format("%s: %s", mLastUpdateTimeLabel,
+                mLastUpdateTime));
     }
 
     @Override
