@@ -1,6 +1,7 @@
 package dk.dtu.itdiplom.dturunner;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -81,7 +82,12 @@ public class FragmentAbout extends Fragment {
         View rod = inflater.inflate(R.layout.fragment_about, container, false);
 
         TextView textViewVersion = (TextView) rod.findViewById(R.id.textViewVersionInfo);
+        TextView textViewDiverseInfo = (TextView) rod.findViewById(R.id.textViewDiverseInfo);
 
+        SharedPreferences pref = getActivity().getPreferences(0);
+        String navn = pref.getString("personnavn", "N/A");
+        Log.d("jjj", "navn:" + navn);
+        textViewDiverseInfo.setText(navn);
 
         String sdkBuildVersion =  "Build.VERSION.SDK_INT: " + Build.VERSION.SDK_INT;
 
@@ -90,7 +96,8 @@ public class FragmentAbout extends Fragment {
 //        String date = df.format(Calendar.getInstance().getTime());          // dette giver ikke build date...
 
 
-        textViewVersion.setText("0.1.0.0, " + Main2Activity.buildDate + ", " + sdkBuildVersion + ", ") ;
+        String displayText = "0.1.0.0, " + Main2Activity.buildDate + ", " + sdkBuildVersion + ", ";
+        textViewVersion.setText(displayText +  navn);
 
         return rod;
 

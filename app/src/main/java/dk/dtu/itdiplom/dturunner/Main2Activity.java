@@ -2,6 +2,7 @@ package dk.dtu.itdiplom.dturunner;
 
 //import android.app.FragmentManager;
 //import android.app.FragmentTransaction;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -20,6 +21,7 @@ public class Main2Activity extends android.support.v4.app.FragmentActivity imple
     // Global variables. skal placeres i singleton klasse???
     static String buildDate;
 
+    public static final String MY_PREFS_NAME = "MyPrefsFile";
 
     private static final String LOGTAG = "Main2Activity";
 
@@ -27,6 +29,11 @@ public class Main2Activity extends android.support.v4.app.FragmentActivity imple
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        
 
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //toolbar.setVisibility(View.GONE);   // todo jan - toolbar, den skal bare fjernes!!! 1/11-2015
