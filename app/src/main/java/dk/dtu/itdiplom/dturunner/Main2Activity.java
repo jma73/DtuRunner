@@ -1,5 +1,6 @@
 package dk.dtu.itdiplom.dturunner;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.net.Uri;
@@ -7,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,7 +20,7 @@ import android.widget.Toast;
 import dk.dtu.itdiplom.dturunner.Utils.BuildInfo;
 import dk.dtu.itdiplom.dturunner.Utils.FragmentPersonInfo;
 
-public class Main2Activity extends AppCompatActivity implements FragmentAbout.OnFragmentInteractionListener
+public class Main2Activity extends Activity implements FragmentAbout.OnFragmentInteractionListener
 {
     // Global variables. skal placeres i singleton klasse???
     static String buildDate;
@@ -40,7 +42,12 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         //  if (savedInstanceState == null) {
         //  MitFragment_frag fragment = new MitFragment_frag();
 
-        visMainMenuFragment();
+        if (savedInstanceState == null) {
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.frameLayoutContent, new FragmentForside());
+            fragmentTransaction.commit();
+        }
 
 
         // dette er den floating email... bør bare fjernes.... todo jan. 1/11-2015...
@@ -100,8 +107,15 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
     private void visMainMenuFragment() {
         Log.d(LOGTAG, ":: i visMainMenuFragment.");
 
+
+        // todo jan: Husk der skal laves et tjek for: Fragment == null. ellers skal der ikke new'es.
+        //
+
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        // todo jan: tilføjede support udgaven af Fragments her...
+        //Fragment fragment = fragmentManager.findFragmentById(R.id.frameLayoutContent);
 
         fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentForside());
         fragmentTransaction.addToBackStack("mainmenu");
