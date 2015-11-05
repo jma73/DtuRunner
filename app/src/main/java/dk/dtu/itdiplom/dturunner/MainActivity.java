@@ -354,7 +354,6 @@ fragmentTransaction.add(R.id.testFragment, frag);
 
     public void buttonHandlerLoeb(View view) {
         Intent i = new Intent(getApplicationContext(), MapActivity.class);
-        //StartActivity(i);
         startActivity(i);
     }
 
@@ -366,22 +365,27 @@ fragmentTransaction.add(R.id.testFragment, frag);
 
     private void addFragmentForsideMenu() {
         // todo jan - test med indsæt af Fragment menu!
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        FragmentForside fragmentForside = new FragmentForside();
-        fragmentTransaction.add(R.id.frameLayout1, fragmentForside);
-        fragmentTransaction.addToBackStack("ssstttjan");
-        fragmentTransaction.commit();
+        // todo jan - udkommenteret pga. start med at indføre app.compat. support. 5/11-15.
+
+//        FragmentManager fragmentManager = getFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//
+//        FragmentForside fragmentForside = new FragmentForside();
+//        fragmentTransaction.add(R.id.frameLayout1, fragmentForside);
+//        fragmentTransaction.addToBackStack("ssstttjan");
+//        fragmentTransaction.commit();
     }
 
 
     public void buttonHandlerLoeb2(View view) {
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        // todo jan - udkommenteret pga. start med at indføre app.compat. support. 5/11-15.
 
-        fragmentTransaction.replace(R.id.frameLayout1, new FragmentLoeb());
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+//        FragmentManager fragmentManager = getFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//
+//        fragmentTransaction.replace(R.id.frameLayout1, new FragmentLoeb());
+//        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.commit();
     }
 }

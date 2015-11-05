@@ -1,16 +1,11 @@
 package dk.dtu.itdiplom.dturunner;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+//import android.app.FragmentManager;
+//import android.app.FragmentTransaction;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +15,7 @@ import android.widget.Toast;
 import dk.dtu.itdiplom.dturunner.Utils.BuildInfo;
 import dk.dtu.itdiplom.dturunner.Utils.FragmentPersonInfo;
 
-public class Main2Activity extends Activity implements FragmentAbout.OnFragmentInteractionListener
+public class Main2Activity extends android.support.v4.app.FragmentActivity implements FragmentAbout.OnFragmentInteractionListener
 {
     // Global variables. skal placeres i singleton klasse???
     static String buildDate;
@@ -42,12 +37,14 @@ public class Main2Activity extends Activity implements FragmentAbout.OnFragmentI
         //  if (savedInstanceState == null) {
         //  MitFragment_frag fragment = new MitFragment_frag();
 
-        if (savedInstanceState == null) {
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(R.id.frameLayoutContent, new FragmentForside());
-            fragmentTransaction.commit();
-        }
+        visMainMenuFragment(savedInstanceState == null);
+
+//        if (savedInstanceState == null) {
+//            FragmentManager fragmentManager = getFragmentManager();
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            fragmentTransaction.add(R.id.frameLayoutContent, new FragmentForside());
+//            fragmentTransaction.commit();
+//        }
 
 
         // dette er den floating email... bør bare fjernes.... todo jan. 1/11-2015...
@@ -76,10 +73,10 @@ public class Main2Activity extends Activity implements FragmentAbout.OnFragmentI
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(LOGTAG, " in onOptionsItemSelected " + item.getItemId());
         if (item.getItemId() == 200) {
-            visMainMenuFragment();
+            visMainMenuFragment(false);
         }
         else if (item.getItemId() == 110) {
-            visMainMenuFragment();
+            visMainMenuFragment(false);
         }
 
 //    else if (item.getItemId() == 115) {
@@ -104,29 +101,34 @@ public class Main2Activity extends Activity implements FragmentAbout.OnFragmentI
     }
 
 
-    private void visMainMenuFragment() {
+    private void visMainMenuFragment(boolean isSavedInstanceStateNull) {
         Log.d(LOGTAG, ":: i visMainMenuFragment.");
 
+
+        if(isSavedInstanceStateNull)
+        {
+            android.support.v4.app.FragmentManager supportFragmentManager = getSupportFragmentManager();
+            //FragmentManager fragmentManager = getFragmentManager();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
+
+            // todo jan: tilføjede support udgaven af Fragments her...
+            //Fragment fragment = fragmentManager.findFragmentById(R.id.frameLayoutContent);
+
+            fragmentTransaction.add(R.id.frameLayoutContent, new FragmentForside());
+            fragmentTransaction.addToBackStack("mainmenu");
+            fragmentTransaction.commit();
+        }
 
         // todo jan: Husk der skal laves et tjek for: Fragment == null. ellers skal der ikke new'es.
         //
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        // todo jan: tilføjede support udgaven af Fragments her...
-        //Fragment fragment = fragmentManager.findFragmentById(R.id.frameLayoutContent);
-
-        fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentForside());
-        fragmentTransaction.addToBackStack("mainmenu");
-        fragmentTransaction.commit();
     }
 
     public void buttonHandlerLoeb2(View view) {
 
         Log.d(LOGTAG, ":: i buttonHandlerLoeb2.");
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentLoeb());
@@ -139,7 +141,7 @@ public class Main2Activity extends Activity implements FragmentAbout.OnFragmentI
         Log.d(LOGTAG, ":: i buttonHandlerOm.");
         buildDate = BuildInfo.GetBuildDate(this);
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentAbout());
@@ -155,11 +157,11 @@ public class Main2Activity extends Activity implements FragmentAbout.OnFragmentI
     }
 
     public void buttonHandlerAboutOk(View view) {
-        visMainMenuFragment();
+        visMainMenuFragment(false);
     }
 
     public void afslutLoebButtonHandler(View view) {
-        visMainMenuFragment();
+        visMainMenuFragment(false);
     }
 
     public void buttonHandlerPersonInfo(View view) {
@@ -169,7 +171,7 @@ public class Main2Activity extends Activity implements FragmentAbout.OnFragmentI
     }
 
     private void visPersonInfo() {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentPersonInfo());
