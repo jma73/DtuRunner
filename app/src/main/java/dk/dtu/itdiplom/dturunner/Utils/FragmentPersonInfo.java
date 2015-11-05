@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import dk.dtu.itdiplom.dturunner.R;
 
@@ -32,8 +33,6 @@ public class FragmentPersonInfo extends Fragment implements View.OnClickListener
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rod = inflater.inflate(R.layout.fragment_person_info, container, false);
-
-
         buttonPersonInfoSet = (Button) rod.findViewById(R.id.buttonPersonInfoSet);
         editTextPersonNavn = (EditText) rod.findViewById(R.id.editTextPersonNavn);
         editTextStudienummer = (EditText) rod.findViewById(R.id.editTextStudienummer);
@@ -76,6 +75,8 @@ public class FragmentPersonInfo extends Fragment implements View.OnClickListener
         edt.putString("personnavn", navn);
         edt.putString("studienummer", studienummer);
         edt.commit();
+
+        Toast.makeText(getActivity(), "Oplysningerne er gemt!", Toast.LENGTH_LONG);
 
 //
 //        SharedPreferences pref = getS
