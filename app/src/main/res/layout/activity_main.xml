@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:baselineAligned="false"
         android:background="@color/colorPrimary"
-        android:id="@+id/layoutButtonsForGps"
+        android:id="@+id/layoutButtonsForGps2"
 
         android:orientation="horizontal">
 
@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
         android:id="@+id/layoutTextLocation"
-        android:layout_below="@+id/layoutButtonsForGps"
+        android:layout_below="@+id/layoutButtonsForGps2"
 
         >
 

@@ -1,6 +1,7 @@
 package dk.dtu.itdiplom.dturunner;
 
 
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 //import android.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 // Disse imports er til for at kunne anvende fused location:
 import com.google.android.gms.common.ConnectionResult;
@@ -20,7 +22,11 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+
+import dk.dtu.itdiplom.dturunner.Utils.LocationUtils;
 
 /**
  * Dette fragment skal indeholde selve løbsaktiviteten
@@ -82,6 +88,9 @@ public class FragmentLoeb extends Fragment implements
 
     private Button buttonStartAktivitet;
     private Button mStopUpdatesButton;
+    private ArrayList<Location> locationList;
+    private TextView textViewLocations;
+    private Button buttonShow;
 
     public FragmentLoeb() {
         // Required empty public constructor
@@ -96,13 +105,18 @@ public class FragmentLoeb extends Fragment implements
 
 
         buttonStartAktivitet = (Button) rod.findViewById(R.id.buttonStartAktivitet);
+        textViewLocations = (TextView) rod.findViewById(R.id.textViewLocations);
+        buttonShow = (Button) rod.findViewById(R.id.buttonShow);
         buttonStartAktivitet.setOnClickListener(this);
         mStopUpdatesButton = (Button) rod.findViewById(R.id.buttonStop);
         mStopUpdatesButton.setOnClickListener(this);
+        buttonShow.setOnClickListener(this);
 
         mLatitudeTextView = (TextView) rod.findViewById(R.id.latitude_text);
         mLongitudeTextView = (TextView) rod.findViewById(R.id.longitude_text);
         mLastUpdateTimeTextView = (TextView) rod.findViewById(R.id.last_update_time_text);
+
+        locationList = new ArrayList<Location>();
 
         // Set labels.
         mLatitudeLabel = ("latitude_label");
@@ -179,7 +193,24 @@ public class FragmentLoeb extends Fragment implements
         }
         if(v==mStopUpdatesButton)
         {
-            startLocationUpdates();
+            stopUpdatesButtonHandler(v);    // todo jan - refactor ect.
+        }
+        if(v==buttonShow)
+        {
+            showAllLocations();
+        }
+    }
+
+    /**
+     * Handles the Stop Updates button, and requests removal of location updates. Does nothing if
+     * updates were not previously requested.
+     */
+    public void stopUpdatesButtonHandler(View view) {
+        if (mRequestingLocationUpdates) {
+            mRequestingLocationUpdates = false;
+            Toast.makeText(getActivity(), "Location updates stoppet!", Toast.LENGTH_LONG);
+            setButtonsEnabledState();
+            stopLocationUpdates();
         }
     }
 
@@ -189,7 +220,8 @@ public class FragmentLoeb extends Fragment implements
         if (!mRequestingLocationUpdates)
         {
             mRequestingLocationUpdates = true;
-            setButtonsEnabledState();   // todo jan - evt. med senere eller fjern.
+            Toast.makeText(getActivity(), "Location updates startet!", Toast.LENGTH_LONG);
+            setButtonsEnabledState();
             startLocationUpdates();
         }
     }
@@ -248,9 +280,72 @@ public class FragmentLoeb extends Fragment implements
         Log.d(TAG, "onLocationChanged " + location.getLatitude());
         // todo jan - her skal bla gemmes placeringen. og laves beregninger...
 
-
-
+        mCurrentLocation = location;
+        mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
         updateUI();
+        saveLocation();  // todo
+        Toast.makeText(getActivity(), "Location updated", Toast.LENGTH_SHORT).show();
+        updateUI();
+    }
+
+    private void saveLocation()
+    {
+        locationList.add(mCurrentLocation);
+        showAllLocations();
+    }
+
+    private void showAllLocations() {
+        textViewLocations.setText("All positions:\n");
+        textViewLocations.setTextColor(Color.BLUE);
+
+        //PrintLocation(locationArrayList);
+        final int size = locationList.size();
+
+        textViewLocations.append("\n");
+        textViewLocations.append("size: " + size);
+        textViewLocations.append("\n");
+
+        for (int i = 0; i < size; i++)
+        {
+
+            Date date = new Date(locationList.get(i).getTime());
+            DateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS");
+            String dateFormatted = formatter.format(date);
+
+            // textViewAppend.append("" + locationArrayList.get(i) + "\n");
+            //textViewLocations.append("" + locationList.get(i).getSpeed() + ", " + dateFormatted);
+            textViewLocations.append("Acc: " + locationList.get(i).getAccuracy() + ", Alt:" + locationList.get(i).getAltitude() + ", " + dateFormatted);
+            // textViewLocations.append(" ::: " + TryGetLocationAddress(locationList.get(i)));
+            textViewLocations.append(" -->" + locationList.get(i).getLatitude() + ", " + locationList.get(i).getLongitude() + "\n");
+            // textViewLocations.append("\n");
+
+            double distance = LocationUtils.distFromDouble(locationList.get(0).getLatitude(), locationList.get(0).getLongitude(), locationList.get(i).getLatitude(), locationList.get(i).getLongitude());
+            long secondsPassed = (locationList.get(i).getTime() - locationList.get(0).getTime()) / 1000;
+            //LocationUtils.distFrom(locationList.get(i).getLatitude(), locationList.get(i).getLongitude(), locationList.get(i).getLatitude(), locationList.get(i).getLongitude() );
+            textViewLocations.append("Distance: " + distance + ", Total seconds: " + secondsPassed);
+
+            double speed = LocationUtils.getSpeed(distance, secondsPassed);
+            String speedWithDecimals = String.format("Value of a: %.9f", speed);
+            if(i > 5)
+            {
+
+                textViewLocations.append(", Speed (5): " + LocationUtils.getSpeedBetweenPoints(locationList.get(i-5), locationList.get(i)));
+                textViewLocations.append(", Speed2: " + speedWithDecimals + " m/s. ");
+                textViewLocations.append("\n");
+            }
+            else if(i > 1)
+            {
+                textViewLocations.append("Distance: " + distance);
+                textViewLocations.append(", Speed: " + LocationUtils.getSpeedBetweenPoints(locationList.get(i-1), locationList.get(i)));
+                textViewLocations.append(", Speed2: " + speedWithDecimals + " m/s. ");
+                // textViewLocations.append(", Speed2: " + speed);
+                textViewLocations.append("\n");
+            }
+
+            textViewLocations.append(" - - - - - - - - - - - ");
+            textViewLocations.append("\n");
+
+        }
     }
 
     //region Connection Callbacks
@@ -300,13 +395,18 @@ public class FragmentLoeb extends Fragment implements
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-
+    public void onConnectionSuspended(int cause) {
+        // The connection to Google Play services was lost for some reason. We call connect() to
+        // attempt to re-establish the connection.
+        Log.i(TAG, "Connection suspended " + cause);
+        mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
+        // onConnectionFailed.
+        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorCode());
     }
     //endregion Connection Callbacks
 }
