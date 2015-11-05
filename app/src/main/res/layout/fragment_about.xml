@@ -24,6 +24,7 @@
         android:layout_weight="1"
 
         android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginRight="@dimen/small_margin"
         android:layout_marginStart="@dimen/small_margin"
 
         android:onClick="buttonHandlerAboutOk"
@@ -33,11 +34,10 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/textViewVersionInfo"
         android:gravity="bottom"
-        android:background="#eeaaaa"
-
+        android:background="#eeaaaaff"
 
         android:text="Version: Beta" />
 
