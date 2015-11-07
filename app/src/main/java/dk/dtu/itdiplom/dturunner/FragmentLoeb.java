@@ -1,10 +1,12 @@
 package dk.dtu.itdiplom.dturunner;
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 //import android.app.Fragment;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,7 +36,6 @@ import dk.dtu.itdiplom.dturunner.Utils.LocationUtils;
 public class FragmentLoeb extends Fragment implements
         View.OnClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
-
 {
 
     protected static final String TAG = "JJ-location-updates";
@@ -51,9 +52,6 @@ public class FragmentLoeb extends Fragment implements
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
-    /**
-     * Provides the entry point to Google Play services.
-     */
     protected GoogleApiClient mGoogleApiClient;
 
 
@@ -67,7 +65,6 @@ public class FragmentLoeb extends Fragment implements
 
     protected double mDistanceAccumulated;
 
-
     protected TextView mLastUpdateTimeTextView;
     protected TextView mLatitudeTextView;
     protected TextView mLongitudeTextView;
@@ -76,10 +73,7 @@ public class FragmentLoeb extends Fragment implements
     protected String mLatitudeLabel;
     protected String mLongitudeLabel;
     protected String mLastUpdateTimeLabel;
-
     protected Boolean mRequestingLocationUpdates;
-
-
 
     private Button buttonStartAktivitet;
     private Button mStopUpdatesButton;
@@ -164,6 +158,15 @@ public class FragmentLoeb extends Fragment implements
      * updates.
      */
     protected void createLocationRequest() {
+
+        // check for gps and ask user:
+
+        boolean isGpsEnabled = checkForUserEnabledGpsSettings();
+    if(!isGpsEnabled)
+    {
+        askToEnableGps();
+    }
+
         mLocationRequest = new LocationRequest();
 
         // Sets the desired interval for active location updates. This interval is
@@ -177,6 +180,17 @@ public class FragmentLoeb extends Fragment implements
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
 
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    private boolean checkForUserEnabledGpsSettings() {
+
+        // todo jan - skal lave et tjek!
+        return false;
+    }
+
+    private void askToEnableGps() {
+        Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        this.startActivity(myIntent);
     }
 
     //endregion
