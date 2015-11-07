@@ -285,7 +285,7 @@ public class FragmentLoeb extends Fragment implements
         updateUI();
         saveLocation();  // todo
         Toast.makeText(getActivity(), "Location updated", Toast.LENGTH_SHORT).show();
-        updateUI();
+        //updateUI();
     }
 
     private void saveLocation()
@@ -381,6 +381,12 @@ public class FragmentLoeb extends Fragment implements
      * Updates the latitude, the longitude, and the last location time in the UI.
      */
     private void updateUI() {
+
+        if(mCurrentLocation == null)
+        {
+            Log.d(TAG, "mCurrentLocation er null. Der er nok ikke adgang til placeringsdata...");
+            return;
+        }
 
         Log.d(TAG, String.format("%s: %f", mLatitudeLabel,
                 mCurrentLocation.getLatitude()));

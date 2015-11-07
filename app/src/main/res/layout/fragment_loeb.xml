@@ -95,20 +95,27 @@
             android:layout_marginStart="@dimen/small_margin"
             android:textSize="@dimen/default_text_size" />
     </LinearLayout>
-<LinearLayout
+    <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+
     android:background="#aaaaaaaa"
     android:layout_gravity="bottom"
     >
 
-    <TextView
-        android:id="@+id/textViewLocations"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/small_margin"
-        android:layout_marginStart="@dimen/small_margin"
-        android:textSize="@dimen/default_text_size" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textViewLocations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/small_margin"
+            android:layout_marginStart="@dimen/small_margin"
+            android:textSize="@dimen/default_text_size" />
+
+    </ScrollView>
 
 
 </LinearLayout>
