@@ -62,15 +62,10 @@ public class FragmentLoeb extends Fragment implements
      */
     protected LocationRequest mLocationRequest;
 
-    /**
-     * Time when the location was updated represented as a String.
-     */
     protected String mLastUpdateTime;
-
-    /**
-     * Represents a geographical location.
-     */
     protected Location mCurrentLocation;
+
+    protected double mDistanceAccumulated;
 
 
     protected TextView mLastUpdateTimeTextView;
@@ -91,6 +86,8 @@ public class FragmentLoeb extends Fragment implements
     private ArrayList<Location> locationList;
     private TextView textViewLocations;
     private Button buttonShow;
+    private TextView textViewDistance;
+    private TextView textViewSpeed;
 
     public FragmentLoeb() {
         // Required empty public constructor
@@ -106,6 +103,8 @@ public class FragmentLoeb extends Fragment implements
 
         buttonStartAktivitet = (Button) rod.findViewById(R.id.buttonStartAktivitet);
         textViewLocations = (TextView) rod.findViewById(R.id.textViewLocations);
+        textViewDistance = (TextView) rod.findViewById(R.id.textViewDistance);
+        textViewSpeed = (TextView) rod.findViewById(R.id.textViewSpeed);
         buttonShow = (Button) rod.findViewById(R.id.buttonShow);
         buttonStartAktivitet.setOnClickListener(this);
         mStopUpdatesButton = (Button) rod.findViewById(R.id.buttonStop);
@@ -125,7 +124,7 @@ public class FragmentLoeb extends Fragment implements
 
         mRequestingLocationUpdates = false;
         mLastUpdateTime = "";
-
+        mDistanceAccumulated = 0;
 
         // Kick off the process of building a GoogleApiClient and requesting the LocationServices
         // API.
@@ -291,6 +290,12 @@ public class FragmentLoeb extends Fragment implements
     private void saveLocation()
     {
         locationList.add(mCurrentLocation);
+        if(locationList.size() > 2)
+        {
+            //mDistanceAccumulated += LocationUtils.distFromDouble()
+            mDistanceAccumulated +=1;
+            textViewDistance.setText((mDistanceAccumulated + " meter"));
+        }
         showAllLocations();
     }
 
