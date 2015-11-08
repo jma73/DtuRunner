@@ -1,13 +1,17 @@
 package dk.dtu.itdiplom.dturunner;
 
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 //import android.app.Fragment;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,6 +86,7 @@ public class FragmentLoeb extends Fragment implements
     private Button buttonShow;
     private TextView textViewDistance;
     private TextView textViewSpeed;
+    private TextView textViewSpeed2;
 
     public FragmentLoeb() {
         // Required empty public constructor
@@ -99,6 +104,7 @@ public class FragmentLoeb extends Fragment implements
         textViewLocations = (TextView) rod.findViewById(R.id.textViewLocations);
         textViewDistance = (TextView) rod.findViewById(R.id.textViewDistance);
         textViewSpeed = (TextView) rod.findViewById(R.id.textViewSpeed);
+        textViewSpeed2 = (TextView) rod.findViewById(R.id.textViewSpeed2);
         buttonShow = (Button) rod.findViewById(R.id.buttonShow);
         buttonStartAktivitet.setOnClickListener(this);
         mStopUpdatesButton = (Button) rod.findViewById(R.id.buttonStop);
@@ -120,6 +126,16 @@ public class FragmentLoeb extends Fragment implements
         mLastUpdateTime = "";
         mDistanceAccumulated = 0;
 
+
+// todo jan - tester pop-up til aktivering af gps
+        boolean isGpsEnabled = checkForUserEnabledGpsSettings();
+//        if(!isGpsEnabled)
+//        {
+//            askToEnableGps();
+//        }
+
+
+
         // Kick off the process of building a GoogleApiClient and requesting the LocationServices
         // API.
         buildGoogleApiClient();
@@ -139,7 +155,7 @@ public class FragmentLoeb extends Fragment implements
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())    // todo jan - måtte ændre fra this til getContext() eller getActivity(). brug getActivity() siger Jakob
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)               // todo jan - her vælges Location...
+                .addApi(LocationServices.API)               // todo jan - her vælges Location... Der er også en FusedLocationApi...
                 .build();
         createLocationRequest();
     }
@@ -159,13 +175,13 @@ public class FragmentLoeb extends Fragment implements
      */
     protected void createLocationRequest() {
 
-        // check for gps and ask user:
+        // check for gps and ask user: flyttet til onCreate...
 
-        boolean isGpsEnabled = checkForUserEnabledGpsSettings();
-    if(!isGpsEnabled)
-    {
-        askToEnableGps();
-    }
+        // boolean isGpsEnabled = checkForUserEnabledGpsSettings();
+//    if(!isGpsEnabled)
+//    {
+//        askToEnableGps();
+//    }
 
         mLocationRequest = new LocationRequest();
 
@@ -184,8 +200,47 @@ public class FragmentLoeb extends Fragment implements
 
     private boolean checkForUserEnabledGpsSettings() {
 
-        // todo jan - skal lave et tjek!
-        return false;
+        Log.d(TAG, "Tester om GPS settings er aktiveret!");
+
+
+        // Get Location Manager and check for GPS & Network location services
+        LocationManager lm = (LocationManager) getContext().getSystemService(getContext().LOCATION_SERVICE);
+
+        // todo jan - tag stilling til om GPS skal være aktiveret...
+        if(!lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+
+            Log.d(TAG, "GPS settings is not enabled!");
+
+            // Build the alert dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Placerings tjenester er ikke aktiveret");
+            builder.setMessage("Aktiverer venligst placeringstjenester (gps) for at kunne anvende appen!");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    // Show location settings when the user acknowledges the alert dialog
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                }
+            });
+            // builder.setNegativeButton("Annuler", )
+
+
+            builder.setNegativeButton("Annuller", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            Dialog alertDialog = builder.create();
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.show();
+
+            return false;
+        }
+
+        Log.d(TAG, "GPS settings is already enabled!");
+
+        return true;
     }
 
     private void askToEnableGps() {
@@ -304,11 +359,22 @@ public class FragmentLoeb extends Fragment implements
     private void saveLocation()
     {
         locationList.add(mCurrentLocation);
-        if(locationList.size() > 2)
+        int size = locationList.size();
+        if(size > 1)
         {
             //mDistanceAccumulated += LocationUtils.distFromDouble()
-            mDistanceAccumulated +=1;
+
+            double distance = LocationUtils.getDistanceBetweenPoints(locationList.get(size - 2), mCurrentLocation);
+            double speedSinceLast = LocationUtils.getSpeedBetweenPoints(locationList.get(size - 2), mCurrentLocation);
+            double speedSinceStartAverage = LocationUtils.getSpeedBetweenPoints(locationList.get(0), mCurrentLocation);
+
+            mDistanceAccumulated +=distance;
             textViewDistance.setText((mDistanceAccumulated + " meter"));
+
+            String speedSinceLastWithDecimals = String.format("%.5f", speedSinceLast);
+            textViewSpeed.setText((String.format("%s m/s", speedSinceLastWithDecimals)));
+            String speedSinceStartAverageWithDecimals = String.format("%.5f", speedSinceStartAverage);
+            textViewSpeed2.setText((String.format("%s m/s avg", speedSinceStartAverageWithDecimals)));
         }
         showAllLocations();
     }
@@ -338,7 +404,8 @@ public class FragmentLoeb extends Fragment implements
             textViewLocations.append(" -->" + locationList.get(i).getLatitude() + ", " + locationList.get(i).getLongitude() + "\n");
             // textViewLocations.append("\n");
 
-            double distance = LocationUtils.distFromDouble(locationList.get(0).getLatitude(), locationList.get(0).getLongitude(), locationList.get(i).getLatitude(), locationList.get(i).getLongitude());
+            double distance = LocationUtils.getDistanceBetweenPoints(locationList.get(0).getLatitude(), locationList.get(0).getLongitude(), locationList.get(i).getLatitude(), locationList.get(i).getLongitude());
+            //double distance = LocationUtils.distFromDouble(locationList.get(0).getLatitude(), locationList.get(0).getLongitude(), locationList.get(i).getLatitude(), locationList.get(i).getLongitude());
             long secondsPassed = (locationList.get(i).getTime() - locationList.get(0).getTime()) / 1000;
             //LocationUtils.distFrom(locationList.get(i).getLatitude(), locationList.get(i).getLongitude(), locationList.get(i).getLatitude(), locationList.get(i).getLongitude() );
             textViewLocations.append("Distance: " + distance + ", Total seconds: " + secondsPassed);

@@ -96,7 +96,7 @@ public class FragmentAbout extends Fragment {
 //        String date = df.format(Calendar.getInstance().getTime());          // dette giver ikke build date...
 
 
-        String displayText = "0.1.0.0, " + Main2Activity.buildDate + ", " + sdkBuildVersion + ", ";
+        String displayText = "0.1.0.0, " + Main2Activity.buildDate + ",  " + sdkBuildVersion + ",  ";
         textViewVersion.setText(displayText +  navn);
 
         return rod;
