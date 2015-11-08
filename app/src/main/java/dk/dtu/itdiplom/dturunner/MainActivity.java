@@ -1,6 +1,5 @@
 package dk.dtu.itdiplom.dturunner;
 
-//import android.location.LocationListener;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -30,19 +29,20 @@ public class MainActivity extends AppCompatActivity
     protected static final String TAG = "JJ-location-updates";
 
     /**
-     * The desired interval for location updates. Inexact. Updates may be more or less frequent.
+     * Det ønskede interval for location opdateringer. Opdateringer kan ske mere eller mindre frekvent.
+     * Upræcis.
      */
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
 
     /**
-     * The fastest rate for active location updates. Exact. Updates will never be more frequent
-     * than this value.
+     * Hurtigste interval for lokationsopdateringer. Der vil aldrig opdateres oftere end denne værdi.
+     * Præcis
      */
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
     /**
-     * Provides the entry point to Google Play services.
+     * Adgang til Google Play services.
      */
     protected GoogleApiClient mGoogleApiClient;
 
@@ -52,12 +52,12 @@ public class MainActivity extends AppCompatActivity
     protected LocationRequest mLocationRequest;
 
     /**
-     * Time when the location was updated represented as a String.
+     * Tidspunktet for hvornår lokationen blev opdateret.
      */
     protected String mLastUpdateTime;
 
     /**
-     * Represents a geographical location.
+     * Dette er den modtagne position
      */
     protected Location mCurrentLocation;
 
@@ -73,8 +73,7 @@ public class MainActivity extends AppCompatActivity
     protected String mLastUpdateTimeLabel;
 
     /**
-     * Tracks the status of the location updates request. Value changes when the user presses the
-     * Start Updates and Stop Updates buttons.
+     * Holder styr på om lokationsopdateringer er slået til.
      */
     protected Boolean mRequestingLocationUpdates;
 
@@ -112,8 +111,7 @@ public class MainActivity extends AppCompatActivity
         // Update values using data stored in the Bundle.
         // updateValuesFromBundle(savedInstanceState);
 
-        // Kick off the process of building a GoogleApiClient and requesting the LocationServices
-        // API.
+        // opret googleApi og LocationServices
         buildGoogleApiClient();
 
 
@@ -174,6 +172,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLocationChanged(Location location) {
 
+        // todo jan: ikke helt klar over hvornår den kaldes...
         mLatitudeTextView.setText("Hellllllooooo");
 
 
@@ -220,11 +219,12 @@ public class MainActivity extends AppCompatActivity
     //endregion
 
     /**
-     * Handles the Start Updates button and requests start of location updates. Does nothing if
-     * updates have already been requested.
+     * Start knappen
      */
     public void startUpdatesButtonHandler(View view) {
-        if (!mRequestingLocationUpdates) {
+        // kun hvis opdateringer ikke allerede er slået til.
+        if (!mRequestingLocationUpdates)
+        {
             mRequestingLocationUpdates = true;
             setButtonsEnabledState();
             startLocationUpdates();
@@ -232,8 +232,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Handles the Stop Updates button, and requests removal of location updates. Does nothing if
-     * updates were not previously requested.
+     * Stop knappen
      */
     public void stopUpdatesButtonHandler(View view) {
         if (mRequestingLocationUpdates) {
@@ -244,9 +243,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    /**
-     * Updates the latitude, the longitude, and the last location time in the UI.
-     */
     private void updateUI() {
         mLatitudeTextView.setText(String.format("%s: %f", mLatitudeLabel,
                 mCurrentLocation.getLatitude()));
@@ -260,35 +256,17 @@ public class MainActivity extends AppCompatActivity
      * Requests location updates from the FusedLocationApi.
      */
     protected void startLocationUpdates() {
-
-        // tjek for googleAPI:
-
-
-
-        // The final argument to {@code requestLocationUpdates()} is a LocationListener
         // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
     }
 
-    /**
-     * Removes location updates from the FusedLocationApi.
-     */
     protected void stopLocationUpdates() {
-        // It is a good practice to remove location requests when the activity is in a paused or
-        // stopped state. Doing so helps battery performance and is especially
-        // recommended in applications that request frequent location updates.
-
-        // The final argument to {@code requestLocationUpdates()} is a LocationListener
-        // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
+        // fjerner location requests når activity er paused eller i stop state...
+        //  dette hjælper til at spare batteri.
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
     }
 
-    /**
-     * Ensures that only one button is enabled at any time. The Start Updates button is enabled
-     * if the user is not requesting location updates. The Stop Updates button is enabled if the
-     * user is requesting location updates.
-     */
     private void setButtonsEnabledState() {
         if (mRequestingLocationUpdates) {
             mStartUpdatesButton.setEnabled(false);

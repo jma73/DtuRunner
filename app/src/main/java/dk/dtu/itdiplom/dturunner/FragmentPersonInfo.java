@@ -1,6 +1,8 @@
-package dk.dtu.itdiplom.dturunner.Utils;
+package dk.dtu.itdiplom.dturunner;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.io.FileOutputStream;
 
 import dk.dtu.itdiplom.dturunner.R;
 
@@ -93,4 +97,24 @@ public class FragmentPersonInfo extends Fragment implements View.OnClickListener
 //        SharedPreferences sharedPreferences = getSharedPreferences()
 
     }
+
+    /*
+        Send til email.
+         - skal udvides... attatche en fil. indlæsning af email.
+     */
+    public void SendEmailIntent(String content)
+    {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/html");
+        intent.putExtra(Intent.EXTRA_EMAIL, "jma73android@gmail.com");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "DtuRunner");
+        intent.putExtra(Intent.EXTRA_TEXT, "I'm email body. Jan.\n\n\nGPS data\n\n\n" + content );
+        //intent.putExtra(Intent.ACTION_ATTACH_DATA, "I'm email body. Jan." + content );
+
+        startActivity(Intent.createChooser(intent, "Send Email"));
+
+    }
+
+
+
 }

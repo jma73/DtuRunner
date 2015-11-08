@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import dk.dtu.itdiplom.dturunner.Utils.BuildInfo;
-import dk.dtu.itdiplom.dturunner.Utils.FragmentPersonInfo;
 
 public class Main2Activity extends android.support.v4.app.FragmentActivity implements FragmentAbout.OnFragmentInteractionListener
 {
