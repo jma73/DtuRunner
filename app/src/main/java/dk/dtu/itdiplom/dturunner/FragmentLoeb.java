@@ -32,6 +32,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import dk.dtu.itdiplom.dturunner.Model.LoebsAktivitet;
+import dk.dtu.itdiplom.dturunner.Model.PointInfo;
 import dk.dtu.itdiplom.dturunner.Utils.LocationUtils;
 
 /**
@@ -57,7 +59,7 @@ public class FragmentLoeb extends Fragment implements
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
     protected GoogleApiClient mGoogleApiClient;
-
+    protected Boolean mRequestingLocationUpdates;
 
     /**
      * Stores parameters for requests to the FusedLocationProviderApi.
@@ -77,11 +79,12 @@ public class FragmentLoeb extends Fragment implements
     protected String mLatitudeLabel;
     protected String mLongitudeLabel;
     protected String mLastUpdateTimeLabel;
-    protected Boolean mRequestingLocationUpdates;
+
 
     private Button buttonStartAktivitet;
     private Button mStopUpdatesButton;
     private ArrayList<Location> locationList;
+    private LoebsAktivitet loebsAktivitet;          // denne introduceres, og skal erstatte flere variabler
     private TextView textViewLocations;
     private Button buttonShow;
     private TextView textViewDistance;
@@ -99,7 +102,6 @@ public class FragmentLoeb extends Fragment implements
         // Inflate the layout for this fragment
         View rod = inflater.inflate(R.layout.fragment_loeb, container, false);
 
-
         buttonStartAktivitet = (Button) rod.findViewById(R.id.buttonStartAktivitet);
         textViewLocations = (TextView) rod.findViewById(R.id.textViewLocations);
         textViewDistance = (TextView) rod.findViewById(R.id.textViewDistance);
@@ -116,6 +118,7 @@ public class FragmentLoeb extends Fragment implements
         mLastUpdateTimeTextView = (TextView) rod.findViewById(R.id.last_update_time_text);
 
         locationList = new ArrayList<Location>();
+        loebsAktivitet = new LoebsAktivitet();
 
         // Set labels.
         mLatitudeLabel = ("latitude_label");
@@ -358,14 +361,19 @@ public class FragmentLoeb extends Fragment implements
 
     private void saveLocation()
     {
+
+
         locationList.add(mCurrentLocation);
         int size = locationList.size();
+        double distance = 0;
+        double speedSinceLast = 0;
+
         if(size > 1)
         {
             //mDistanceAccumulated += LocationUtils.distFromDouble()
 
-            double distance = LocationUtils.getDistanceBetweenPoints(locationList.get(size - 2), mCurrentLocation);
-            double speedSinceLast = LocationUtils.getSpeedBetweenPoints(locationList.get(size - 2), mCurrentLocation);
+            distance = LocationUtils.getDistanceBetweenPoints(locationList.get(size - 2), mCurrentLocation);
+            speedSinceLast = LocationUtils.getSpeedBetweenPoints(locationList.get(size - 2), mCurrentLocation);
             double speedSinceStartAverage = LocationUtils.getSpeedBetweenPoints(locationList.get(0), mCurrentLocation);
 
             mDistanceAccumulated +=distance;
@@ -376,6 +384,11 @@ public class FragmentLoeb extends Fragment implements
             String speedSinceStartAverageWithDecimals = String.format("%.5f", speedSinceStartAverage);
             textViewSpeed2.setText((String.format("%s m/s avg", speedSinceStartAverageWithDecimals)));
         }
+
+        // todo jan - working here... 9/11-15
+        PointInfo pointInfo = new PointInfo(mCurrentLocation.getTime(), mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), speedSinceLast, distance, 1);
+        loebsAktivitet.pointInfoList.add(pointInfo);
+
         showAllLocations();
     }
 

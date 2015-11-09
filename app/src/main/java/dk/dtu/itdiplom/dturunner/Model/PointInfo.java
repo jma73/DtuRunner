@@ -9,7 +9,17 @@ import java.sql.Timestamp;
  */
 public class PointInfo {
 
-    Timestamp timestamp;
+    public PointInfo(long timestamp, double latitude, double longitude, double speed, double distance, int heartRate) {
+        this.timestamp = timestamp;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.speed = speed;
+        this.distance = distance;
+        this.heartRate = heartRate;
+    }
+
+    //Timestamp timestamp2;
+    long timestamp;
     double latitude;
     double longitude;
     double speed;
@@ -19,15 +29,15 @@ public class PointInfo {
     // separator tegn. Kunne laves til at blive skiftet ud.
     String separator = "\t";
 
-    public void PointInfo(Timestamp timestamp, double latitude, double longitude, double speed, double distance, int heartRate)
-    {
-        this.distance = distance;
-        this.timestamp = timestamp;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.speed = speed;
-        this.heartRate = heartRate;
-    }
+//    public PointInfo(long timestamp, double latitude, double longitude, double speed, double distance, int heartRate)
+//    {
+//        this.distance = distance;
+//        this.timestamp = timestamp;
+//        this.latitude = latitude;
+//        this.longitude = longitude;
+//        this.speed = speed;
+//        this.heartRate = heartRate;
+//    }
 
     public String ToString()
     {
