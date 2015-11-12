@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -110,18 +111,11 @@ public class Main2Activity extends android.support.v4.app.FragmentActivity imple
     private void visMainMenuFragment(boolean isSavedInstanceStateNull) {
         Log.d(LOGTAG, ":: i visMainMenuFragment.");
 
-
         if(isSavedInstanceStateNull)
         {
             android.support.v4.app.FragmentManager supportFragmentManager = getSupportFragmentManager();
-            //FragmentManager fragmentManager = getFragmentManager();
             android.support.v4.app.FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
-
-            // todo jan: tilføjede support udgaven af Fragments her...
-            //Fragment fragment = fragmentManager.findFragmentById(R.id.frameLayoutContent);
-
             fragmentTransaction.add(R.id.frameLayoutContent, new FragmentForside());
-            fragmentTransaction.addToBackStack("mainmenu");
             fragmentTransaction.commit();
         }
 

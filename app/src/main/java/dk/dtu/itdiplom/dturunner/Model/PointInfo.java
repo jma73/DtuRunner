@@ -21,6 +21,35 @@ public class PointInfo {
     //Timestamp timestamp2;
     long timestamp;
     double latitude;
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public int getHeartRate() {
+        return heartRate;
+    }
+
+    public String getSeparator() {
+        return separator;
+    }
+
     double longitude;
     double speed;
     double distance;

@@ -61,6 +61,32 @@
                 android:hint="navn"
 
                 />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout android:layout_width="match_parent"
+            android:id="@+id/linearLayoutEmail"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="Email"
+                android:id="@+id/textViewEmail"
+                />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/editTextEmail"
+                android:maxLength="50"
+                android:hint="email"
+
+                />
         </LinearLayout>
 
     <LinearLayout android:layout_width="match_parent"

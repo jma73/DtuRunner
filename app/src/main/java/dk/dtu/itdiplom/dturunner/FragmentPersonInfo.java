@@ -26,6 +26,7 @@ public class FragmentPersonInfo extends Fragment implements View.OnClickListener
     Button buttonPersonInfoSet;
     private EditText editTextPersonNavn;
     private EditText editTextStudienummer;
+    private EditText editTextEmail;
 
     public FragmentPersonInfo() {
         // Required empty public constructor
@@ -40,6 +41,7 @@ public class FragmentPersonInfo extends Fragment implements View.OnClickListener
         buttonPersonInfoSet = (Button) rod.findViewById(R.id.buttonPersonInfoSet);
         editTextPersonNavn = (EditText) rod.findViewById(R.id.editTextPersonNavn);
         editTextStudienummer = (EditText) rod.findViewById(R.id.editTextStudienummer);
+        editTextEmail = (EditText) rod.findViewById(R.id.editTextEmail);
         buttonPersonInfoSet.setOnClickListener(this);
 
         loadSharedPrefs();
@@ -51,12 +53,14 @@ public class FragmentPersonInfo extends Fragment implements View.OnClickListener
     private void loadSharedPrefs() {
         SharedPreferences pref = getActivity().getPreferences(0);
         String navn = pref.getString("personnavn", "");
+        String email = pref.getString("email", "");
         String studienummer = pref.getString("studienummer", "");
         if(navn != "")
         {
             editTextPersonNavn.setText(navn);
         }
         editTextStudienummer.setText(studienummer);
+        editTextEmail.setText(email);
     }
 
 
@@ -69,6 +73,7 @@ public class FragmentPersonInfo extends Fragment implements View.OnClickListener
     }
 
     private void GemPersonInfo() {
+        if(getActivity() == null) return;   // hvis activity context er null er vi allerede ude af fragment.
 
         Log.d("JJJ", "i GemPersonInfo");
         String navn = editTextPersonNavn.getText().toString();

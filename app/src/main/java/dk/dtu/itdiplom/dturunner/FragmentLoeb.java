@@ -273,10 +273,13 @@ public class FragmentLoeb extends Fragment implements
     }
 
     /**
+     *
      * Handles the Stop Updates button, and requests removal of location updates. Does nothing if
      * updates were not previously requested.
      */
     public void stopUpdatesButtonHandler(View view) {
+        if(getActivity() == null) return;   // hvis activity context er null er vi allerede ude af fragment.
+
         if (mRequestingLocationUpdates) {
             mRequestingLocationUpdates = false;
             Toast.makeText(getActivity(), "Location updates stoppet!", Toast.LENGTH_LONG);
@@ -288,6 +291,9 @@ public class FragmentLoeb extends Fragment implements
     // todo jan old name: startUpdatesButtonHandler. rename til noget mere sigende!!!
     //      public void startUpdatesButtonHandler(View view)
     public void startLoebsAktivitetOgLocationUpdates() {
+        if(getActivity() == null)   // hvis activity context er null er vi allerede ude af fragment.
+            return;
+
         if (!mRequestingLocationUpdates)
         {
             mRequestingLocationUpdates = true;
@@ -351,6 +357,9 @@ public class FragmentLoeb extends Fragment implements
         Log.d(TAG, "onLocationChanged " + location.getLatitude());
         // todo jan - her skal bla gemmes placeringen. og laves beregninger...
 
+        if(getActivity() == null)   // hvis activity context er null er vi allerede ude af fragment.
+            return;
+
         mCurrentLocation = location;
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
         updateUI();
@@ -389,7 +398,16 @@ public class FragmentLoeb extends Fragment implements
         PointInfo pointInfo = new PointInfo(mCurrentLocation.getTime(), mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), speedSinceLast, distance, 1);
         loebsAktivitet.pointInfoList.add(pointInfo);
 
+        int loebsAktivitetId = 2;
+        savePointToDabase(pointInfo, loebsAktivitetId);
+
         showAllLocations();
+    }
+
+    private void savePointToDabase(PointInfo pointInfo, int loebsAktivitetId) {
+
+
+
     }
 
     private void showAllLocations() {
