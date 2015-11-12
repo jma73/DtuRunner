@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,7 +32,11 @@ public class Main2Activity extends android.support.v4.app.FragmentActivity imple
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-        
+
+//        // Setup database:
+//        PointInfoDbContractDatabase database = new PointInfoDbContractDatabase(this);
+//        database.getReadableDatabase();
+
 
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //toolbar.setVisibility(View.GONE);   // todo jan - toolbar, den skal bare fjernes!!! 1/11-2015

@@ -17,7 +17,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0px"
         android:id="@+id/layoutCurrentInfos"
         android:layout_weight="2"
         android:orientation="horizontal"
@@ -78,7 +78,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0px"
         android:id="@+id/layoutButtonsForGps2"
         android:layout_weight="2"
         android:background="#ffaaaaff"
@@ -89,10 +89,9 @@
             android:id="@+id/buttonStartAktivitet"
             android:layout_width="0dp"
             android:layout_weight="2"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
-            android:gravity="center"
             android:onClick="startUpdatesButtonHandler"
             android:text="Start aktivitet" />
 
@@ -100,11 +99,10 @@
             android:id="@+id/buttonStop"
             android:layout_width="0dp"
             android:layout_weight="2"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_marginLeft="@dimen/small_margin"
             android:layout_marginStart="@dimen/small_margin"
             android:enabled="false"
-            android:gravity="center"
             android:onClick="stopUpdatesButtonHandler"
             android:text="Stop" />
 
@@ -113,22 +111,20 @@
             android:id="@+id/buttonShow"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_marginLeft="@dimen/small_margin"
             android:layout_marginStart="@dimen/small_margin"
             android:enabled="true"
-            android:gravity="center"
             android:text="Vis positioner" />
 
         <Button
             android:id="@+id/buttonAfslut"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_marginLeft="@dimen/small_margin"
             android:layout_marginStart="@dimen/small_margin"
             android:enabled="true"
-            android:gravity="center"
             android:onClick="afslutLoebButtonHandler"
             android:text="Afslut løb" />
 
@@ -136,7 +132,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0px"
         android:layout_weight="2"
         android:layout_gravity="center"
         android:background="#88888888"
@@ -169,7 +165,7 @@
     </LinearLayout>
     <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="0px"
         android:layout_weight="1"
     android:background="#aaaaaaaa"
     android:layout_gravity="bottom"

@@ -4,6 +4,7 @@ package dk.dtu.itdiplom.dturunner;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
@@ -32,6 +33,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import dk.dtu.itdiplom.dturunner.Database.PointInfoDbContract;
+import dk.dtu.itdiplom.dturunner.Database.PointInfoDbContractDatabase;
 import dk.dtu.itdiplom.dturunner.Model.LoebsAktivitet;
 import dk.dtu.itdiplom.dturunner.Model.PointInfo;
 import dk.dtu.itdiplom.dturunner.Utils.LocationUtils;
@@ -90,6 +93,7 @@ public class FragmentLoeb extends Fragment implements
     private TextView textViewDistance;
     private TextView textViewSpeed;
     private TextView textViewSpeed2;
+    private PointInfoDbContractDatabase pointInfoDbContractDatabase;
 
     public FragmentLoeb() {
         // Required empty public constructor
@@ -129,6 +133,9 @@ public class FragmentLoeb extends Fragment implements
         mLastUpdateTime = "";
         mDistanceAccumulated = 0;
 
+
+        // Setup pointInfoDbContractDatabase:
+        pointInfoDbContractDatabase = new PointInfoDbContractDatabase(getActivity());
 
 // todo jan - tester pop-up til aktivering af gps
         boolean isGpsEnabled = checkForUserEnabledGpsSettings();
@@ -406,7 +413,12 @@ public class FragmentLoeb extends Fragment implements
 
     private void savePointToDabase(PointInfo pointInfo, int loebsAktivitetId) {
 
+        //PointInfoDbContractDatabase db = new PointInfoDbContractDatabase(getActivity());
+        //SQLiteDatabase db = pointInfoDbContractDatabase.getWritableDatabase();
+        //db.insert()
 
+        PointInfoDbContract pointInfoDbContract = new PointInfoDbContract();
+        pointInfoDbContract.insertPointData(pointInfo, 100, getActivity());
 
     }
 
