@@ -94,6 +94,7 @@ public class FragmentLoeb extends Fragment implements
     private TextView textViewSpeed;
     private TextView textViewSpeed2;
     private PointInfoDbContractDatabase pointInfoDbContractDatabase;
+    private TextView textViewTimer;
 
     public FragmentLoeb() {
         // Required empty public constructor
@@ -111,6 +112,7 @@ public class FragmentLoeb extends Fragment implements
         textViewDistance = (TextView) rod.findViewById(R.id.textViewDistance);
         textViewSpeed = (TextView) rod.findViewById(R.id.textViewSpeed);
         textViewSpeed2 = (TextView) rod.findViewById(R.id.textViewSpeed2);
+        textViewTimer = (TextView) rod.findViewById(R.id.textViewTimer);
         buttonShow = (Button) rod.findViewById(R.id.buttonShow);
         buttonStartAktivitet.setOnClickListener(this);
         mStopUpdatesButton = (Button) rod.findViewById(R.id.buttonStop);
@@ -303,45 +305,51 @@ public class FragmentLoeb extends Fragment implements
 
         if (!mRequestingLocationUpdates)
         {
-            mRequestingLocationUpdates = true;
-            Toast.makeText(getActivity(), "Location updates startet!", Toast.LENGTH_LONG);
-            setButtonsEnabledState();
-            startLocationUpdates();
+            boolean googleApiStatus = startLocationUpdates();
+
+            if(googleApiStatus)
+            {
+                mRequestingLocationUpdates = true;
+                Toast.makeText(getActivity(), "Location updates startet!", Toast.LENGTH_LONG);
+                setButtonsEnabledState();
+            }
+            else
+            {
+                textViewTimer.setText("Du har ikke google play installeret. Så kan du desværre ikke anvende denne app.");
+            }
         }
     }
 
     /**
      * Requests location updates from the FusedLocationApi.
      */
-    protected void startLocationUpdates() {
+    protected boolean startLocationUpdates() {
 
         // tjek for googleAPI:
 
 
         // The final argument to {@code requestLocationUpdates()} is a LocationListener
         // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, mLocationRequest, this);
+
+        try
+        {
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                    mGoogleApiClient, mLocationRequest, this);
+            return true;
+        }
+        catch (Exception exception)
+        {
+            // java.lang.IllegalStateException: GoogleApiClient is not connected yet.
+            Log.d(TAG, "Der opstod en fejl. Måske GoogleApiClient ikke er tilgængelig? " + exception + " " + exception.getStackTrace() );
+        }
+        return false;
     }
 
-    /**
-     * Removes location updates from the FusedLocationApi.
-     */
     protected void stopLocationUpdates() {
-        // It is a good practice to remove location requests when the activity is in a paused or
-        // stopped state. Doing so helps battery performance and is especially
-        // recommended in applications that request frequent location updates.
 
-        // The final argument to {@code requestLocationUpdates()} is a LocationListener
-        // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
     }
 
-    /**
-     * Ensures that only one button is enabled at any time. The Start Updates button is enabled
-     * if the user is not requesting location updates. The Stop Updates button is enabled if the
-     * user is requesting location updates.
-     */
     private void setButtonsEnabledState() {
         if (mRequestingLocationUpdates) {
             buttonStartAktivitet.setEnabled(false);
@@ -384,6 +392,8 @@ public class FragmentLoeb extends Fragment implements
         double distance = 0;
         double speedSinceLast = 0;
 
+
+
         if(size > 1)
         {
             //mDistanceAccumulated += LocationUtils.distFromDouble()
@@ -399,6 +409,9 @@ public class FragmentLoeb extends Fragment implements
             textViewSpeed.setText((String.format("%s m/s", speedSinceLastWithDecimals)));
             String speedSinceStartAverageWithDecimals = String.format("%.5f", speedSinceStartAverage);
             textViewSpeed2.setText((String.format("%s m/s avg", speedSinceStartAverageWithDecimals)));
+
+            long timeSinceStart = LocationUtils.getTimeSinceStart(locationList.get(0), locationList.get(size - 1));
+            textViewTimer.setText(timeSinceStart + "  millisek");
         }
 
         // todo jan - working here... 9/11-15

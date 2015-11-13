@@ -118,4 +118,7 @@ public class LocationUtils {
         return distanceInMeters / secondsPassed;
     }
 
+    public static long getTimeSinceStart(Location location0, Location locationN) {
+        return locationN.getTime() - location0.getTime();
+    }
 }
