@@ -17,8 +17,8 @@ public class DatabaseContract extends SQLiteOpenHelper {
 //        super(context, name, factory, version);
 //    }
 
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "DtuRunner.db";
+    public static final int DATABASE_VERSION = 2;
+    public static final String DATABASE_NAME = "DtuRunner2.db";
 
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
@@ -65,6 +65,9 @@ public class DatabaseContract extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
             Log.d("jjSQLiteDatabase", "SQLiteDatabase creating in onCreate");
+
+
+
         db.execSQL(SQL_CREATE_LoebsAktivitet_ENTRIES);
         db.execSQL(SQL_CREATE_PointInfo_ENTRIES);
     }

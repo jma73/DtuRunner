@@ -308,6 +308,7 @@ public class FragmentLoeb extends Fragment implements
         {
             boolean googleApiStatus = startLocationUpdates();
             opretLoebsAktivitet();
+            nulstilLoebsdata();
 
 
             if(googleApiStatus)
@@ -321,6 +322,11 @@ public class FragmentLoeb extends Fragment implements
                 textViewTimer.setText("Du har ikke google play installeret. Så kan du desværre ikke anvende denne app.");
             }
         }
+    }
+
+    private void nulstilLoebsdata() {
+        // nulstil data
+        locationList.clear();
     }
 
     private void opretLoebsAktivitet() {
