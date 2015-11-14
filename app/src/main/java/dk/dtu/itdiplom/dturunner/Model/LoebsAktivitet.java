@@ -1,8 +1,13 @@
 package dk.dtu.itdiplom.dturunner.Model;
 
+//import java.sql.Time;
+import android.text.format.Time;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by JanMøller on 09-11-2015.
@@ -10,15 +15,48 @@ import java.util.List;
  */
 public class LoebsAktivitet {
 
-    public LoebsAktivitet() {
-        pointInfoList = new ArrayList<PointInfo>();
+    public String getNavnAlias() {
+        return navnAlias;
     }
 
+    public void setNavnAlias(String navnAlias) {
+        this.navnAlias = navnAlias;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    String email;
+    String navnAlias;
     String loebsNote;
-    String loebsDato;
+    String loebsDato;   // kan vel udgå
     String loebsProgramType;
     public List<PointInfo> pointInfoList;
-    Date starttidspunkt;
+    long starttidspunkt;
+
+    public UUID getLoebsAktivitetUuid() {
+        return loebsAktivitetUuid;
+    }
+
+    UUID loebsAktivitetUuid;
+
+    public LoebsAktivitet() {
+
+        pointInfoList = new ArrayList<PointInfo>();
+        Time time = new Time();
+        time.setToNow();
+        starttidspunkt = time.toMillis(false);
+        loebsAktivitetUuid = UUID.randomUUID();
+
+        loebsDato = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
+    }
+
 
     public String getLoebsNote()
     {
@@ -38,11 +76,11 @@ public class LoebsAktivitet {
         this.loebsDato = loebsDato;
     }
 
-    public Date getStarttidspunkt() {
+    public long getStarttidspunkt() {
         return starttidspunkt;
     }
 
-    public void setStarttidspunkt(Date starttidspunkt) {
+    public void setStarttidspunkt(long starttidspunkt) {
         this.starttidspunkt = starttidspunkt;
     }
 

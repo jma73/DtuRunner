@@ -34,7 +34,7 @@ public class Main2Activity extends android.support.v4.app.FragmentActivity imple
         SharedPreferences.Editor editor = pref.edit();
 
 //        // Setup database:
-//        PointInfoDbContractDatabase database = new PointInfoDbContractDatabase(this);
+//        DatabaseContract database = new DatabaseContract(this);
 //        database.getReadableDatabase();
 
 

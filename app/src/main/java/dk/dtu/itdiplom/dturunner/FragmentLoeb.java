@@ -4,7 +4,6 @@ package dk.dtu.itdiplom.dturunner;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
@@ -32,9 +31,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
+import dk.dtu.itdiplom.dturunner.Database.DatabaseContract;
 import dk.dtu.itdiplom.dturunner.Database.PointInfoDbContract;
-import dk.dtu.itdiplom.dturunner.Database.PointInfoDbContractDatabase;
 import dk.dtu.itdiplom.dturunner.Model.LoebsAktivitet;
 import dk.dtu.itdiplom.dturunner.Model.PointInfo;
 import dk.dtu.itdiplom.dturunner.Utils.LocationUtils;
@@ -71,6 +71,7 @@ public class FragmentLoeb extends Fragment implements
 
     protected String mLastUpdateTime;
     protected Location mCurrentLocation;
+    private UUID loebsAktivitetUUID;
 
     protected double mDistanceAccumulated;
 
@@ -93,7 +94,7 @@ public class FragmentLoeb extends Fragment implements
     private TextView textViewDistance;
     private TextView textViewSpeed;
     private TextView textViewSpeed2;
-    private PointInfoDbContractDatabase pointInfoDbContractDatabase;
+    private DatabaseContract databaseContract;
     private TextView textViewTimer;
 
     public FragmentLoeb() {
@@ -136,8 +137,8 @@ public class FragmentLoeb extends Fragment implements
         mDistanceAccumulated = 0;
 
 
-        // Setup pointInfoDbContractDatabase:
-        pointInfoDbContractDatabase = new PointInfoDbContractDatabase(getActivity());
+        // Setup databaseContract:
+        databaseContract = new DatabaseContract(getActivity());
 
 // todo jan - tester pop-up til aktivering af gps
         boolean isGpsEnabled = checkForUserEnabledGpsSettings();
@@ -306,6 +307,8 @@ public class FragmentLoeb extends Fragment implements
         if (!mRequestingLocationUpdates)
         {
             boolean googleApiStatus = startLocationUpdates();
+            opretLoebsAktivitet();
+
 
             if(googleApiStatus)
             {
@@ -318,6 +321,20 @@ public class FragmentLoeb extends Fragment implements
                 textViewTimer.setText("Du har ikke google play installeret. Så kan du desværre ikke anvende denne app.");
             }
         }
+    }
+
+    private void opretLoebsAktivitet() {
+        // opret løb:
+        LoebsAktivitet loebsAktivitet = new LoebsAktivitet();
+        loebsAktivitet.setNavnAlias("TestNavn");
+        loebsAktivitet.setEmail("Test email");
+        loebsAktivitet.setLoebsNote("Dette er en test af løbsnoten");
+        //loebsAktivitet.setStarttidspunkt();
+        loebsAktivitet.setLoebsNote("Dette er et test løb! skal have input fra bruger...");
+
+        // todo jan kan det gøre pænere?
+        PointInfoDbContract pointInfoDbContract = new PointInfoDbContract();
+        loebsAktivitetUUID = pointInfoDbContract.insertLoebsAktivitet(loebsAktivitet, getActivity());
     }
 
     /**
@@ -426,12 +443,13 @@ public class FragmentLoeb extends Fragment implements
 
     private void savePointToDabase(PointInfo pointInfo, int loebsAktivitetId) {
 
-        //PointInfoDbContractDatabase db = new PointInfoDbContractDatabase(getActivity());
-        //SQLiteDatabase db = pointInfoDbContractDatabase.getWritableDatabase();
+        //DatabaseContract db = new DatabaseContract(getActivity());
+        //SQLiteDatabase db = databaseContract.getWritableDatabase();
         //db.insert()
 
         PointInfoDbContract pointInfoDbContract = new PointInfoDbContract();
-        pointInfoDbContract.insertPointData(pointInfo, 100, getActivity());
+        pointInfoDbContract.insertPointData(pointInfo, loebsAktivitetUUID, getActivity());
+        //pointInfoDbContract.insertPointData(pointInfo, 100, getActivity());
 
     }
 
