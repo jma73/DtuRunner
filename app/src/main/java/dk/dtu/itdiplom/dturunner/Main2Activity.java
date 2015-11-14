@@ -178,7 +178,17 @@ public class Main2Activity extends android.support.v4.app.FragmentActivity imple
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentPersonInfo());
-        fragmentTransaction.addToBackStack("TestJJ");
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    public void buttonHandlerLoebsHistorik(View view) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentLoebsHistorik());
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
     }
 }

@@ -45,6 +45,10 @@ public class LoebsAktivitet {
 
     UUID loebsAktivitetUuid;
 
+    /*
+        Denne konstructør skal anvendes når der startes et nyt løb.
+        her new nyt uuid og tiden op.
+     */
     public LoebsAktivitet() {
 
         pointInfoList = new ArrayList<PointInfo>();
@@ -52,9 +56,24 @@ public class LoebsAktivitet {
         time.setToNow();
         starttidspunkt = time.toMillis(false);
         loebsAktivitetUuid = UUID.randomUUID();
-
         loebsDato = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+    }
 
+    public String getTextHeader()
+    {
+
+        long milliseconds = Long.parseLong(loebsDato);
+        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(milliseconds));
+        return String.format(" :: %s %s %s %s ", date, loebsDato, loebsAktivitetUuid, starttidspunkt);
+    }
+
+
+    /*
+        Denne konstructør skal anvendes når der læses op fra databasen
+     */
+    public LoebsAktivitet(UUID p_loebsAktivitetUuid)
+    {
+        loebsAktivitetUuid = p_loebsAktivitetUuid;
     }
 
 

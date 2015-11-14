@@ -2,12 +2,14 @@ package dk.dtu.itdiplom.dturunner.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 import android.text.format.Time;
 import android.util.Log;
 
-import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import dk.dtu.itdiplom.dturunner.Model.LoebsAktivitet;
@@ -17,10 +19,10 @@ import dk.dtu.itdiplom.dturunner.Model.PointInfo;
  * Created by jan on 12-11-2015.
  */
 // todo jan rename class til mere generelt navn.
-public class PointInfoDbContract {
+public class DatabaseHelper {
 
 
-    public PointInfoDbContract()
+    public DatabaseHelper()
     {}
 
 
@@ -77,32 +79,31 @@ public class PointInfoDbContract {
 
 // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
-        values.put(PointInfoDbContract.PointInfoDb.COLUMN_NAME_ENTRY_ID, "1");  // ????
-        values.put(PointInfoDbContract.PointInfoDb.COLUMN_NAME_LOEBS_ID, loebsAktivitetId.toString());
-        values.put(PointInfoDbContract.PointInfoDb.COLUMN_NAME_LATITUDE, pointInfo.getLatitude());
-        values.put(PointInfoDbContract.PointInfoDb.COLUMN_NAME_LONGITUDE, pointInfo.getLongitude());
-        values.put(PointInfoDbContract.PointInfoDb.COLUMN_NAME_DISTANCE, pointInfo.getDistance());
-        values.put(PointInfoDbContract.PointInfoDb.COLUMN_NAME_SPEED, pointInfo.getSpeed());
-        values.put(PointInfoDbContract.PointInfoDb.COLUMN_NAME_HEARTRATE, pointInfo.getHeartRate());
-        values.put(PointInfoDbContract.PointInfoDb.COLUMN_NAME_TIMESTAMP, pointInfo.getTimestamp());
+        values.put(DatabaseHelper.PointInfoDb.COLUMN_NAME_ENTRY_ID, "1");  // ????
+        values.put(DatabaseHelper.PointInfoDb.COLUMN_NAME_LOEBS_ID, loebsAktivitetId.toString());
+        values.put(DatabaseHelper.PointInfoDb.COLUMN_NAME_LATITUDE, pointInfo.getLatitude());
+        values.put(DatabaseHelper.PointInfoDb.COLUMN_NAME_LONGITUDE, pointInfo.getLongitude());
+        values.put(DatabaseHelper.PointInfoDb.COLUMN_NAME_DISTANCE, pointInfo.getDistance());
+        values.put(DatabaseHelper.PointInfoDb.COLUMN_NAME_SPEED, pointInfo.getSpeed());
+        values.put(DatabaseHelper.PointInfoDb.COLUMN_NAME_HEARTRATE, pointInfo.getHeartRate());
+        values.put(DatabaseHelper.PointInfoDb.COLUMN_NAME_TIMESTAMP, pointInfo.getTimestamp());
 
 // Insert the new row, returning the primary key value of the new row
         long newRowId;
         newRowId = db.insert(
-                PointInfoDbContract.PointInfoDb.TABLE_NAME,
+                DatabaseHelper.PointInfoDb.TABLE_NAME,
                 null,
-//                PointInfoDbContract.PointInfoDb.COLUMN_NAME_NULLABLE,
+//                DatabaseHelper.PointInfoDb.COLUMN_NAME_NULLABLE,
                 values);
     }
 
     public UUID insertLoebsAktivitet(LoebsAktivitet loebsAktivitet, Context context)
     {
-        Log.d("JJdatabase", "insertPointData");
+        Log.d("JJdatabase", "insertLoebsAktivitet");
 
         // Gets the data repository in write mode
         DatabaseContract sqliteRepo = new DatabaseContract(context);
         SQLiteDatabase db = sqliteRepo.getWritableDatabase();
-
 
         // UUID loebsAktivitetId = UUID.randomUUID();
         Time starttidspunkt = new Time();
@@ -127,5 +128,50 @@ public class PointInfoDbContract {
         return loebsAktivitet.getLoebsAktivitetUuid();
     }
 
+    public LoebsAktivitet hentLoebsAktivitet()
+    {
+        return new LoebsAktivitet();
+    }
+
+    public List<LoebsAktivitet> hentLoebsAktivitetListe(Context context)
+    {
+
+        DatabaseContract sqliteRepo = new DatabaseContract(context);
+        SQLiteDatabase db = sqliteRepo.getReadableDatabase();
+
+        List<LoebsAktivitet> liste = new ArrayList<>();
+
+        String query = String.format("SELECT * FROM %s ", LoebsAktivitetDb.TABLE_NAME);
+
+        //db.execSQL(query);
+        //db.query(query);
+        db.rawQuery(query, null);
+
+        Cursor cursor = db.rawQuery(query, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+
+                    // todo jan - skal udvides
+                    String uuidAsString = cursor.getString(cursor.getColumnIndex(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_LOEBSAKTIVITETS_ID));
+                    UUID loebsAktivitetsUUID = UUID.fromString(uuidAsString);
+                    LoebsAktivitet loebsAktivitet = new LoebsAktivitet(loebsAktivitetsUUID);
+
+                    String starttid = cursor.getString(cursor.getColumnIndex(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_STARTTIDSPUNKT));
+                    loebsAktivitet.setLoebsDato(starttid);
+                    loebsAktivitet.setStarttidspunkt(cursor.getLong(cursor.getColumnIndex(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_STARTTIDSPUNKT)));
+                    liste.add(loebsAktivitet);
+
+                } while(cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.d("DatabaseFejl.DTURunner", "Error while trying to get posts from database");
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        return liste;
+    }
 
 }

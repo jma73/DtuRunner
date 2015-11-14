@@ -34,7 +34,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import dk.dtu.itdiplom.dturunner.Database.DatabaseContract;
-import dk.dtu.itdiplom.dturunner.Database.PointInfoDbContract;
+import dk.dtu.itdiplom.dturunner.Database.DatabaseHelper;
 import dk.dtu.itdiplom.dturunner.Model.LoebsAktivitet;
 import dk.dtu.itdiplom.dturunner.Model.PointInfo;
 import dk.dtu.itdiplom.dturunner.Utils.LocationUtils;
@@ -339,8 +339,8 @@ public class FragmentLoeb extends Fragment implements
         loebsAktivitet.setLoebsNote("Dette er et test løb! skal have input fra bruger...");
 
         // todo jan kan det gøre pænere?
-        PointInfoDbContract pointInfoDbContract = new PointInfoDbContract();
-        loebsAktivitetUUID = pointInfoDbContract.insertLoebsAktivitet(loebsAktivitet, getActivity());
+        DatabaseHelper databaseHelper = new DatabaseHelper();
+        loebsAktivitetUUID = databaseHelper.insertLoebsAktivitet(loebsAktivitet, getActivity());
     }
 
     /**
@@ -453,9 +453,9 @@ public class FragmentLoeb extends Fragment implements
         //SQLiteDatabase db = databaseContract.getWritableDatabase();
         //db.insert()
 
-        PointInfoDbContract pointInfoDbContract = new PointInfoDbContract();
-        pointInfoDbContract.insertPointData(pointInfo, loebsAktivitetUUID, getActivity());
-        //pointInfoDbContract.insertPointData(pointInfo, 100, getActivity());
+        DatabaseHelper databaseHelper = new DatabaseHelper();
+        databaseHelper.insertPointData(pointInfo, loebsAktivitetUUID, getActivity());
+        //databaseHelper.insertPointData(pointInfo, 100, getActivity());
 
     }
 
