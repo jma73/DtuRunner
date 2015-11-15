@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import dk.dtu.itdiplom.dturunner.Database.DatabaseHelper;
@@ -44,6 +43,7 @@ public class FragmentLoebsHistorik extends Fragment implements AdapterView.OnIte
         ListView listView = (ListView) rod.findViewById(R.id.listViewLoebsHistorik);
         listView.setOnItemClickListener(this);
         ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, loebsAktivitetList);
+
         listView.setAdapter(adapter);
 //        listView.setAdapter(new ArrayAdapter(getActivity(), android.R.layout.simple_expandable_list_item_2, loebsAktivitetList));
 
@@ -66,14 +66,11 @@ public class FragmentLoebsHistorik extends Fragment implements AdapterView.OnIte
 
         Toast.makeText(getActivity(), "Klik på " + position + ", id=" + id, Toast.LENGTH_SHORT).show();
 
-        //ArrayList<String> ordliste = ForsideActivity.galgelogik.muligeOrd();
-
-        Toast.makeText(getContext(), "on cklick ...", Toast.LENGTH_SHORT).show();
-
-
-
         LoebsAktivitet loebsAktivitet = loebsAktivitetList.get((int) id);
-        Log.d("FragmentOrdliste", "Løbsinfo:" + id + loebsAktivitet.getTextHeader());
+
+        Toast.makeText(getActivity(), "uuid: " + loebsAktivitet.getLoebsAktivitetUuid(), Toast.LENGTH_SHORT).show();
+
+        Log.d("FragmentOrdliste", "Løbsinfo:" + id + loebsAktivitet.getTextLog());
 
     }
 }

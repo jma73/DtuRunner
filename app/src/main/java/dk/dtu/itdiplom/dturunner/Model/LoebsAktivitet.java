@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import dk.dtu.itdiplom.dturunner.Model.PointInfo;
+
 /**
  * Created by JanMøller on 09-11-2015.
  * Denne klasse skal indeholde de værdier som der er brug for ifb. med en løbsaktivitet.
@@ -61,7 +63,13 @@ public class LoebsAktivitet {
 
     public String getTextHeader()
     {
+        long milliseconds = Long.parseLong(loebsDato);
+        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(milliseconds));
+        return String.format(" %s ", date);
+    }
 
+    public String getTextLog()
+    {
         long milliseconds = Long.parseLong(loebsDato);
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(milliseconds));
         return String.format(" :: %s %s %s %s ", date, loebsDato, loebsAktivitetUuid, starttidspunkt);
@@ -76,6 +84,10 @@ public class LoebsAktivitet {
         loebsAktivitetUuid = p_loebsAktivitetUuid;
     }
 
+    public String toString()
+    {
+        return getTextHeader();
+    }
 
     public String getLoebsNote()
     {

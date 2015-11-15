@@ -28,7 +28,7 @@ public class DatabaseContract extends SQLiteOpenHelper {
                     DatabaseHelper.PointInfoDb._ID + " INTEGER PRIMARY KEY," +
                     DatabaseHelper.PointInfoDb.COLUMN_NAME_ENTRY_ID + INTEGER_TYPE + COMMA_SEP +
                     DatabaseHelper.PointInfoDb.COLUMN_NAME_LOEBS_ID + TEXT_TYPE + COMMA_SEP +      // skal være guid. derfor TEXT.
-                    DatabaseHelper.PointInfoDb.COLUMN_NAME_TIMESTAMP + TEXT_TYPE + COMMA_SEP +
+                    DatabaseHelper.PointInfoDb.COLUMN_NAME_TIMESTAMP + TEXT_TYPE + COMMA_SEP +      // timestamp gemmes i millisekunder...
                     DatabaseHelper.PointInfoDb.COLUMN_NAME_LATITUDE + TEXT_TYPE + COMMA_SEP +      // Kunne være REAL ?
                     DatabaseHelper.PointInfoDb.COLUMN_NAME_LONGITUDE + TEXT_TYPE + COMMA_SEP +     // Kunne være REAL ?
                     DatabaseHelper.PointInfoDb.COLUMN_NAME_SPEED + TEXT_TYPE + COMMA_SEP +         // Kunne være REAL ?
