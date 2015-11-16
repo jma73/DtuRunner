@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,7 +17,7 @@ import android.widget.Toast;
 
 import dk.dtu.itdiplom.dturunner.Utils.BuildInfo;
 
-public class Main2Activity extends android.support.v4.app.FragmentActivity implements FragmentAbout.OnFragmentInteractionListener
+public class Main2Activity extends AppCompatActivity implements FragmentAbout.OnFragmentInteractionListener
 {
     // Global variables. skal placeres i singleton klasse???
     static String buildDate;
@@ -38,9 +40,9 @@ public class Main2Activity extends android.support.v4.app.FragmentActivity imple
 //        database.getReadableDatabase();
 
 
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //toolbar.setVisibility(View.GONE);   // todo jan - toolbar, den skal bare fjernes!!! 1/11-2015
-        //setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
 
 
         // todo jan: skal tjekke på savedInstanceState
@@ -86,7 +88,8 @@ public class Main2Activity extends android.support.v4.app.FragmentActivity imple
             visMainMenuFragment(false);
         }
         else if (item.getItemId() == 110) {
-            visMainMenuFragment(false);
+//            visMainMenuFragment(false);
+            visPersonInfo();        // todo jan NB der bliver flere hele tiden.
         }
 
 //    else if (item.getItemId() == 115) {
@@ -121,6 +124,12 @@ public class Main2Activity extends android.support.v4.app.FragmentActivity imple
             fragmentTransaction.add(R.id.frameLayoutContent, new FragmentForside());
             fragmentTransaction.commit();
         }
+        else
+        {
+            // todo jan 16/11-15: test af pop stack
+            FragmentManager fm = getSupportFragmentManager();
+            fm.popBackStackImmediate();     // hvad hvis vi er på hoved menuen??
+        }
 
         // todo jan: Husk der skal laves et tjek for: Fragment == null. ellers skal der ikke new'es.
         //
@@ -150,6 +159,25 @@ public class Main2Activity extends android.support.v4.app.FragmentActivity imple
         fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentAbout());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+
+    public void buttonHandlerTestLocation(View view) {
+
+        // todo jan 16/11-15: denne skal formentlig udgå igen!!!
+
+        FragmentShowOnMap fragmentShowOnMap = new FragmentShowOnMap();
+        FragmentShowOnMap2 fragmentShowOnMap2 = new FragmentShowOnMap2();
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        //fragmentTransaction.add(R.id.frameLayoutContent, frag);
+
+        fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentShowOnMap2());
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+
     }
 
     // denne skulle implementeres ifb. med ...

@@ -308,8 +308,8 @@ public class MainActivity extends AppCompatActivity
         FragmentShowOnMap2 frag = new FragmentShowOnMap2();
         //Fragment fragment = new FragmentShowOnMap();
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 //fragmentTransaction.add(R.id.testFragment, fragment);
 fragmentTransaction.add(R.id.testFragment, frag);
 

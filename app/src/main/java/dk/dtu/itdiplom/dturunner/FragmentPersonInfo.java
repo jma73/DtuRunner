@@ -75,7 +75,7 @@ public class FragmentPersonInfo extends Fragment implements View.OnClickListener
         if(getActivity() == null) return;   // hvis activity context er null er vi allerede ude af fragment.
 
         Log.d("JJJ", "i GemPersonInfo");
-        Toast.makeText(getActivity(), "Oplysningerne er gemt!", Toast.LENGTH_LONG);
+        //Toast.makeText(getActivity(), "Oplysningerne er gemt!", Toast.LENGTH_LONG);
 
         String navn = editTextPersonNavn.getText().toString();
         String studienummer = editTextStudienummer.getText().toString();
@@ -88,20 +88,7 @@ public class FragmentPersonInfo extends Fragment implements View.OnClickListener
         edt.putString("studienummer", studienummer);
         edt.commit();
 
-
-//
-//        SharedPreferences pref = getS
-//
-//                getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
-//        SharedPreferences.Editor editor = pref.edit();
-//
-//
-//        SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-//        editor.putString("name", "Elena");
-//        editor.putInt("idName", 12);
-//        editor.commit();
-
-//        SharedPreferences sharedPreferences = getSharedPreferences()
+        Toast.makeText(getActivity(), "Dine oplysninger er gemt!", Toast.LENGTH_SHORT).show();
 
     }
 
