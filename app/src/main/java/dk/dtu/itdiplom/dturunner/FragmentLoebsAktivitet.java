@@ -10,6 +10,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.UUID;
+
+import dk.dtu.itdiplom.dturunner.Database.DatabaseHelper;
+import dk.dtu.itdiplom.dturunner.Model.LoebsAktivitet;
+
 
 /**
  * Visning af løb, med mulighed for slet, email løb.
@@ -43,6 +48,16 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
 
         // todo jan: hent og vis løbsAktivitet
 
+
+        LoebsAktivitet loebsAktivitetSelected = new DatabaseHelper().hentLoebsAktivitet(getActivity(), UUID.fromString(uuid));
+        //loebsAktivitetSelected.pointInfoList    // todo jan - mangler at indlæse punkterne.
+
+        String loebsAktivitetInfoString = String.format("Dato: %s \n" +
+                " Starttidspunkt %s \n Distance: XX meter \n  Tid: yy minutter \n " +
+                        " Uuid %s ",
+                loebsAktivitetSelected.getLoebsDato(), loebsAktivitetSelected.getStarttidspunkt(), uuid);
+
+        tv.setText(loebsAktivitetInfoString);
 
         Button buttonSletLoebsAkt = (Button) rod.findViewById(R.id.buttonSletLoebsAkt);
         buttonSendLoebsdataEmail = (Button) rod.findViewById(R.id.buttonSendLoebsdataEmail);

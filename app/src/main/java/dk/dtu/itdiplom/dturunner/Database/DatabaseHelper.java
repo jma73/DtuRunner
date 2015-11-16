@@ -128,9 +128,63 @@ public class DatabaseHelper {
         return loebsAktivitet.getLoebsAktivitetUuid();
     }
 
-    public LoebsAktivitet hentLoebsAktivitet()
+    public boolean SletLoebsAktivitet(Context context, UUID uuid)
     {
-        return new LoebsAktivitet();
+        Log.d("JJdatabase", "SletLoebsAktivitet");
+
+        // Gets the data repository in write mode
+        DatabaseContract sqliteRepo = new DatabaseContract(context);
+        SQLiteDatabase db = sqliteRepo.getWritableDatabase();
+
+        int rows = db.delete(LoebsAktivitetDb.TABLE_NAME, LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_LOEBSAKTIVITETS_ID + " = " + uuid, null);
+        // db.getPath()
+        return rows > 0;
+    }
+
+    // todo sql til hent af løbsaktivitet pr. uuid
+    public LoebsAktivitet hentLoebsAktivitet(Context context, UUID uuid)
+    {
+        DatabaseContract sqliteRepo = new DatabaseContract(context);
+        SQLiteDatabase db = sqliteRepo.getReadableDatabase();
+
+        List<LoebsAktivitet> liste = new ArrayList<>();     // der bør kun være een dog.
+
+
+
+        String query = String.format("SELECT * FROM %s WHERE %s = '%s'", LoebsAktivitetDb.TABLE_NAME, LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_LOEBSAKTIVITETS_ID, uuid.toString());
+        db.rawQuery(query, null);
+
+        Cursor cursor = db.rawQuery(query, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+
+                    String uuidAsString = cursor.getString(cursor.getColumnIndex(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_LOEBSAKTIVITETS_ID));
+                    UUID loebsAktivitetsUUID = UUID.fromString(uuidAsString);
+                    LoebsAktivitet loebsAktivitet = new LoebsAktivitet(loebsAktivitetsUUID);
+
+                    String starttid = cursor.getString(cursor.getColumnIndex(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_STARTTIDSPUNKT));
+                    loebsAktivitet.setLoebsDato(starttid);
+                    loebsAktivitet.setStarttidspunkt(cursor.getLong(cursor.getColumnIndex(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_STARTTIDSPUNKT)));
+                    liste.add(loebsAktivitet);
+
+                } while(cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.d("DatabaseFejl.DTURunner", "Error while trying to get posts from database... " + query);
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+
+        if(liste.size() > 1)
+        {
+            Log.e("JJDatabase", String.format("Der blev fundet flere LoebsAktivitet for uuid %s. Det burde ikke kunne ske...", uuid));
+        }
+
+        return liste.get(0);
+
     }
 
     public List<LoebsAktivitet> hentLoebsAktivitetListe(Context context)
@@ -165,7 +219,7 @@ public class DatabaseHelper {
                 } while(cursor.moveToNext());
             }
         } catch (Exception e) {
-            Log.d("DatabaseFejl.DTURunner", "Error while trying to get posts from database");
+            Log.d("DatabaseFejl.DTURunner", "Error while trying to get posts from database... " + query);
         } finally {
             if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
