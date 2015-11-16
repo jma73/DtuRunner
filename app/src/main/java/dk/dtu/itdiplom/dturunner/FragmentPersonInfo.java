@@ -15,11 +15,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.FileOutputStream;
-
 import dk.dtu.itdiplom.dturunner.R;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Giver mulighed for at indtaste oplysninger om brugeren.
  */
 public class FragmentPersonInfo extends Fragment implements View.OnClickListener {
 

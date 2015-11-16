@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="dk.dtu.itdiplom.dturunner.FragmentLoebsAktivitet">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_weight="1"
+
+        android:text="Her skal man kunne gøre noget med den valgte løbsaktivitet." />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="kslafjsdfkjalsdfjalfk"
+        android:id="@+id/textViewLoebsAktDato"
+
+        />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text=""
+        android:id="@+id/textViewLoebsAktId"
+
+        />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+
+        android:text="Mail løbsdata"
+        android:id="@+id/buttonSendLoebsdataEmail"
+        />
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+
+
+        android:text="Slet løb"
+        android:id="@+id/buttonSletLoebsAkt"
+        />
+
+
+</LinearLayout>
