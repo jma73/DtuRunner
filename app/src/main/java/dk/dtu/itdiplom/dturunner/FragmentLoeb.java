@@ -426,15 +426,16 @@ public class FragmentLoeb extends Fragment implements
             double speedSinceStartAverage = LocationUtils.getSpeedBetweenPoints(locationList.get(0), mCurrentLocation);
 
             mDistanceAccumulated +=distance;
-            textViewDistance.setText((mDistanceAccumulated + " meter"));
+            //double distanceInMeters = mDistanceAccumulated / 1000;
+            textViewDistance.setText(( mDistanceAccumulated + " meter"));
 
             String speedSinceLastWithDecimals = String.format("%.5f", speedSinceLast);
             textViewSpeed.setText((String.format("%s m/s", speedSinceLastWithDecimals)));
             String speedSinceStartAverageWithDecimals = String.format("%.5f", speedSinceStartAverage);
             textViewSpeed2.setText((String.format("%s m/s avg", speedSinceStartAverageWithDecimals)));
 
-            long timeSinceStart = LocationUtils.getTimeSinceStart(locationList.get(0), locationList.get(size - 1));
-            textViewTimer.setText(timeSinceStart + "  millisek");
+            double timeSinceStart = LocationUtils.getTimeSinceStart(locationList.get(0), locationList.get(size - 1)) / 1000;
+            textViewTimer.setText(timeSinceStart + "  sekunder");
         }
 
         // todo jan - working here... 9/11-15
