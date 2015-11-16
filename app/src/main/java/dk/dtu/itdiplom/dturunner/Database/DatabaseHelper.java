@@ -128,7 +128,7 @@ public class DatabaseHelper {
         return loebsAktivitet.getLoebsAktivitetUuid();
     }
 
-    public boolean SletLoebsAktivitet(Context context, UUID uuid)
+    public boolean sletLoebsAktivitet(Context context, UUID uuid)
     {
         Log.d("JJdatabase", "SletLoebsAktivitet");
 
@@ -136,7 +136,7 @@ public class DatabaseHelper {
         DatabaseContract sqliteRepo = new DatabaseContract(context);
         SQLiteDatabase db = sqliteRepo.getWritableDatabase();
 
-        int rows = db.delete(LoebsAktivitetDb.TABLE_NAME, LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_LOEBSAKTIVITETS_ID + " = " + uuid, null);
+        int rows = db.delete(LoebsAktivitetDb.TABLE_NAME, LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_LOEBSAKTIVITETS_ID + " = '" + uuid + "'", null);
         // db.getPath()
         return rows > 0;
     }

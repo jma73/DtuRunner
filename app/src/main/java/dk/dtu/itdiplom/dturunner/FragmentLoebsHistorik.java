@@ -55,18 +55,6 @@ public class FragmentLoebsHistorik extends Fragment implements AdapterView.OnIte
         return rod;
     }
 
-
-//    @Override
-//    public void onClick(View v) {
-//
-//        Toast.makeText(getContext(), "on cklick ...", Toast.LENGTH_SHORT);
-//
-////        if(v==)
-//
-//    }
-
-
-    //  pt. ikke ok...
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         Toast.makeText(getActivity(), "Klik på " + position + ", id=" + id, Toast.LENGTH_SHORT).show();
@@ -77,36 +65,15 @@ public class FragmentLoebsHistorik extends Fragment implements AdapterView.OnIte
 
         Log.d("FragmentLoebsHistorik", "Løbsinfo:" + id + loebsAktivitet.getTextLog());
 
-//        PopupWindow pw = new PopupWindow(getActivity());
-////        PopupWindow pw = new PopupWindow(getActivity(), ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-//        TextView textView = new TextView(getActivity());
-//        textView.setText("popopop up");
-//        pw.showAsDropDown(textView);
-//
-//        // test detailsview:
-//        TextView tv = new TextView(getActivity());
-
-
-//        sendEmail();
-
-//        visPersonInfo(); // denne har virket!
-
-
-
-
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//
-//        // todo jan send id med over!
-//
-//
+
         Fragment fragment = new FragmentLoebsAktivitet();
-        Fragment fragmentPersonInfo = new FragmentPersonInfo();
-//
+
         Bundle bundle = new Bundle();
         bundle.putString("Uuid", String.valueOf(loebsAktivitet.getLoebsAktivitetUuid()));
         fragment.setArguments(bundle);
-//
+
         fragmentTransaction.replace(R.id.frameLayoutContent, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();

@@ -1,6 +1,7 @@
 package dk.dtu.itdiplom.dturunner.Model;
 
 //import java.sql.Time;
+import android.support.annotation.NonNull;
 import android.text.format.Time;
 
 import java.text.SimpleDateFormat;
@@ -8,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-import dk.dtu.itdiplom.dturunner.Model.PointInfo;
 
 /**
  * Created by JanMøller on 09-11-2015.
@@ -63,15 +62,19 @@ public class LoebsAktivitet {
 
     public String getTextHeader()
     {
-        long milliseconds = Long.parseLong(loebsDato);
-        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(milliseconds));
+        String date = getStarttimeFormatted();
         return String.format(" %s ", date);
+    }
+
+    @NonNull
+    public String getStarttimeFormatted() {
+        long milliseconds = Long.parseLong(loebsDato);
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(milliseconds));
     }
 
     public String getTextLog()
     {
-        long milliseconds = Long.parseLong(loebsDato);
-        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(milliseconds));
+        String date = getStarttimeFormatted();
         return String.format(" :: %s %s %s %s ", date, loebsDato, loebsAktivitetUuid, starttidspunkt);
     }
 
@@ -84,6 +87,7 @@ public class LoebsAktivitet {
         loebsAktivitetUuid = p_loebsAktivitetUuid;
     }
 
+    // note jan: toString giver teksten i ListView'et / adapteren.
     public String toString()
     {
         return getTextHeader();
@@ -122,4 +126,5 @@ public class LoebsAktivitet {
     public void setLoebsProgramType(String loebsProgramType) {
         this.loebsProgramType = loebsProgramType;
     }
+
 }

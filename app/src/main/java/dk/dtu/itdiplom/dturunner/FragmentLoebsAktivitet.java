@@ -3,12 +3,14 @@ package dk.dtu.itdiplom.dturunner;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.UUID;
 
@@ -22,7 +24,8 @@ import dk.dtu.itdiplom.dturunner.Model.LoebsAktivitet;
 public class FragmentLoebsAktivitet extends Fragment implements View.OnClickListener {
 
 
-    Button buttonSendLoebsdataEmail;
+    Button buttonSendLoebsdataEmail, buttonSletLoebsAkt;
+    private String uuid;
 
     public FragmentLoebsAktivitet() {
         // Required empty public constructor
@@ -36,7 +39,7 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
         // Inflate the layout for this fragment
         View rod = inflater.inflate(R.layout.fragment_loebs_aktivitet, container, false);
 
-        String uuid = "N/A";
+        uuid = "N/A";
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -53,13 +56,14 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
         //loebsAktivitetSelected.pointInfoList    // todo jan - mangler at indlæse punkterne.
 
         String loebsAktivitetInfoString = String.format("Dato: %s \n" +
-                " Starttidspunkt %s \n Distance: XX meter \n  Tid: yy minutter \n " +
+                " Starttidspunkt %s \n\tDistance: XX meter \n\tTid: yy minutter \n " +
                         " Uuid %s ",
-                loebsAktivitetSelected.getLoebsDato(), loebsAktivitetSelected.getStarttidspunkt(), uuid);
+                loebsAktivitetSelected.getStarttimeFormatted(), loebsAktivitetSelected.getStarttidspunkt(), uuid);
 
         tv.setText(loebsAktivitetInfoString);
 
-        Button buttonSletLoebsAkt = (Button) rod.findViewById(R.id.buttonSletLoebsAkt);
+        buttonSletLoebsAkt = (Button) rod.findViewById(R.id.buttonSletLoebsAkt);
+        buttonSletLoebsAkt.setOnClickListener(this);
         buttonSendLoebsdataEmail = (Button) rod.findViewById(R.id.buttonSendLoebsdataEmail);
         buttonSendLoebsdataEmail.setOnClickListener(this);
         return rod;
@@ -88,6 +92,27 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
         {
             // todo jan - hent, gem til fil og send løbsdata...
             sendEmail();
+        }
+        if(v == buttonSletLoebsAkt)
+        {
+            // todo jan - hent, gem til fil og send løbsdata...
+            sletLoebsAktivitet();
+        }
+    }
+
+    private void sletLoebsAktivitet() {
+
+        boolean sqlResult = new DatabaseHelper().sletLoebsAktivitet(getActivity(), UUID.fromString(uuid));
+        if(sqlResult)
+        {
+            Toast.makeText(getActivity(), "Aktiviteten blev slettet", Toast.LENGTH_SHORT).show();
+
+            // tving Fragmentet til at "lukke":
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.popBackStackImmediate();
+        } else
+        {
+            Toast.makeText(getActivity(), "Aktiviteten blev IKKE slettet", Toast.LENGTH_LONG).show();
         }
     }
 }
