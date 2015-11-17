@@ -34,6 +34,16 @@ public class LoebsAktivitet {
 
     String email;
     String navnAlias;
+
+    public String getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(String personId) {
+        this.personId = personId;
+    }
+
+    String personId;    // fx. studienummer
     String loebsNote;
     String loebsDato;   // kan vel udgå
     String loebsProgramType;

@@ -3,7 +3,6 @@ package dk.dtu.itdiplom.dturunner;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -15,12 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.UUID;
 
 import dk.dtu.itdiplom.dturunner.Database.DatabaseHelper;
-import dk.dtu.itdiplom.dturunner.Model.FileHelper;
+import dk.dtu.itdiplom.dturunner.Model.FileHelperTest;
 import dk.dtu.itdiplom.dturunner.Model.LoebsAktivitet;
 
 
@@ -89,19 +86,19 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
         // todo jan 16/11-15: test af attach fil. Ser ud til at virke. dog kommer filen ikke videre, end at det ligner at den er vedhæftet i mail programmet.
         String filename = "dtuRunner.txt";
 
-//        FileHelper.testSaveFile(getActivity(), " points points.....");
+//        FileHelperTest.testSaveFile(getActivity(), " points points.....");
 //        File file = new File(getActivity().getFilesDir(), filename);
 //        Uri uri = Uri.fromFile(file);
 
 
         // ny til external
-        File fff = FileHelper.testSaveFileExternalStorage(getActivity(), "some content...");
+        File fff = FileHelperTest.testSaveFileExternalStorage(getActivity(), "some content...");
         //File externalFilesDir = getActivity().getExternalFilesDir(null);
         Uri uri2 = Uri.fromFile(fff);
 
 //        try {
 //            inputStream = getActivity().openFileInput(filename);
-//            intent.putExtra(Intent.EXTRA_STREAM, new FileHelper().testReadFile(getActivity()));
+//            intent.putExtra(Intent.EXTRA_STREAM, new FileHelperTest().testReadFile(getActivity()));
 //
 //        } catch (FileNotFoundException e) {
 //                e.printStackTrace();

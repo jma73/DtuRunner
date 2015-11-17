@@ -113,9 +113,9 @@ public class DatabaseHelper {
         values.put(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_LOEBSAKTIVITETS_ID, loebsAktivitet.getLoebsAktivitetUuid().toString());
         values.put(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_STARTTIDSPUNKT, loebsAktivitet.getStarttidspunkt());
         values.put(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_NOTE, loebsAktivitet.getLoebsNote());
-        values.put(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_EMAIL, "TBD");
-        values.put(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_NAVN, "TBD");
-        values.put(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_PERSONID, "TBD");
+        values.put(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_EMAIL, loebsAktivitet.getEmail());
+        values.put(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_NAVN, loebsAktivitet.getNavnAlias());
+        values.put(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_PERSONID, loebsAktivitet.getPersonId());
         values.put(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_PROGRAMTYPE, "Normal");  // todo jan 14/11-15.
 
 // Insert the new row, returning the primary key value of the new row

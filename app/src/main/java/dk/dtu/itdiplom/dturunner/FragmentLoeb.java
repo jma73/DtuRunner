@@ -334,11 +334,11 @@ public class FragmentLoeb extends Fragment implements
         LoebsAktivitet loebsAktivitet = new LoebsAktivitet();
         loebsAktivitet.setNavnAlias("TestNavn");
         loebsAktivitet.setEmail("Test email");
-        loebsAktivitet.setLoebsNote("Dette er en test af løbsnoten");
-        //loebsAktivitet.setStarttidspunkt();
         loebsAktivitet.setLoebsNote("Dette er et test løb! skal have input fra bruger...");
+        loebsAktivitet.setPersonId("todo");
+        //loebsAktivitet.setStarttidspunkt();
 
-        // todo jan kan det gøre pænere?
+        // todo jan kan det gøre pænere? dvs. uden new hver gang... eller static...
         DatabaseHelper databaseHelper = new DatabaseHelper();
         loebsAktivitetUUID = databaseHelper.insertLoebsAktivitet(loebsAktivitet, getActivity());
     }
