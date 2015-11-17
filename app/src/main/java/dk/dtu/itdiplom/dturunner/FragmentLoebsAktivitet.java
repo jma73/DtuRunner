@@ -1,7 +1,9 @@
 package dk.dtu.itdiplom.dturunner;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -12,9 +14,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.UUID;
 
 import dk.dtu.itdiplom.dturunner.Database.DatabaseHelper;
+import dk.dtu.itdiplom.dturunner.Model.FileHelper;
 import dk.dtu.itdiplom.dturunner.Model.LoebsAktivitet;
 
 
@@ -72,13 +78,40 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
     private void sendEmail() {
         // todo hent email fra SharedPrefs
         String emailTo = "jma73android@gmail.com";
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL, new String[]{emailTo});
-        i.putExtra(Intent.EXTRA_SUBJECT, "EXTRA_SUBJECT");
-        i.putExtra(Intent.EXTRA_TEXT, "EXTRA_TEXT");
-        i.putExtra(Intent.EXTRA_CC, new String[]{"jma73android@gmail.com"});
-        startActivity(Intent.createChooser(i, "Send løbsdata med e-post..."));
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("message/rfc822");
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{emailTo});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "DtuRunner - løbsdata");
+        intent.putExtra(Intent.EXTRA_TEXT, "Løbsdata fra ... dags dato.");
+        //  intent.putExtra(Intent.EXTRA_CC, new String[]{"jma73android@gmail.com"});   // mulighed for cc adresse.
+
+
+        // todo jan 16/11-15: test af attach fil. Ser ud til at virke. dog kommer filen ikke videre, end at det ligner at den er vedhæftet i mail programmet.
+        String filename = "dtuRunner.txt";
+
+//        FileHelper.testSaveFile(getActivity(), " points points.....");
+//        File file = new File(getActivity().getFilesDir(), filename);
+//        Uri uri = Uri.fromFile(file);
+
+
+        // ny til external
+        File fff = FileHelper.testSaveFileExternalStorage(getActivity(), "some content...");
+        //File externalFilesDir = getActivity().getExternalFilesDir(null);
+        Uri uri2 = Uri.fromFile(fff);
+
+//        try {
+//            inputStream = getActivity().openFileInput(filename);
+//            intent.putExtra(Intent.EXTRA_STREAM, new FileHelper().testReadFile(getActivity()));
+//
+//        } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//        }
+
+
+        intent.putExtra(Intent.EXTRA_STREAM, uri2);
+        intent.setType("text/plain");
+
+        startActivity(Intent.createChooser(intent, "Send løbsdata med e-post..."));
     }
 
     /**
