@@ -10,6 +10,8 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
+    <!--todo jan 18/11-15 - denne skal egentlig slettes!-->
+
     <TextView android:text="Hello World! todo jan - slet denne!!!" android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

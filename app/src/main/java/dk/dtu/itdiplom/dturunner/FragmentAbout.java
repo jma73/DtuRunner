@@ -85,7 +85,7 @@ public class FragmentAbout extends Fragment {
         TextView textViewDiverseInfo = (TextView) rod.findViewById(R.id.textViewDiverseInfo);
 
         SharedPreferences pref = getActivity().getPreferences(0);
-        String navn = pref.getString("personnavn", "N/A");
+        String navn = pref.getString("PERSONNAVN_PREF", "N/A");
         Log.d("jjj", "navn:" + navn);
         textViewDiverseInfo.setText(navn);
 

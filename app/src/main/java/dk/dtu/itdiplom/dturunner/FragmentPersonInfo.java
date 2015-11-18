@@ -1,7 +1,6 @@
 package dk.dtu.itdiplom.dturunner;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,9 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.FileOutputStream;
-import dk.dtu.itdiplom.dturunner.R;
-
 /**
  * Giver mulighed for at indtaste oplysninger om brugeren.
  */
@@ -26,6 +22,11 @@ public class FragmentPersonInfo extends Fragment implements View.OnClickListener
     private EditText editTextPersonNavn;
     private EditText editTextStudienummer;
     private EditText editTextEmail;
+
+    final String PERSONNAVN_PREF = "personnavn";
+    final String EMAIL_PREF = "email";
+    final String STUDIENUMMER_PREF = "studienummer";
+
 
     public FragmentPersonInfo() {
         // Required empty public constructor
@@ -51,9 +52,11 @@ public class FragmentPersonInfo extends Fragment implements View.OnClickListener
 
     private void loadSharedPrefs() {
         SharedPreferences pref = getActivity().getPreferences(0);
-        String navn = pref.getString("personnavn", "");
-        String email = pref.getString("email", "");
-        String studienummer = pref.getString("studienummer", "");
+
+
+        String navn = pref.getString(PERSONNAVN_PREF, "");
+        String email = pref.getString(EMAIL_PREF, "");
+        String studienummer = pref.getString(STUDIENUMMER_PREF, "");
         if(navn != "")
         {
             editTextPersonNavn.setText(navn);
@@ -75,7 +78,6 @@ public class FragmentPersonInfo extends Fragment implements View.OnClickListener
         if(getActivity() == null) return;   // hvis activity context er null er vi allerede ude af fragment.
 
         Log.d("JJJ", "i GemPersonInfo");
-        //Toast.makeText(getActivity(), "Oplysningerne er gemt!", Toast.LENGTH_LONG);
 
         String navn = editTextPersonNavn.getText().toString();
         String studienummer = editTextStudienummer.getText().toString();
@@ -83,9 +85,9 @@ public class FragmentPersonInfo extends Fragment implements View.OnClickListener
 
         SharedPreferences pref = getActivity().getPreferences(0);
         SharedPreferences.Editor edt = pref.edit();
-        edt.putString("personnavn", navn);
-        edt.putString("email", email);
-        edt.putString("studienummer", studienummer);
+        edt.putString(PERSONNAVN_PREF, navn);
+        edt.putString(EMAIL_PREF, email);
+        edt.putString(STUDIENUMMER_PREF, studienummer);
         edt.commit();
 
         Toast.makeText(getActivity(), "Dine oplysninger er gemt!", Toast.LENGTH_SHORT).show();

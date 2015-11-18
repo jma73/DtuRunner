@@ -31,9 +31,10 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-
+        // todo jan 18/11-15: pt. bliver dette ikke anvendt!
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
+        //editor.
 
 //        // Setup database:
 //        DatabaseContract database = new DatabaseContract(this);

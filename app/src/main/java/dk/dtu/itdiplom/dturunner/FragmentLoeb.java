@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
-import dk.dtu.itdiplom.dturunner.Database.DatabaseContract;
 import dk.dtu.itdiplom.dturunner.Database.DatabaseHelper;
 import dk.dtu.itdiplom.dturunner.Model.LoebsAktivitet;
 import dk.dtu.itdiplom.dturunner.Model.PointInfo;
@@ -46,27 +45,17 @@ public class FragmentLoeb extends Fragment implements
         View.OnClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
-
     protected static final String TAG = "JJ-location-updates";
 
-    /**
-     * The desired interval for location updates. Inexact. Updates may be more or less frequent.
-     */
+    /** * Det ønskede interval for location opdateringer. Upræcis, opdateringer vil forekomme mere eller mindre præcist.  */
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
-
-    /**
-     * The fastest rate for active location updates. Exact. Updates will never be more frequent
-     * than this value.
-     */
-    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
-            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+    /** * Hurtigste rate for lokationsopdateringer. Præcis. Opdateringer vil aldrig være oftere end denne værdi.          */
+    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
     protected GoogleApiClient mGoogleApiClient;
     protected Boolean mRequestingLocationUpdates;
 
-    /**
-     * Stores parameters for requests to the FusedLocationProviderApi.
-     */
+    /** * requests til FusedLocationProviderApi.      */
     protected LocationRequest mLocationRequest;
 
     protected String mLastUpdateTime;
@@ -84,7 +73,6 @@ public class FragmentLoeb extends Fragment implements
     protected String mLongitudeLabel;
     protected String mLastUpdateTimeLabel;
 
-
     private Button buttonStartAktivitet;
     private Button mStopUpdatesButton;
     private ArrayList<Location> locationList;
@@ -94,7 +82,7 @@ public class FragmentLoeb extends Fragment implements
     private TextView textViewDistance;
     private TextView textViewSpeed;
     private TextView textViewSpeed2;
-    private DatabaseContract databaseContract;
+    //private DatabaseContract databaseContract;
     private TextView textViewTimer;
 
     public FragmentLoeb() {
@@ -136,11 +124,10 @@ public class FragmentLoeb extends Fragment implements
         mLastUpdateTime = "";
         mDistanceAccumulated = 0;
 
-
         // Setup databaseContract:
-        databaseContract = new DatabaseContract(getActivity());
+        // databaseContract = new DatabaseContract(getActivity());
 
-// todo jan - tester pop-up til aktivering af gps
+        // todo jan - tester pop-up til aktivering af gps
         boolean isGpsEnabled = checkForUserEnabledGpsSettings();
 //        if(!isGpsEnabled)
 //        {
@@ -214,7 +201,6 @@ public class FragmentLoeb extends Fragment implements
     private boolean checkForUserEnabledGpsSettings() {
 
         Log.d(TAG, "Tester om GPS settings er aktiveret!");
-
 
         // Get Location Manager and check for GPS & Network location services
         LocationManager lm = (LocationManager) getContext().getSystemService(getContext().LOCATION_SERVICE);
@@ -442,22 +428,15 @@ public class FragmentLoeb extends Fragment implements
         PointInfo pointInfo = new PointInfo(mCurrentLocation.getTime(), mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), speedSinceLast, distance, 1);
         loebsAktivitet.pointInfoList.add(pointInfo);
 
-        int loebsAktivitetId = 2;
-        savePointToDabase(pointInfo, loebsAktivitetId);
+        savePointToDatabase(pointInfo);
 
         showAllLocations();
     }
 
-    private void savePointToDabase(PointInfo pointInfo, int loebsAktivitetId) {
-
-        //DatabaseContract db = new DatabaseContract(getActivity());
-        //SQLiteDatabase db = databaseContract.getWritableDatabase();
-        //db.insert()
+    private void savePointToDatabase(PointInfo pointInfo) {
 
         DatabaseHelper databaseHelper = new DatabaseHelper();
         databaseHelper.insertPointData(pointInfo, loebsAktivitetUUID, getActivity());
-        //databaseHelper.insertPointData(pointInfo, 100, getActivity());
-
     }
 
     private void showAllLocations() {
@@ -544,9 +523,7 @@ public class FragmentLoeb extends Fragment implements
         }
     }
 
-    /**
-     * Updates the latitude, the longitude, and the last location time in the UI.
-     */
+    // todo jan - denne er ikke nødvendig. overvej formål!
     private void updateUI() {
 
         if(mCurrentLocation == null)
@@ -558,13 +535,9 @@ public class FragmentLoeb extends Fragment implements
         Log.d(TAG, String.format("%s: %f", mLatitudeLabel,
                 mCurrentLocation.getLatitude()));
 
-
-        mLatitudeTextView.setText(String.format("%s: %f", mLatitudeLabel,
-                mCurrentLocation.getLatitude()));
-        mLongitudeTextView.setText(String.format("%s: %f", mLongitudeLabel,
-                mCurrentLocation.getLongitude()));
-        mLastUpdateTimeTextView.setText(String.format("%s: %s", mLastUpdateTimeLabel,
-                mLastUpdateTime));
+        mLatitudeTextView.setText(String.format("%s: %f", mLatitudeLabel, mCurrentLocation.getLatitude()));
+        mLongitudeTextView.setText(String.format("%s: %f", mLongitudeLabel, mCurrentLocation.getLongitude()));
+        mLastUpdateTimeTextView.setText(String.format("%s: %s", mLastUpdateTimeLabel, mLastUpdateTime));
     }
 
     @Override
