@@ -70,6 +70,15 @@ public class LoebsAktivitet {
         loebsDato = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
     }
 
+    /*
+       Denne konstructør skal anvendes når der læses op fra databasen
+    */
+    public LoebsAktivitet(UUID p_loebsAktivitetUuid)
+    {
+        loebsAktivitetUuid = p_loebsAktivitetUuid;
+    }
+
+
     public String getTextHeader()
     {
         String date = getStarttimeFormatted();
@@ -89,13 +98,6 @@ public class LoebsAktivitet {
     }
 
 
-    /*
-        Denne konstructør skal anvendes når der læses op fra databasen
-     */
-    public LoebsAktivitet(UUID p_loebsAktivitetUuid)
-    {
-        loebsAktivitetUuid = p_loebsAktivitetUuid;
-    }
 
     // note jan: toString giver teksten i ListView'et / adapteren.
     public String toString()

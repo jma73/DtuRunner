@@ -1,18 +1,38 @@
 package dk.dtu.itdiplom.dturunner.Model;
 
 import android.content.Context;
-import android.media.MediaScannerConnection;
 import android.util.Log;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by JanMøller on 17-11-2015.
  */
 public class FileHelper {
+
+
+    public static File saveFileToExternalStorageLobsAktivitet(Context context, String loebsInfoContent, LoebsAktivitet loebsAktivitet)
+    {
+        
+
+        return saveFileExternalStorage(context, loebsInfoContent);
+    }
+    
+    private String makePointInfoString(List<PointInfo> pointInfoList)
+    {
+        String separator = "\t";
+
+        String line = "header\n";
+        for (PointInfo po: pointInfoList) {
+            line = "" + po.longitude;
+            line+="\n";
+        }
+        return line;
+    }
 
 
 
