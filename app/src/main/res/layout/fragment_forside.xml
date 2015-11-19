@@ -17,13 +17,11 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:id="@+id/imageViewLogo"
             android:src="@drawable/dtu_logo"
-
-
+            android:padding="@dimen/paddingLoeb"
             android:adjustViewBounds="true"
-
             android:layout_gravity="center_horizontal" />
 
         <Button
@@ -31,9 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
-
-            android:layout_marginLeft="@dimen/small_margin"
-            android:layout_marginStart="@dimen/small_margin"
+            android:layout_margin="@dimen/small_margin"
             android:onClick="buttonHandlerPersonInfo"
             android:text="Person info" />
 
@@ -43,14 +39,10 @@
             android:id="@+id/buttonLoeb"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-
             android:layout_weight="2"
-            android:layout_marginLeft="@dimen/small_margin"
-            android:layout_marginStart="@dimen/small_margin"
+            android:layout_margin="@dimen/small_margin"
             android:onClick="buttonHandlerLoeb2"
-
             android:text="Løb" />
-
 
         <Button
             android:id="@+id/buttonHistory"
@@ -58,8 +50,7 @@
             android:layout_height="0px"
 
             android:layout_weight="2"
-            android:layout_marginLeft="@dimen/small_margin"
-            android:layout_marginStart="@dimen/small_margin"
+            android:layout_margin="@dimen/small_margin"
             android:onClick="buttonHandlerLoebsHistorik"
 
             android:text="Historik" />
@@ -70,8 +61,7 @@
             android:layout_height="0px"
 
             android:layout_weight="2"
-            android:layout_marginLeft="@dimen/small_margin"
-            android:layout_marginStart="@dimen/small_margin"
+            android:layout_margin="@dimen/small_margin"
             android:onClick="buttonHandlerTestLocation"
             android:text="Test placering" />
 
@@ -81,8 +71,7 @@
             android:layout_height="0px"
 
             android:layout_weight="2"
-            android:layout_marginLeft="@dimen/small_margin"
-            android:layout_marginStart="@dimen/small_margin"
+            android:layout_margin="@dimen/small_margin"
             android:onClick="buttonHandlerOm"
             android:text="Om" />
 

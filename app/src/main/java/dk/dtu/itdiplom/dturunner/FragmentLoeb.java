@@ -48,7 +48,8 @@ public class FragmentLoeb extends Fragment implements
     protected static final String TAG = "JJ-location-updates";
 
     /** * Det ønskede interval for location opdateringer. Upræcis, opdateringer vil forekomme mere eller mindre præcist.  */
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    //public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 6000;    // todo jan - bør ligge i settings...
     /** * Hurtigste rate for lokationsopdateringer. Præcis. Opdateringer vil aldrig være oftere end denne værdi.          */
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
@@ -204,42 +205,57 @@ public class FragmentLoeb extends Fragment implements
 
         // Get Location Manager and check for GPS & Network location services
         LocationManager lm = (LocationManager) getContext().getSystemService(getContext().LOCATION_SERVICE);
+        logGpsSettingsStatus(lm);
 
         // todo jan - tag stilling til om GPS skal være aktiveret...
         if(!lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-
+                !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+        {
             Log.d(TAG, "GPS settings is not enabled!");
-
-            // Build the alert dialog
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setTitle("Placerings tjenester er ikke aktiveret");
-            builder.setMessage("Aktiverer venligst placeringstjenester (gps) for at kunne anvende appen!");
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    // Show location settings when the user acknowledges the alert dialog
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
-                }
-            });
-            // builder.setNegativeButton("Annuler", )
-
-
-            builder.setNegativeButton("Annuller", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            Dialog alertDialog = builder.create();
-            alertDialog.setCanceledOnTouchOutside(false);
-            alertDialog.show();
-
+            askToEnableGps2();
             return false;
         }
 
         Log.d(TAG, "GPS settings is already enabled!");
 
         return true;
+    }
+
+    private void logGpsSettingsStatus(LocationManager lm) {
+        // note jan - ekstra logning for at se hvad der ikke er aktiveret
+        if(!lm.isProviderEnabled(LocationManager.GPS_PROVIDER))
+        {
+            Log.d(TAG, "GPS (GPS_PROVIDER) settings is not enabled!");
+        }
+        if(!lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+        {
+            Log.d(TAG, "GPS (NETWORK_PROVIDER) settings is not enabled!");
+        }
+    }
+
+    private void askToEnableGps2() {
+        // Build the alert dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Placerings tjenester er ikke aktiveret");
+        builder.setMessage("Aktiverer venligst placeringstjenester (gps) for at kunne anvende appen!");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // Show location settings when the user acknowledges the alert dialog
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+       }
+        });
+        // builder.setNegativeButton("Annuler", )
+
+
+        builder.setNegativeButton("Annuller", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        Dialog alertDialog = builder.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
     }
 
     private void askToEnableGps() {
