@@ -14,6 +14,7 @@ public class BuildInfo {
 
     /*
     * Prøver at hente dato fra manifest filen.
+    *  - gøres ved at kigge i den genererede apk fil og tjekke datoen for denne fil META-INF/MANIFEST.MF.
     * */
     public static String GetBuildDate(Context context)
     {
@@ -24,7 +25,7 @@ public class BuildInfo {
             ZipEntry ze = zf.getEntry("META-INF/MANIFEST.MF");
             long time = ze.getTime();
             SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getInstance();
-            formatter.setTimeZone(TimeZone.getTimeZone("gmt"));
+            formatter.setTimeZone(TimeZone.getTimeZone("gmt"));     // gmt er valgt. Kunne være DK tid også.
             String s = formatter.format(new java.util.Date(time));
             zf.close();
             return s;

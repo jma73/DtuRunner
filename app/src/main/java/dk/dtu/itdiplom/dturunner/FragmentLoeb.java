@@ -116,9 +116,9 @@ public class FragmentLoeb extends Fragment implements
         loebsAktivitet = new LoebsAktivitet();
 
         // Set labels.
-        mLatitudeLabel = ("latitude_label");
-        mLongitudeLabel = ("longitude_label");
-        mLastUpdateTimeLabel = "last_update_time_label";
+        mLatitudeLabel = "latitude";
+        mLongitudeLabel = "longitude";
+        mLastUpdateTimeLabel = "opdateringstidspunkt";
 
         mRequestingLocationUpdates = false;
         mLastUpdateTime = "";
