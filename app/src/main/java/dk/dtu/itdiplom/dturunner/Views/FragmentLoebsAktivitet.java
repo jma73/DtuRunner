@@ -1,4 +1,4 @@
-package dk.dtu.itdiplom.dturunner;
+package dk.dtu.itdiplom.dturunner.Views;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -18,7 +18,8 @@ import java.util.UUID;
 
 import dk.dtu.itdiplom.dturunner.Database.DatabaseHelper;
 import dk.dtu.itdiplom.dturunner.Model.FileHelperTest;
-import dk.dtu.itdiplom.dturunner.Model.LoebsAktivitet;
+import dk.dtu.itdiplom.dturunner.Model.Entities.LoebsAktivitet;
+import dk.dtu.itdiplom.dturunner.R;
 
 
 /**

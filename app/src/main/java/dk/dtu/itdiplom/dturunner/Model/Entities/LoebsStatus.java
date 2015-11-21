@@ -7,7 +7,7 @@ package dk.dtu.itdiplom.dturunner.Model.Entities;
  */
 public class LoebsStatus {
 
-    boolean erLoebStartet;
+    public static boolean isLoebsAktivitetStartet;
 
 
 }

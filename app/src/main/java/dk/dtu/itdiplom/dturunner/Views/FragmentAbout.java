@@ -1,4 +1,4 @@
-package dk.dtu.itdiplom.dturunner;
+package dk.dtu.itdiplom.dturunner.Views;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -13,11 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
-import dk.dtu.itdiplom.dturunner.Utils.BuildInfo;
+import dk.dtu.itdiplom.dturunner.Main2Activity;
+import dk.dtu.itdiplom.dturunner.R;
+import dk.dtu.itdiplom.dturunner.SingletonDtuRunner;
 
 
 /**
@@ -81,6 +79,9 @@ public class FragmentAbout extends Fragment {
         // Inflate the layout for this fragment
         View rod = inflater.inflate(R.layout.fragment_about, container, false);
 
+        //SingletonDtuRunner singletonDtuRunner = SingletonDtuRunner.getInstance();
+
+
         TextView textViewVersion = (TextView) rod.findViewById(R.id.textViewVersionInfo);
         TextView textViewDiverseInfo = (TextView) rod.findViewById(R.id.textViewDiverseInfo);
 
@@ -91,12 +92,7 @@ public class FragmentAbout extends Fragment {
 
         String sdkBuildVersion =  "Build.VERSION.SDK_INT: " + Build.VERSION.SDK_INT;
 
-        // SLETTT
-//        SimpleDateFormat df = new SimpleDateFormat("dd MM yyyy, HH:mm");
-//        String date = df.format(Calendar.getInstance().getTime());          // dette giver ikke build date...
-
-
-        String displayText = "0.1.0.0, " + Main2Activity.buildDate + ",  " + sdkBuildVersion + ",  ";
+        String displayText = "0.1.1.0, " + SingletonDtuRunner.buildDate + "\n" + sdkBuildVersion + "\n";
         textViewVersion.setText(displayText +  navn);
 
         return rod;

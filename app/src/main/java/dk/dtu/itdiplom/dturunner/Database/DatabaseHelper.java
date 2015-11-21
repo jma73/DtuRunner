@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import dk.dtu.itdiplom.dturunner.Model.LoebsAktivitet;
+import dk.dtu.itdiplom.dturunner.Model.Entities.LoebsAktivitet;
 import dk.dtu.itdiplom.dturunner.Model.PointInfo;
 
 /**

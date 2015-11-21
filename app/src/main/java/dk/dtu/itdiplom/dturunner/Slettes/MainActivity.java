@@ -21,8 +21,8 @@
 //import java.text.DateFormat;
 //import java.util.Date;
 //
-//import dk.dtu.itdiplom.dturunner.FragmentShowOnMap;
-//import dk.dtu.itdiplom.dturunner.FragmentShowOnMap2;
+//import dk.dtu.itdiplom.dturunner.Views.FragmentShowOnMap;
+//import dk.dtu.itdiplom.dturunner.Views.FragmentShowOnMap2;
 //import dk.dtu.itdiplom.dturunner.MapActivity;
 //import dk.dtu.itdiplom.dturunner.R;
 //

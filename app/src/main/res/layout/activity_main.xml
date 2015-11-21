@@ -164,7 +164,7 @@
         android:orientation="vertical">
 
         <fragment
-            android:name="dk.dtu.itdiplom.dturunner.FragmentShowOnMap"
+            android:name="dk.dtu.itdiplom.dturunner.Views.FragmentShowOnMap"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/testFragment"

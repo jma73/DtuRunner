@@ -1,4 +1,4 @@
-package dk.dtu.itdiplom.dturunner;
+package dk.dtu.itdiplom.dturunner.Views;
 
 
 import android.content.Intent;
@@ -14,14 +14,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
 import dk.dtu.itdiplom.dturunner.Database.DatabaseHelper;
-import dk.dtu.itdiplom.dturunner.Model.LoebsAktivitet;
+import dk.dtu.itdiplom.dturunner.Model.Entities.LoebsAktivitet;
+import dk.dtu.itdiplom.dturunner.R;
 
 
 /**

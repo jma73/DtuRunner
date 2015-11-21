@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import dk.dtu.itdiplom.dturunner.Model.Entities.LoebsAktivitet;
+
 /**
  * Created by JanMøller on 17-11-2015.
  */

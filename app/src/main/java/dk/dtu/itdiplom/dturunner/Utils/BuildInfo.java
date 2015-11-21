@@ -25,7 +25,7 @@ public class BuildInfo {
             ZipEntry ze = zf.getEntry("META-INF/MANIFEST.MF");
             long time = ze.getTime();
             SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getInstance();
-            formatter.setTimeZone(TimeZone.getTimeZone("gmt"));     // gmt er valgt. Kunne være DK tid også.
+            formatter.setTimeZone(TimeZone.getTimeZone("Europe/Copenhagen"));     // gmt er valgt. Kunne være DK tid også.
             String s = formatter.format(new java.util.Date(time));
             zf.close();
             return s;

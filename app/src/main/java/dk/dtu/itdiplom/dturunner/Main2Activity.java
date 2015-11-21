@@ -16,9 +16,18 @@ import android.view.View;
 import android.widget.Toast;
 
 import dk.dtu.itdiplom.dturunner.Utils.BuildInfo;
+import dk.dtu.itdiplom.dturunner.Views.FragmentAbout;
+import dk.dtu.itdiplom.dturunner.Views.FragmentForside;
+import dk.dtu.itdiplom.dturunner.Views.FragmentLoeb;
+import dk.dtu.itdiplom.dturunner.Views.FragmentLoebsHistorik;
+import dk.dtu.itdiplom.dturunner.Views.FragmentPersonInfo;
+import dk.dtu.itdiplom.dturunner.Views.FragmentShowOnMap;
+import dk.dtu.itdiplom.dturunner.Views.FragmentShowOnMap2;
 
 public class Main2Activity extends AppCompatActivity implements FragmentAbout.OnFragmentInteractionListener
 {
+    SingletonDtuRunner singletonDtuRunner;
+
     // Global variables. skal placeres i singleton klasse???
     static String buildDate;
 
@@ -31,6 +40,8 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+        singletonDtuRunner = SingletonDtuRunner.getInstance();
+
         // todo jan 18/11-15: pt. bliver dette ikke anvendt!
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
@@ -42,9 +53,8 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //toolbar.setVisibility(View.GONE);   // todo jan - toolbar, den skal bare fjernes!!! 1/11-2015
+        //toolbar.setVisibility(View.GONE);
         setSupportActionBar(toolbar);
-
 
         // todo jan: skal tjekke på savedInstanceState
         //  if (savedInstanceState == null) {
@@ -152,7 +162,8 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
     public void buttonHandlerOm(View view) {
         
         Log.d(LOGTAG, ":: i buttonHandlerOm.");
-        buildDate = BuildInfo.GetBuildDate(this);
+        // todo jan - ændres hvis Singleton ikke skal new'es.
+        singletonDtuRunner.buildDate = BuildInfo.GetBuildDate(this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -193,6 +204,7 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
     }
 
     public void afslutLoebButtonHandler(View view) {
+        // todo jan 21/11 - denne skal ikke være her!
         visMainMenuFragment(false);
     }
 

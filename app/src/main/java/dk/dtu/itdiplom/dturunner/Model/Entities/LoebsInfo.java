@@ -1,6 +1,8 @@
-package dk.dtu.itdiplom.dturunner.Model;
+package dk.dtu.itdiplom.dturunner.Model.Entities;
 
 import java.util.List;
+
+import dk.dtu.itdiplom.dturunner.Model.PointInfo;
 
 /**
  * Created by JanMøller on 08-11-2015.

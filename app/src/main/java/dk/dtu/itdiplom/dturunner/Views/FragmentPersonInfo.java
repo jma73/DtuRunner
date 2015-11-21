@@ -1,4 +1,4 @@
-package dk.dtu.itdiplom.dturunner;
+package dk.dtu.itdiplom.dturunner.Views;
 
 
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import dk.dtu.itdiplom.dturunner.R;
 
 /**
  * Giver mulighed for at indtaste oplysninger om brugeren.

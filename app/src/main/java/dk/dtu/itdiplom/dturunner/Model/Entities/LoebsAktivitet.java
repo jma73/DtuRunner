@@ -1,4 +1,4 @@
-package dk.dtu.itdiplom.dturunner.Model;
+package dk.dtu.itdiplom.dturunner.Model.Entities;
 
 //import java.sql.Time;
 import android.support.annotation.NonNull;
@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import dk.dtu.itdiplom.dturunner.Model.PointInfo;
 
 /**
  * Created by JanMøller on 09-11-2015.

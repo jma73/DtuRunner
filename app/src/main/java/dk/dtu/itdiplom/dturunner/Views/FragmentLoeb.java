@@ -1,4 +1,4 @@
-package dk.dtu.itdiplom.dturunner;
+package dk.dtu.itdiplom.dturunner.Views;
 
 
 import android.app.Dialog;
@@ -34,12 +34,14 @@ import java.util.Date;
 import java.util.UUID;
 
 import dk.dtu.itdiplom.dturunner.Database.DatabaseHelper;
-import dk.dtu.itdiplom.dturunner.Model.LoebsAktivitet;
+import dk.dtu.itdiplom.dturunner.Model.Entities.LoebsAktivitet;
 import dk.dtu.itdiplom.dturunner.Model.PointInfo;
+import dk.dtu.itdiplom.dturunner.R;
+import dk.dtu.itdiplom.dturunner.SingletonDtuRunner;
 import dk.dtu.itdiplom.dturunner.Utils.LocationUtils;
 
 /**
- * Dette fragment skal indeholde selve løbsaktiviteten
+ * Dette fragment indeholder selve løbsaktiviteten
  */
 public class FragmentLoeb extends Fragment implements
         View.OnClickListener,
@@ -53,33 +55,37 @@ public class FragmentLoeb extends Fragment implements
     /** * Hurtigste rate for lokationsopdateringer. Præcis. Opdateringer vil aldrig være oftere end denne værdi.          */
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
+    SingletonDtuRunner singletonDtuRunner;
+
     protected GoogleApiClient mGoogleApiClient;
     protected Boolean mRequestingLocationUpdates;
-
     /** * requests til FusedLocationProviderApi.      */
     protected LocationRequest mLocationRequest;
 
     protected String mLastUpdateTime;
     protected Location mCurrentLocation;
     private UUID loebsAktivitetUUID;
-
     protected double mDistanceAccumulated;
-
-    protected TextView mLastUpdateTimeTextView;
-    protected TextView mLatitudeTextView;
-    protected TextView mLongitudeTextView;
 
     // Labels.
     protected String mLatitudeLabel;
     protected String mLongitudeLabel;
     protected String mLastUpdateTimeLabel;
 
+    // Views:
+
+    protected TextView mLastUpdateTimeTextView;
+    protected TextView mLatitudeTextView;
+    protected TextView mLongitudeTextView;
+
     private Button buttonStartAktivitet;
     private Button mStopUpdatesButton;
+    private Button buttonAfslut;
+    private Button buttonShow;
+
     private ArrayList<Location> locationList;
     private LoebsAktivitet loebsAktivitet;          // denne introduceres, og skal erstatte flere variabler
     private TextView textViewLocations;
-    private Button buttonShow;
     private TextView textViewDistance;
     private TextView textViewSpeed;
     private TextView textViewSpeed2;
@@ -94,20 +100,35 @@ public class FragmentLoeb extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if(savedInstanceState == null)
+        {
+            Log.d(TAG, "FragmentLoeb: savedInstanceState is null");
+        }
+
         // Inflate the layout for this fragment
         View rod = inflater.inflate(R.layout.fragment_loeb, container, false);
 
+        //singletonDtuRunner = SingletonDtuRunner.getInstance();
+        if(SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet)
+        {
+            // todo jan ???
+        }
+
         buttonStartAktivitet = (Button) rod.findViewById(R.id.buttonStartAktivitet);
+        buttonAfslut = (Button) rod.findViewById(R.id.buttonAfslut);
+        buttonShow = (Button) rod.findViewById(R.id.buttonShow);
+        buttonStartAktivitet.setOnClickListener(this);
+        buttonAfslut.setOnClickListener(this);
+        buttonShow.setOnClickListener(this);
+
         textViewLocations = (TextView) rod.findViewById(R.id.textViewLocations);
         textViewDistance = (TextView) rod.findViewById(R.id.textViewDistance);
         textViewSpeed = (TextView) rod.findViewById(R.id.textViewSpeed);
         textViewSpeed2 = (TextView) rod.findViewById(R.id.textViewSpeed2);
         textViewTimer = (TextView) rod.findViewById(R.id.textViewTimer);
-        buttonShow = (Button) rod.findViewById(R.id.buttonShow);
-        buttonStartAktivitet.setOnClickListener(this);
+
         mStopUpdatesButton = (Button) rod.findViewById(R.id.buttonStop);
         mStopUpdatesButton.setOnClickListener(this);
-        buttonShow.setOnClickListener(this);
 
         mLatitudeTextView = (TextView) rod.findViewById(R.id.latitude_text);
         mLongitudeTextView = (TextView) rod.findViewById(R.id.longitude_text);
@@ -137,8 +158,8 @@ public class FragmentLoeb extends Fragment implements
 
 
 
-        // Kick off the process of building a GoogleApiClient and requesting the LocationServices
-        // API.
+        // todo jan - skal ligge et andet sted...
+        // Kick off the process of building a GoogleApiClient and requesting the LocationServices API.
         buildGoogleApiClient();
 
         return rod;
@@ -278,6 +299,10 @@ public class FragmentLoeb extends Fragment implements
         {
             stopUpdatesButtonHandler(v);    // todo jan - refactor ect.
         }
+        if(v==buttonAfslut)
+        {
+            Log.d(TAG, "todo jan - buttonAfslut. Sørg for at lukke løbsaktivitet...");
+        }
         if(v==buttonShow)
         {
             showAllLocations();
@@ -297,6 +322,7 @@ public class FragmentLoeb extends Fragment implements
             Toast.makeText(getActivity(), "Location updates stoppet!", Toast.LENGTH_LONG);
             setButtonsEnabledState();
             stopLocationUpdates();
+            SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet = false;
         }
     }
 
@@ -306,6 +332,21 @@ public class FragmentLoeb extends Fragment implements
         if(getActivity() == null)   // hvis activity context er null er vi allerede ude af fragment.
             return;
 
+        if(SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet)
+        {
+            Log.d(TAG, "løbsaktivitet er allerede startet! (SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet) ");
+            // todo jan - aktiver knapper? mm
+        }
+
+
+//        if(SingletonDtuRunner.isLoebsAktivitetStartet)
+//        {
+//            Log.d(TAG, "løbsaktivitet er allerede startet! (SingletonDtuRunner.isLoebsAktivitetStartet) ");
+//            // todo jan - aktiver knapper? mm
+//        }
+
+//        SingletonDtuRunner.isLoebsAktivitetStartet = true;
+        SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet = true;
         if (!mRequestingLocationUpdates)
         {
             boolean googleApiStatus = startLocationUpdates();
@@ -359,6 +400,7 @@ public class FragmentLoeb extends Fragment implements
         try
         {
             LocationServices.FusedLocationApi.requestLocationUpdates(
+//                    singletonDtuRunner.googleApiClient, mLocationRequest, this);
                     mGoogleApiClient, mLocationRequest, this);
             return true;
         }
@@ -372,6 +414,7 @@ public class FragmentLoeb extends Fragment implements
 
     protected void stopLocationUpdates() {
 
+//        LocationServices.FusedLocationApi.removeLocationUpdates(singletonDtuRunner.googleApiClient, this);
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
     }
 
@@ -389,22 +432,24 @@ public class FragmentLoeb extends Fragment implements
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+//        singletonDtuRunner.googleApiClient.connect();
     }
 
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG, "onLocationChanged " + location.getLatitude());
+        Log.d(TAG, "onLocationChanged " + location.getLatitude() + ", " + location.getLongitude());
         // todo jan - her skal bla gemmes placeringen. og laves beregninger...
 
         if(getActivity() == null)   // hvis activity context er null er vi allerede ude af fragment.
             return;
 
+        Toast.makeText(getActivity(), "Location updated", Toast.LENGTH_SHORT).show();
+
         mCurrentLocation = location;
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
         updateUI();
         saveLocation();  // todo
-        Toast.makeText(getActivity(), "Location updated", Toast.LENGTH_SHORT).show();
         //updateUI();
     }
 
@@ -527,6 +572,7 @@ public class FragmentLoeb extends Fragment implements
         // is displayed as the activity is re-created.
         if (mCurrentLocation == null) {
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+//            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(singletonDtuRunner.googleApiClient);
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
             updateUI();
         }
@@ -562,6 +608,7 @@ public class FragmentLoeb extends Fragment implements
         // attempt to re-establish the connection.
         Log.i(TAG, "Connection suspended " + cause);
         mGoogleApiClient.connect();
+//        singletonDtuRunner.googleApiClient.connect();
     }
 
     @Override
