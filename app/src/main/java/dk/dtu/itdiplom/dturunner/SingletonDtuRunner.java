@@ -39,7 +39,7 @@ public class SingletonDtuRunner extends Application {
     public static final boolean EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator"); // false;
     public static boolean udvikling = true;
 
-    // protected GoogleApiClient mGoogleApiClient;
+    // protected GoogleApiClient googleApiClient;
 
 
 }

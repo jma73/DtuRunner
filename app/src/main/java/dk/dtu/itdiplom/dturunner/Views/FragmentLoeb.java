@@ -1,6 +1,5 @@
 package dk.dtu.itdiplom.dturunner.Views;
 
-
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,6 +34,7 @@ import java.util.UUID;
 
 import dk.dtu.itdiplom.dturunner.Database.DatabaseHelper;
 import dk.dtu.itdiplom.dturunner.Model.Entities.LoebsAktivitet;
+import dk.dtu.itdiplom.dturunner.Model.LocationHelper;
 import dk.dtu.itdiplom.dturunner.Model.PointInfo;
 import dk.dtu.itdiplom.dturunner.R;
 import dk.dtu.itdiplom.dturunner.SingletonDtuRunner;
@@ -55,17 +55,19 @@ public class FragmentLoeb extends Fragment implements
     /** * Hurtigste rate for lokationsopdateringer. Præcis. Opdateringer vil aldrig være oftere end denne værdi.          */
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
-    SingletonDtuRunner singletonDtuRunner;
-
-    protected GoogleApiClient mGoogleApiClient;
-    protected Boolean mRequestingLocationUpdates;
-    /** * requests til FusedLocationProviderApi.      */
-    protected LocationRequest mLocationRequest;
+    // SingletonDtuRunner singletonDtuRunner;
+//    protected GoogleApiClient googleApiClient;
+//    protected Boolean requestingLocationUpdates;
+//    /** * requests til FusedLocationProviderApi.      */
+//    protected LocationRequest locationRequest;
 
     protected String mLastUpdateTime;
     protected Location mCurrentLocation;
     private UUID loebsAktivitetUUID;
     protected double mDistanceAccumulated;
+
+    private ArrayList<Location> locationList;
+    private LoebsAktivitet loebsAktivitet;          // denne introduceres, og skal erstatte flere variabler
 
     // Labels.
     protected String mLatitudeLabel;
@@ -73,29 +75,23 @@ public class FragmentLoeb extends Fragment implements
     protected String mLastUpdateTimeLabel;
 
     // Views:
-
     protected TextView mLastUpdateTimeTextView;
     protected TextView mLatitudeTextView;
     protected TextView mLongitudeTextView;
+    private TextView textViewLocations;
+    private TextView textViewDistance;
+    private TextView textViewSpeed;
+    private TextView textViewSpeed2;
+    private TextView textViewTimer;
 
     private Button buttonStartAktivitet;
     private Button mStopUpdatesButton;
     private Button buttonAfslut;
     private Button buttonShow;
 
-    private ArrayList<Location> locationList;
-    private LoebsAktivitet loebsAktivitet;          // denne introduceres, og skal erstatte flere variabler
-    private TextView textViewLocations;
-    private TextView textViewDistance;
-    private TextView textViewSpeed;
-    private TextView textViewSpeed2;
-    //private DatabaseContract databaseContract;
-    private TextView textViewTimer;
-
     public FragmentLoeb() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,10 +101,8 @@ public class FragmentLoeb extends Fragment implements
             Log.d(TAG, "FragmentLoeb: savedInstanceState is null");
         }
 
-        // Inflate the layout for this fragment
         View rod = inflater.inflate(R.layout.fragment_loeb, container, false);
 
-        //singletonDtuRunner = SingletonDtuRunner.getInstance();
         if(SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet)
         {
             // todo jan ???
@@ -142,7 +136,7 @@ public class FragmentLoeb extends Fragment implements
         mLongitudeLabel = "longitude";
         mLastUpdateTimeLabel = "opdateringstidspunkt";
 
-        mRequestingLocationUpdates = false;
+        SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates = false;
         mLastUpdateTime = "";
         mDistanceAccumulated = 0;
 
@@ -150,7 +144,7 @@ public class FragmentLoeb extends Fragment implements
         // databaseContract = new DatabaseContract(getActivity());
 
         // todo jan - tester pop-up til aktivering af gps
-        boolean isGpsEnabled = checkForUserEnabledGpsSettings();
+        boolean isGpsEnabled = LocationHelper.checkForUserEnabledGpsSettings(getContext());
 //        if(!isGpsEnabled)
 //        {
 //            askToEnableGps();
@@ -173,8 +167,9 @@ public class FragmentLoeb extends Fragment implements
      *
      */
     protected synchronized void buildGoogleApiClient() {
+
         Log.i(TAG, "Building GoogleApiClient");
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())    // todo jan - måtte ændre fra this til getContext() eller getActivity(). brug getActivity() siger Jakob
+        SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient = new GoogleApiClient.Builder(getActivity())    // todo jan - måtte ændre fra this til getContext() eller getActivity(). brug getActivity() siger Jakob
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)               // todo jan - her vælges Location... Der er også en FusedLocationApi...
@@ -198,91 +193,91 @@ public class FragmentLoeb extends Fragment implements
     protected void createLocationRequest() {
 
         // check for gps and ask user: flyttet til onCreate...
-
         // boolean isGpsEnabled = checkForUserEnabledGpsSettings();
 //    if(!isGpsEnabled)
 //    {
 //        askToEnableGps();
 //    }
 
-        mLocationRequest = new LocationRequest();
+        // dette ser ud til at det virker :-) så resten her kan slettes.
+        LocationHelper.createLocationRequest();
 
-        // Sets the desired interval for active location updates. This interval is
-        // inexact. You may not receive updates at all if no location sources are available, or
-        // you may receive them slower than requested. You may also receive updates faster than
-        // requested if other applications are requesting location at a faster interval.
-        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
-
-        // Sets the fastest rate for active location updates. This interval is exact, and your
-        // application will never receive updates faster than this value.
-        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//        SingletonDtuRunner.loebsStatus.locationGoogleApi.locationRequest = new LocationRequest();
+//
+//        // Sets the desired interval for active location updates. This interval is
+//        // inexact. You may not receive updates at all if no location sources are available, or
+//        // you may receive them slower than requested. You may also receive updates faster than
+//        // requested if other applications are requesting location at a faster interval.
+//        SingletonDtuRunner.loebsStatus.locationGoogleApi.locationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+//
+//        // Sets the fastest rate for active location updates. This interval is exact, and your
+//        // application will never receive updates faster than this value.
+//        SingletonDtuRunner.loebsStatus.locationGoogleApi.locationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+//
+//        SingletonDtuRunner.loebsStatus.locationGoogleApi.locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-    private boolean checkForUserEnabledGpsSettings() {
+//    private boolean checkForUserEnabledGpsSettings() {
+//
+//        Log.d(TAG, "Tester om GPS settings er aktiveret!");
+//
+//        // Get Location Manager and check for GPS & Network location services
+//        LocationManager lm = (LocationManager) getContext().getSystemService(getContext().LOCATION_SERVICE);
+//        logGpsSettingsStatus(lm);
+//
+//        // todo jan - tag stilling til om GPS skal være aktiveret...
+//        if(!lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+//                !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+//        {
+//            Log.d(TAG, "GPS settings is not enabled!");
+//            LocationHelper.askToEnableGps2(getContext());
+//            return false;
+//        }
+//
+//        Log.d(TAG, "GPS settings is already enabled!");
+//
+//        return true;
+//    }
+//
+//    private void logGpsSettingsStatus(LocationManager lm) {
+//        // note jan - ekstra logning for at se hvad der ikke er aktiveret
+//        if(!lm.isProviderEnabled(LocationManager.GPS_PROVIDER))
+//        {
+//            Log.d(TAG, "GPS (GPS_PROVIDER) settings is not enabled!");
+//        }
+//        if(!lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+//        {
+//            Log.d(TAG, "GPS (NETWORK_PROVIDER) settings is not enabled!");
+//        }
+//    }
 
-        Log.d(TAG, "Tester om GPS settings er aktiveret!");
-
-        // Get Location Manager and check for GPS & Network location services
-        LocationManager lm = (LocationManager) getContext().getSystemService(getContext().LOCATION_SERVICE);
-        logGpsSettingsStatus(lm);
-
-        // todo jan - tag stilling til om GPS skal være aktiveret...
-        if(!lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-        {
-            Log.d(TAG, "GPS settings is not enabled!");
-            askToEnableGps2();
-            return false;
-        }
-
-        Log.d(TAG, "GPS settings is already enabled!");
-
-        return true;
-    }
-
-    private void logGpsSettingsStatus(LocationManager lm) {
-        // note jan - ekstra logning for at se hvad der ikke er aktiveret
-        if(!lm.isProviderEnabled(LocationManager.GPS_PROVIDER))
-        {
-            Log.d(TAG, "GPS (GPS_PROVIDER) settings is not enabled!");
-        }
-        if(!lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-        {
-            Log.d(TAG, "GPS (NETWORK_PROVIDER) settings is not enabled!");
-        }
-    }
-
-    private void askToEnableGps2() {
-        // Build the alert dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Placerings tjenester er ikke aktiveret");
-        builder.setMessage("Aktiverer venligst placeringstjenester (gps) for at kunne anvende appen!");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-                // Show location settings when the user acknowledges the alert dialog
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(intent);
-       }
-        });
-        // builder.setNegativeButton("Annuler", )
-
-
-        builder.setNegativeButton("Annuller", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        Dialog alertDialog = builder.create();
-        alertDialog.setCanceledOnTouchOutside(false);
-        alertDialog.show();
-    }
-
-    private void askToEnableGps() {
-        Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        this.startActivity(myIntent);
-    }
+//    private void askToEnableGps2() {
+//        // Build the alert dialog
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//        builder.setTitle("Placerings tjenester er ikke aktiveret");
+//        builder.setMessage("Aktiverer venligst placeringstjenester (gps) for at kunne anvende appen!");
+//        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                // Show location settings when the user acknowledges the alert dialog
+//                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//                startActivity(intent);
+//       }
+//        });
+//
+//        builder.setNegativeButton("Annuller", new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.cancel();
+//            }
+//        });
+//        Dialog alertDialog = builder.create();
+//        alertDialog.setCanceledOnTouchOutside(false);
+//        alertDialog.show();
+//    }
+//
+//    private void askToEnableGps() {
+//        Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//        this.startActivity(myIntent);
+//    }
 
     //endregion
 
@@ -317,8 +312,8 @@ public class FragmentLoeb extends Fragment implements
     public void stopUpdatesButtonHandler(View view) {
         if(getActivity() == null) return;   // hvis activity context er null er vi allerede ude af fragment.
 
-        if (mRequestingLocationUpdates) {
-            mRequestingLocationUpdates = false;
+        if (SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates) {
+            SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates = false;
             Toast.makeText(getActivity(), "Location updates stoppet!", Toast.LENGTH_LONG);
             setButtonsEnabledState();
             stopLocationUpdates();
@@ -347,7 +342,7 @@ public class FragmentLoeb extends Fragment implements
 
 //        SingletonDtuRunner.isLoebsAktivitetStartet = true;
         SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet = true;
-        if (!mRequestingLocationUpdates)
+        if (!SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates)
         {
             boolean googleApiStatus = startLocationUpdates();
             opretLoebsAktivitet();
@@ -356,7 +351,7 @@ public class FragmentLoeb extends Fragment implements
 
             if(googleApiStatus)
             {
-                mRequestingLocationUpdates = true;
+                SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates = true;
                 Toast.makeText(getActivity(), "Location updates startet!", Toast.LENGTH_LONG);
                 setButtonsEnabledState();
             }
@@ -400,8 +395,8 @@ public class FragmentLoeb extends Fragment implements
         try
         {
             LocationServices.FusedLocationApi.requestLocationUpdates(
-//                    singletonDtuRunner.googleApiClient, mLocationRequest, this);
-                    mGoogleApiClient, mLocationRequest, this);
+//                    singletonDtuRunner.googleApiClient, locationRequest, this);
+                    SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient, SingletonDtuRunner.loebsStatus.locationGoogleApi.locationRequest, this);
             return true;
         }
         catch (Exception exception)
@@ -415,11 +410,11 @@ public class FragmentLoeb extends Fragment implements
     protected void stopLocationUpdates() {
 
 //        LocationServices.FusedLocationApi.removeLocationUpdates(singletonDtuRunner.googleApiClient, this);
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        LocationServices.FusedLocationApi.removeLocationUpdates(SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient, this);
     }
 
     private void setButtonsEnabledState() {
-        if (mRequestingLocationUpdates) {
+        if (SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates) {
             buttonStartAktivitet.setEnabled(false);
             mStopUpdatesButton.setEnabled(true);
         } else {
@@ -431,7 +426,7 @@ public class FragmentLoeb extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient.connect();
 //        singletonDtuRunner.googleApiClient.connect();
     }
 
@@ -571,16 +566,16 @@ public class FragmentLoeb extends Fragment implements
         // moves to a new location, and then changes the device orientation, the original location
         // is displayed as the activity is re-created.
         if (mCurrentLocation == null) {
-            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient);
 //            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(singletonDtuRunner.googleApiClient);
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
             updateUI();
         }
 
         // If the user presses the Start Updates button before GoogleApiClient connects, we set
-        // mRequestingLocationUpdates to true (see startUpdatesButtonHandler()). Here, we check
-        // the value of mRequestingLocationUpdates and if it is true, we start location updates.
-        if (mRequestingLocationUpdates) {
+        // requestingLocationUpdates to true (see startUpdatesButtonHandler()). Here, we check
+        // the value of requestingLocationUpdates and if it is true, we start location updates.
+        if (SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates) {
             startLocationUpdates();
         }
     }
@@ -607,7 +602,7 @@ public class FragmentLoeb extends Fragment implements
         // The connection to Google Play services was lost for some reason. We call connect() to
         // attempt to re-establish the connection.
         Log.i(TAG, "Connection suspended " + cause);
-        mGoogleApiClient.connect();
+        SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient.connect();
 //        singletonDtuRunner.googleApiClient.connect();
     }
 

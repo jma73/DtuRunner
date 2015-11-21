@@ -41,7 +41,7 @@
             android:layout_height="0dp"
             android:layout_weight="2"
             android:layout_margin="@dimen/small_margin"
-            android:onClick="buttonHandlerLoeb2"
+            android:onClick="buttonHandlerLoeb"
             android:text="Løb" />
 
         <Button

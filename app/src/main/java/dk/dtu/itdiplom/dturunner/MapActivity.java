@@ -89,7 +89,7 @@ public class MapActivity extends AppCompatActivity implements
             mLocationRequest.setInterval(5000); //5 seconds
             mLocationRequest.setFastestInterval(3000); //3 seconds
             mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-            //mLocationRequest.setSmallestDisplacement(0.1F); //1/10 meter
+            //locationRequest.setSmallestDisplacement(0.1F); //1/10 meter
 
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
@@ -119,7 +119,7 @@ public class MapActivity extends AppCompatActivity implements
             Toast.makeText(this,"Location Changed",Toast.LENGTH_SHORT).show();
 
             //If you only need one location, unregister the listener
-            //LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            //LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
 
         }
     }

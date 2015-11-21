@@ -147,13 +147,13 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
 
     }
 
-    public void buttonHandlerLoeb2(View view) {
+    public void buttonHandlerLoeb(View view) {
 
-        Log.d(LOGTAG, ":: i buttonHandlerLoeb2.");
+        Log.d(LOGTAG, ":: i buttonHandlerLoeb.");
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentLoeb());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -167,7 +167,7 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentAbout());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -184,6 +184,7 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         //fragmentTransaction.add(R.id.frameLayoutContent, frag);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 
         fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentShowOnMap2());
         fragmentTransaction.addToBackStack(null);
@@ -197,10 +198,6 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
     public void onFragmentInteraction(Uri uri) {
         Log.d(LOGTAG, ":: i onFragmentInteraction.");
 
-    }
-
-    public void buttonHandlerAboutOk(View view) {
-        visMainMenuFragment(false);
     }
 
     public void afslutLoebButtonHandler(View view) {
@@ -217,8 +214,8 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
     private void visPersonInfo() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
         fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentPersonInfo());
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -226,10 +223,9 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
     public void buttonHandlerLoebsHistorik(View view) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
         fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentLoebsHistorik());
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
     }
 }

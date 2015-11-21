@@ -7,7 +7,7 @@ package dk.dtu.itdiplom.dturunner.Model.Entities;
  */
 public class LoebsStatus {
 
+
     public static boolean isLoebsAktivitetStartet;
-
-
+    public static LocationGoogleApi locationGoogleApi;
 }

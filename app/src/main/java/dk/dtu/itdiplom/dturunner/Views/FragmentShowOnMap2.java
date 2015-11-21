@@ -88,7 +88,7 @@ public class FragmentShowOnMap2 extends Fragment
         // Toast.makeText(this,"Location Changed", Toast.LENGTH_SHORT).show();
 
         //If you only need one location, unregister the listener
-        //LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        //LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
 
     }
 

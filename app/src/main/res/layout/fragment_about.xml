@@ -17,7 +17,7 @@
         android:text="debug text" />
 
     <Button
-        android:id="@+id/buttonPersonInfo"
+        android:id="@+id/buttonOmOk"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -26,9 +26,6 @@
         android:layout_marginLeft="@dimen/small_margin"
         android:layout_marginRight="@dimen/small_margin"
         android:layout_marginStart="@dimen/small_margin"
-
-        android:onClick="buttonHandlerAboutOk"
-
         android:text="Ok" />
 
 

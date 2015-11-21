@@ -11,9 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
-import dk.dtu.itdiplom.dturunner.Main2Activity;
 import dk.dtu.itdiplom.dturunner.R;
 import dk.dtu.itdiplom.dturunner.SingletonDtuRunner;
 
@@ -26,7 +26,8 @@ import dk.dtu.itdiplom.dturunner.SingletonDtuRunner;
  * Use the {@link FragmentAbout#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentAbout extends Fragment {
+public class FragmentAbout extends Fragment implements View.OnClickListener
+{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -39,6 +40,7 @@ public class FragmentAbout extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private Button buttonOmOk;
 
     /**
      * Use this factory method to create a new instance of
@@ -70,6 +72,7 @@ public class FragmentAbout extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+
     }
 
     @Override
@@ -81,6 +84,9 @@ public class FragmentAbout extends Fragment {
 
         //SingletonDtuRunner singletonDtuRunner = SingletonDtuRunner.getInstance();
 
+
+        buttonOmOk = (Button)rod.findViewById(R.id.buttonOmOk);
+        buttonOmOk.setOnClickListener(this);
 
         TextView textViewVersion = (TextView) rod.findViewById(R.id.textViewVersionInfo);
         TextView textViewDiverseInfo = (TextView) rod.findViewById(R.id.textViewDiverseInfo);
@@ -124,6 +130,19 @@ public class FragmentAbout extends Fragment {
     }
 
     /**
+     * Called when a view has been clicked.
+     *
+     * @param v The view that was clicked.
+     */
+    @Override
+    public void onClick(View v) {
+        if(v == buttonOmOk)
+        {
+            getActivity().getSupportFragmentManager().popBackStack();
+        }
+    }
+
+    /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
@@ -137,5 +156,4 @@ public class FragmentAbout extends Fragment {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
-
 }

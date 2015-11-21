@@ -49,12 +49,12 @@
 //    /**
 //     * Adgang til Google Play services.
 //     */
-//    protected GoogleApiClient mGoogleApiClient;
+//    protected GoogleApiClient googleApiClient;
 //
 //    /**
 //     * Stores parameters for requests to the FusedLocationProviderApi.
 //     */
-//    protected LocationRequest mLocationRequest;
+//    protected LocationRequest locationRequest;
 //
 //    /**
 //     * Tidspunktet for hvornår lokationen blev opdateret.
@@ -80,7 +80,7 @@
 //    /**
 //     * Holder styr på om lokationsopdateringer er slået til.
 //     */
-//    protected Boolean mRequestingLocationUpdates;
+//    protected Boolean requestingLocationUpdates;
 //
 //    // jans tilføjelser:
 //    private Button buttonShow;      // todo jan
@@ -106,7 +106,7 @@
 //        mLongitudeLabel = ("longitude_label");
 //        mLastUpdateTimeLabel = "last_update_time_label";
 //
-//        mRequestingLocationUpdates = false;
+//        requestingLocationUpdates = false;
 //        mLastUpdateTime = "";
 //
 //
@@ -132,7 +132,7 @@
 //     */
 //    protected synchronized void buildGoogleApiClient() {
 //        Log.i(TAG, "Building GoogleApiClient");
-//        mGoogleApiClient = new GoogleApiClient.Builder(this)
+//        googleApiClient = new GoogleApiClient.Builder(this)
 //                .addConnectionCallbacks(this)
 //                .addOnConnectionFailedListener(this)
 //                .addApi(LocationServices.API)               // todo jan - her vælges Location...
@@ -154,19 +154,19 @@
 //     * updates.
 //     */
 //    protected void createLocationRequest() {
-//        mLocationRequest = new LocationRequest();
+//        locationRequest = new LocationRequest();
 //
 //        // Sets the desired interval for active location updates. This interval is
 //        // inexact. You may not receive updates at all if no location sources are available, or
 //        // you may receive them slower than requested. You may also receive updates faster than
 //        // requested if other applications are requesting location at a faster interval.
-//        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+//        locationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
 //
 //        // Sets the fastest rate for active location updates. This interval is exact, and your
 //        // application will never receive updates faster than this value.
-//        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+//        locationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
 //
-//        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 //    }
 //
 //    //endregion
@@ -198,15 +198,15 @@
 //        // moves to a new location, and then changes the device orientation, the original location
 //        // is displayed as the activity is re-created.
 //        if (mCurrentLocation == null) {
-//            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+//            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 //            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
 //            updateUI();
 //        }
 //
 //        // If the user presses the Start Updates button before GoogleApiClient connects, we set
-//        // mRequestingLocationUpdates to true (see startUpdatesButtonHandler()). Here, we check
-//        // the value of mRequestingLocationUpdates and if it is true, we start location updates.
-//        if (mRequestingLocationUpdates) {
+//        // requestingLocationUpdates to true (see startUpdatesButtonHandler()). Here, we check
+//        // the value of requestingLocationUpdates and if it is true, we start location updates.
+//        if (requestingLocationUpdates) {
 //            startLocationUpdates();
 //        }
 //    }
@@ -228,9 +228,9 @@
 //     */
 //    public void startUpdatesButtonHandler(View view) {
 //        // kun hvis opdateringer ikke allerede er slået til.
-//        if (!mRequestingLocationUpdates)
+//        if (!requestingLocationUpdates)
 //        {
-//            mRequestingLocationUpdates = true;
+//            requestingLocationUpdates = true;
 //            setButtonsEnabledState();
 //            startLocationUpdates();
 //        }
@@ -240,8 +240,8 @@
 //     * Stop knappen
 //     */
 //    public void stopUpdatesButtonHandler(View view) {
-//        if (mRequestingLocationUpdates) {
-//            mRequestingLocationUpdates = false;
+//        if (requestingLocationUpdates) {
+//            requestingLocationUpdates = false;
 //            setButtonsEnabledState();
 //            stopLocationUpdates();
 //        }
@@ -263,17 +263,17 @@
 //    protected void startLocationUpdates() {
 //        // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
 //        LocationServices.FusedLocationApi.requestLocationUpdates(
-//                mGoogleApiClient, mLocationRequest, this);
+//                googleApiClient, locationRequest, this);
 //    }
 //
 //    protected void stopLocationUpdates() {
 //        // fjerner location requests når activity er paused eller i stop state...
 //        //  dette hjælper til at spare batteri.
-//        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+//        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
 //    }
 //
 //    private void setButtonsEnabledState() {
-//        if (mRequestingLocationUpdates) {
+//        if (requestingLocationUpdates) {
 //            mStartUpdatesButton.setEnabled(false);
 //            mStopUpdatesButton.setEnabled(true);
 //        } else {
@@ -286,7 +286,7 @@
 //    @Override
 //    protected void onStart() {
 //        super.onStart();
-//        mGoogleApiClient.connect();
+//        googleApiClient.connect();
 //    }
 //
 //    public void showLocationsButtonHandler(View view) {
@@ -361,7 +361,7 @@
 //    }
 //
 //
-//    public void buttonHandlerLoeb2(View view) {
+//    public void buttonHandlerLoeb(View view) {
 //        // todo jan - udkommenteret pga. start med at indføre app.compat. support. 5/11-15.
 //
 ////        FragmentManager fragmentManager = getFragmentManager();
