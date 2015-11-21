@@ -9,9 +9,12 @@ import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import dk.dtu.itdiplom.dturunner.SingletonDtuRunner;
+import dk.dtu.itdiplom.dturunner.Views.FragmentLoeb;
 
 /**
  * Created by JanMøller on 21-11-2015.
@@ -40,6 +43,22 @@ public class LocationHelper {
         // application will never receive updates faster than this value.
         SingletonDtuRunner.loebsStatus.locationGoogleApi.locationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
         SingletonDtuRunner.loebsStatus.locationGoogleApi.locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    /**
+     * Builds a GoogleApiClient. Uses the {@code #addApi} method to request the
+     * LocationServices API.
+     *
+     */
+    public static synchronized void buildGoogleApiClient(Context context, FragmentLoeb fragmentLoeb) {
+
+        Log.i(TAG, "Building GoogleApiClient");
+        SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient = new GoogleApiClient.Builder(context)    // todo jan - måtte ændre fra this til getContext() eller getActivity(). brug getActivity() siger Jakob
+                .addConnectionCallbacks(fragmentLoeb)
+                .addOnConnectionFailedListener(fragmentLoeb)
+                .addApi(LocationServices.API)               // note jan - her vælges Location API... Der er også en FusedLocationApi... Dette er OK!
+                .build();
+        LocationHelper.createLocationRequest();
     }
 
     public static void askToEnableGps2(final Context context) {

@@ -1,16 +1,9 @@
 package dk.dtu.itdiplom.dturunner.Views;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-//import android.app.Fragment;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,18 +12,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-// Disse imports er til for at kunne anvende fused location:
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.UUID;
 
 import dk.dtu.itdiplom.dturunner.Database.DatabaseHelper;
 import dk.dtu.itdiplom.dturunner.Model.Entities.LoebsAktivitet;
@@ -48,26 +38,8 @@ public class FragmentLoeb extends Fragment implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
     protected static final String TAG = "JJ-location-updates";
+    final String fragmentLoebTag = "FragmentLoeb";
 
-    /** * Det ønskede interval for location opdateringer. Upræcis, opdateringer vil forekomme mere eller mindre præcist.  */
-    //public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 6000;    // todo jan - bør ligge i settings...
-    /** * Hurtigste rate for lokationsopdateringer. Præcis. Opdateringer vil aldrig være oftere end denne værdi.          */
-    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
-
-    // SingletonDtuRunner singletonDtuRunner;
-//    protected GoogleApiClient googleApiClient;
-//    protected Boolean requestingLocationUpdates;
-//    /** * requests til FusedLocationProviderApi.      */
-//    protected LocationRequest locationRequest;
-
-    protected String mLastUpdateTime;
-    protected Location mCurrentLocation;
-    private UUID loebsAktivitetUUID;
-    protected double mDistanceAccumulated;
-
-    private ArrayList<Location> locationList;
-    private LoebsAktivitet loebsAktivitet;          // denne introduceres, og skal erstatte flere variabler
 
     // Labels.
     protected String mLatitudeLabel;
@@ -93,6 +65,28 @@ public class FragmentLoeb extends Fragment implements
         // Required empty public constructor
     }
 
+//    @Override
+//    public void onBackPressed() {
+//
+//        super.getActivity().getSupportFragmentManager();
+//
+//        Log.d(TAG, "- onBackPressed.... " + getActivity().getSupportFragmentManager().getBackStackEntryCount());
+//
+//        //getSupportFragmentManager().findFragmentById(R.id.)
+//
+//        if (getActivity().getSupportFragmentManager().findFragmentByTag(fragmentLoebTag) != null) {
+//            Log.d(TAG, "- onBackPressed - fragment found!!!");
+//            getActivity().finish();
+//        }
+//        else if (getActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
+//            Log.d(TAG, "- onBackPressed - getBackStackEntryCount == 0...");
+//            getActivity().finish();
+//        } else {
+//            getActivity().getSupportFragmentManager().popBackStack();
+//        }
+//    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -103,10 +97,6 @@ public class FragmentLoeb extends Fragment implements
 
         View rod = inflater.inflate(R.layout.fragment_loeb, container, false);
 
-        if(SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet)
-        {
-            // todo jan ???
-        }
 
         buttonStartAktivitet = (Button) rod.findViewById(R.id.buttonStartAktivitet);
         buttonAfslut = (Button) rod.findViewById(R.id.buttonAfslut);
@@ -128,33 +118,45 @@ public class FragmentLoeb extends Fragment implements
         mLongitudeTextView = (TextView) rod.findViewById(R.id.longitude_text);
         mLastUpdateTimeTextView = (TextView) rod.findViewById(R.id.last_update_time_text);
 
-        locationList = new ArrayList<Location>();
-        loebsAktivitet = new LoebsAktivitet();
 
-        // Set labels.
-        mLatitudeLabel = "latitude";
-        mLongitudeLabel = "longitude";
-        mLastUpdateTimeLabel = "opdateringstidspunkt";
 
-        SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates = false;
-        mLastUpdateTime = "";
-        mDistanceAccumulated = 0;
 
-        // Setup databaseContract:
-        // databaseContract = new DatabaseContract(getActivity());
 
-        // todo jan - tester pop-up til aktivering af gps
-        boolean isGpsEnabled = LocationHelper.checkForUserEnabledGpsSettings(getContext());
+        if(!SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet) {
+            //return rod;
+            // todo jan ???
+
+            Log.d(TAG, "isLoebsAktivitetStartet: false. Så initialiser løbs værdier...");
+
+            // Set labels.
+            mLatitudeLabel = "latitude";
+            mLongitudeLabel = "longitude";
+            mLastUpdateTimeLabel = "opdateringstidspunkt";
+
+            SingletonDtuRunner.loebsStatus.locationList = new ArrayList<Location>();
+            SingletonDtuRunner.loebsStatus.loebsAktivitet = new LoebsAktivitet();
+
+            SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates = false;
+            SingletonDtuRunner.loebsStatus.mLastUpdateTime = "";
+            SingletonDtuRunner.loebsStatus.mDistanceAccumulated = 0;
+
+            // todo jan - tester pop-up til aktivering af gps
+            boolean isGpsEnabled = LocationHelper.checkForUserEnabledGpsSettings(getContext());
 //        if(!isGpsEnabled)
 //        {
 //            askToEnableGps();
 //        }
 
-
-
-        // todo jan - skal ligge et andet sted...
-        // Kick off the process of building a GoogleApiClient and requesting the LocationServices API.
-        buildGoogleApiClient();
+            // todo jan - skal ligge et andet sted...
+            // Kick off the process of building a GoogleApiClient and requesting the LocationServices API.
+            LocationHelper.buildGoogleApiClient(getActivity(), this);
+        }
+        else {
+            // reload values...
+            updateUI();
+            int size = SingletonDtuRunner.loebsStatus.locationList.size();
+            Log.d(TAG, "- SingletonDtuRunner.loebsStatus.locationList.size() " + size);
+        }
 
         return rod;
     }
@@ -166,117 +168,15 @@ public class FragmentLoeb extends Fragment implements
      * LocationServices API.
      *
      */
-    protected synchronized void buildGoogleApiClient() {
-
-        Log.i(TAG, "Building GoogleApiClient");
-        SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient = new GoogleApiClient.Builder(getActivity())    // todo jan - måtte ændre fra this til getContext() eller getActivity(). brug getActivity() siger Jakob
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)               // todo jan - her vælges Location... Der er også en FusedLocationApi...
-                .build();
-        createLocationRequest();
-    }
-
-    /**
-     * Sets up the location request. Android has two location request settings:
-     * {@code ACCESS_COARSE_LOCATION} and {@code ACCESS_FINE_LOCATION}. These settings control
-     * the accuracy of the current location. This sample uses ACCESS_FINE_LOCATION, as defined in
-     * the AndroidManifest.xml.
-     * <p/>
-     * When the ACCESS_FINE_LOCATION setting is specified, combined with a fast update
-     * interval (5 seconds), the Fused Location Provider API returns location updates that are
-     * accurate to within a few feet.
-     * <p/>
-     * These settings are appropriate for mapping applications that show real-time location
-     * updates.
-     */
-    protected void createLocationRequest() {
-
-        // check for gps and ask user: flyttet til onCreate...
-        // boolean isGpsEnabled = checkForUserEnabledGpsSettings();
-//    if(!isGpsEnabled)
-//    {
-//        askToEnableGps();
-//    }
-
-        // dette ser ud til at det virker :-) så resten her kan slettes.
-        LocationHelper.createLocationRequest();
-
-//        SingletonDtuRunner.loebsStatus.locationGoogleApi.locationRequest = new LocationRequest();
+//    protected synchronized void buildGoogleApiClient() {
 //
-//        // Sets the desired interval for active location updates. This interval is
-//        // inexact. You may not receive updates at all if no location sources are available, or
-//        // you may receive them slower than requested. You may also receive updates faster than
-//        // requested if other applications are requesting location at a faster interval.
-//        SingletonDtuRunner.loebsStatus.locationGoogleApi.locationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
-//
-//        // Sets the fastest rate for active location updates. This interval is exact, and your
-//        // application will never receive updates faster than this value.
-//        SingletonDtuRunner.loebsStatus.locationGoogleApi.locationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-//
-//        SingletonDtuRunner.loebsStatus.locationGoogleApi.locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-    }
-
-//    private boolean checkForUserEnabledGpsSettings() {
-//
-//        Log.d(TAG, "Tester om GPS settings er aktiveret!");
-//
-//        // Get Location Manager and check for GPS & Network location services
-//        LocationManager lm = (LocationManager) getContext().getSystemService(getContext().LOCATION_SERVICE);
-//        logGpsSettingsStatus(lm);
-//
-//        // todo jan - tag stilling til om GPS skal være aktiveret...
-//        if(!lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-//                !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-//        {
-//            Log.d(TAG, "GPS settings is not enabled!");
-//            LocationHelper.askToEnableGps2(getContext());
-//            return false;
-//        }
-//
-//        Log.d(TAG, "GPS settings is already enabled!");
-//
-//        return true;
-//    }
-//
-//    private void logGpsSettingsStatus(LocationManager lm) {
-//        // note jan - ekstra logning for at se hvad der ikke er aktiveret
-//        if(!lm.isProviderEnabled(LocationManager.GPS_PROVIDER))
-//        {
-//            Log.d(TAG, "GPS (GPS_PROVIDER) settings is not enabled!");
-//        }
-//        if(!lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-//        {
-//            Log.d(TAG, "GPS (NETWORK_PROVIDER) settings is not enabled!");
-//        }
-//    }
-
-//    private void askToEnableGps2() {
-//        // Build the alert dialog
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-//        builder.setTitle("Placerings tjenester er ikke aktiveret");
-//        builder.setMessage("Aktiverer venligst placeringstjenester (gps) for at kunne anvende appen!");
-//        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                // Show location settings when the user acknowledges the alert dialog
-//                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//                startActivity(intent);
-//       }
-//        });
-//
-//        builder.setNegativeButton("Annuller", new DialogInterface.OnClickListener() {
-//            public void onClick(DialogInterface dialog, int which) {
-//                dialog.cancel();
-//            }
-//        });
-//        Dialog alertDialog = builder.create();
-//        alertDialog.setCanceledOnTouchOutside(false);
-//        alertDialog.show();
-//    }
-//
-//    private void askToEnableGps() {
-//        Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//        this.startActivity(myIntent);
+//        Log.i(TAG, "Building GoogleApiClient");
+//        SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient = new GoogleApiClient.Builder(getActivity())    // todo jan - måtte ændre fra this til getContext() eller getActivity(). brug getActivity() siger Jakob
+//                .addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this)
+//                .addApi(LocationServices.API)               // todo jan - her vælges Location... Der er også en FusedLocationApi...
+//                .build();
+//        LocationHelper.createLocationRequest();
 //    }
 
     //endregion
@@ -333,13 +233,6 @@ public class FragmentLoeb extends Fragment implements
             // todo jan - aktiver knapper? mm
         }
 
-
-//        if(SingletonDtuRunner.isLoebsAktivitetStartet)
-//        {
-//            Log.d(TAG, "løbsaktivitet er allerede startet! (SingletonDtuRunner.isLoebsAktivitetStartet) ");
-//            // todo jan - aktiver knapper? mm
-//        }
-
 //        SingletonDtuRunner.isLoebsAktivitetStartet = true;
         SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet = true;
         if (!SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates)
@@ -364,7 +257,7 @@ public class FragmentLoeb extends Fragment implements
 
     private void nulstilLoebsdata() {
         // nulstil data
-        locationList.clear();
+        SingletonDtuRunner.loebsStatus.locationList.clear();
     }
 
     private void opretLoebsAktivitet() {
@@ -378,7 +271,7 @@ public class FragmentLoeb extends Fragment implements
 
         // todo jan kan det gøre pænere? dvs. uden new hver gang... eller static...
         DatabaseHelper databaseHelper = new DatabaseHelper();
-        loebsAktivitetUUID = databaseHelper.insertLoebsAktivitet(loebsAktivitet, getActivity());
+        SingletonDtuRunner.loebsStatus.loebsAktivitetUUID = databaseHelper.insertLoebsAktivitet(loebsAktivitet, getActivity());
     }
 
     /**
@@ -437,12 +330,16 @@ public class FragmentLoeb extends Fragment implements
         // todo jan - her skal bla gemmes placeringen. og laves beregninger...
 
         if(getActivity() == null)   // hvis activity context er null er vi allerede ude af fragment.
+        {
+            Log.d(TAG, "onLocationChanged,  getActivity() == null  !!! så kan vi ikke gøre mere her!!!");
+
             return;
+        }
 
         Toast.makeText(getActivity(), "Location updated", Toast.LENGTH_SHORT).show();
 
-        mCurrentLocation = location;
-        mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+        SingletonDtuRunner.loebsStatus.mCurrentLocation = location;
+        SingletonDtuRunner.loebsStatus.mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
         updateUI();
         saveLocation();  // todo
         //updateUI();
@@ -452,37 +349,37 @@ public class FragmentLoeb extends Fragment implements
     {
 
 
-        locationList.add(mCurrentLocation);
-        int size = locationList.size();
+        SingletonDtuRunner.loebsStatus.locationList.add(SingletonDtuRunner.loebsStatus.mCurrentLocation);
+        int size = SingletonDtuRunner.loebsStatus.locationList.size();
         double distance = 0;
         double speedSinceLast = 0;
 
-
+        double timeSinceStart = LocationUtils.getTimeSinceStart(SingletonDtuRunner.loebsStatus.locationList.get(0), SingletonDtuRunner.loebsStatus.locationList.get(size - 1)) / 1000;
+        textViewTimer.setText(timeSinceStart + "  sekunder");
 
         if(size > 1)
         {
             //mDistanceAccumulated += LocationUtils.distFromDouble()
 
-            distance = LocationUtils.getDistanceBetweenPoints(locationList.get(size - 2), mCurrentLocation);
-            speedSinceLast = LocationUtils.getSpeedBetweenPoints(locationList.get(size - 2), mCurrentLocation);
-            double speedSinceStartAverage = LocationUtils.getSpeedBetweenPoints(locationList.get(0), mCurrentLocation);
+            distance = LocationUtils.getDistanceBetweenPoints(SingletonDtuRunner.loebsStatus.locationList.get(size - 2), SingletonDtuRunner.loebsStatus.mCurrentLocation);
+            speedSinceLast = LocationUtils.getSpeedBetweenPoints(SingletonDtuRunner.loebsStatus.locationList.get(size - 2), SingletonDtuRunner.loebsStatus.mCurrentLocation);
+            double speedSinceStartAverage = LocationUtils.getSpeedBetweenPoints(SingletonDtuRunner.loebsStatus.locationList.get(0), SingletonDtuRunner.loebsStatus.mCurrentLocation);
 
-            mDistanceAccumulated +=distance;
+            SingletonDtuRunner.loebsStatus.mDistanceAccumulated +=distance;
             //double distanceInMeters = mDistanceAccumulated / 1000;
-            textViewDistance.setText(( mDistanceAccumulated + " meter"));
+            textViewDistance.setText(( SingletonDtuRunner.loebsStatus.mDistanceAccumulated + " meter"));
 
             String speedSinceLastWithDecimals = String.format("%.5f", speedSinceLast);
             textViewSpeed.setText((String.format("%s m/s", speedSinceLastWithDecimals)));
             String speedSinceStartAverageWithDecimals = String.format("%.5f", speedSinceStartAverage);
             textViewSpeed2.setText((String.format("%s m/s avg", speedSinceStartAverageWithDecimals)));
 
-            double timeSinceStart = LocationUtils.getTimeSinceStart(locationList.get(0), locationList.get(size - 1)) / 1000;
-            textViewTimer.setText(timeSinceStart + "  sekunder");
+
         }
 
         // todo jan - working here... 9/11-15
-        PointInfo pointInfo = new PointInfo(mCurrentLocation.getTime(), mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), speedSinceLast, distance, 1);
-        loebsAktivitet.pointInfoList.add(pointInfo);
+        PointInfo pointInfo = new PointInfo(SingletonDtuRunner.loebsStatus.mCurrentLocation.getTime(), SingletonDtuRunner.loebsStatus.mCurrentLocation.getLatitude(), SingletonDtuRunner.loebsStatus.mCurrentLocation.getLongitude(), speedSinceLast, distance, 1);
+        SingletonDtuRunner.loebsStatus.loebsAktivitet.pointInfoList.add(pointInfo);
 
         savePointToDatabase(pointInfo);
 
@@ -492,7 +389,7 @@ public class FragmentLoeb extends Fragment implements
     private void savePointToDatabase(PointInfo pointInfo) {
 
         DatabaseHelper databaseHelper = new DatabaseHelper();
-        databaseHelper.insertPointData(pointInfo, loebsAktivitetUUID, getActivity());
+        databaseHelper.insertPointData(pointInfo, SingletonDtuRunner.loebsStatus.loebsAktivitetUUID, getActivity());
     }
 
     private void showAllLocations() {
@@ -500,7 +397,7 @@ public class FragmentLoeb extends Fragment implements
         textViewLocations.setTextColor(Color.BLUE);
 
         //PrintLocation(locationArrayList);
-        final int size = locationList.size();
+        final int size = SingletonDtuRunner.loebsStatus.locationList.size();
 
         textViewLocations.append("\n");
         textViewLocations.append("size: " + size);
@@ -509,20 +406,20 @@ public class FragmentLoeb extends Fragment implements
         for (int i = 0; i < size; i++)
         {
 
-            Date date = new Date(locationList.get(i).getTime());
+            Date date = new Date(SingletonDtuRunner.loebsStatus.locationList.get(i).getTime());
             DateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS");
             String dateFormatted = formatter.format(date);
 
             // textViewAppend.append("" + locationArrayList.get(i) + "\n");
             //textViewLocations.append("" + locationList.get(i).getSpeed() + ", " + dateFormatted);
-            textViewLocations.append("Acc: " + locationList.get(i).getAccuracy() + ", Alt:" + locationList.get(i).getAltitude() + ", " + dateFormatted);
+            textViewLocations.append("Acc: " + SingletonDtuRunner.loebsStatus.locationList.get(i).getAccuracy() + ", Alt:" + SingletonDtuRunner.loebsStatus.locationList.get(i).getAltitude() + ", " + dateFormatted);
             // textViewLocations.append(" ::: " + TryGetLocationAddress(locationList.get(i)));
-            textViewLocations.append(" -->" + locationList.get(i).getLatitude() + ", " + locationList.get(i).getLongitude() + "\n");
+            textViewLocations.append(" -->" + SingletonDtuRunner.loebsStatus.locationList.get(i).getLatitude() + ", " + SingletonDtuRunner.loebsStatus.locationList.get(i).getLongitude() + "\n");
             // textViewLocations.append("\n");
 
-            double distance = LocationUtils.getDistanceBetweenPoints(locationList.get(0).getLatitude(), locationList.get(0).getLongitude(), locationList.get(i).getLatitude(), locationList.get(i).getLongitude());
+            double distance = LocationUtils.getDistanceBetweenPoints(SingletonDtuRunner.loebsStatus.locationList.get(0).getLatitude(), SingletonDtuRunner.loebsStatus.locationList.get(0).getLongitude(), SingletonDtuRunner.loebsStatus.locationList.get(i).getLatitude(), SingletonDtuRunner.loebsStatus.locationList.get(i).getLongitude());
             //double distance = LocationUtils.distFromDouble(locationList.get(0).getLatitude(), locationList.get(0).getLongitude(), locationList.get(i).getLatitude(), locationList.get(i).getLongitude());
-            long secondsPassed = (locationList.get(i).getTime() - locationList.get(0).getTime()) / 1000;
+            long secondsPassed = (SingletonDtuRunner.loebsStatus.locationList.get(i).getTime() - SingletonDtuRunner.loebsStatus.locationList.get(0).getTime()) / 1000;
             //LocationUtils.distFrom(locationList.get(i).getLatitude(), locationList.get(i).getLongitude(), locationList.get(i).getLatitude(), locationList.get(i).getLongitude() );
             textViewLocations.append("Distance: " + distance + ", Total seconds: " + secondsPassed);
 
@@ -531,14 +428,14 @@ public class FragmentLoeb extends Fragment implements
             if(i > 5)
             {
 
-                textViewLocations.append(", Speed (5): " + LocationUtils.getSpeedBetweenPoints(locationList.get(i-5), locationList.get(i)));
+                textViewLocations.append(", Speed (5): " + LocationUtils.getSpeedBetweenPoints(SingletonDtuRunner.loebsStatus.locationList.get(i-5), SingletonDtuRunner.loebsStatus.locationList.get(i)));
                 textViewLocations.append(", Speed2: " + speedWithDecimals + " m/s. ");
                 textViewLocations.append("\n");
             }
             else if(i > 1)
             {
                 textViewLocations.append("Distance: " + distance);
-                textViewLocations.append(", Speed: " + LocationUtils.getSpeedBetweenPoints(locationList.get(i-1), locationList.get(i)));
+                textViewLocations.append(", Speed: " + LocationUtils.getSpeedBetweenPoints(SingletonDtuRunner.loebsStatus.locationList.get(i-1), SingletonDtuRunner.loebsStatus.locationList.get(i)));
                 textViewLocations.append(", Speed2: " + speedWithDecimals + " m/s. ");
                 // textViewLocations.append(", Speed2: " + speed);
                 textViewLocations.append("\n");
@@ -565,10 +462,10 @@ public class FragmentLoeb extends Fragment implements
         // user launches the activity,
         // moves to a new location, and then changes the device orientation, the original location
         // is displayed as the activity is re-created.
-        if (mCurrentLocation == null) {
-            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient);
+        if (SingletonDtuRunner.loebsStatus.mCurrentLocation == null) {
+            SingletonDtuRunner.loebsStatus.mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient);
 //            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(singletonDtuRunner.googleApiClient);
-            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+            SingletonDtuRunner.loebsStatus.mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
             updateUI();
         }
 
@@ -583,18 +480,18 @@ public class FragmentLoeb extends Fragment implements
     // todo jan - denne er ikke nødvendig. overvej formål!
     private void updateUI() {
 
-        if(mCurrentLocation == null)
+        if(SingletonDtuRunner.loebsStatus.mCurrentLocation == null)
         {
             Log.d(TAG, "mCurrentLocation er null. Der er nok ikke adgang til placeringsdata...");
             return;
         }
 
         Log.d(TAG, String.format("%s: %f", mLatitudeLabel,
-                mCurrentLocation.getLatitude()));
+                SingletonDtuRunner.loebsStatus.mCurrentLocation.getLatitude()));
 
-        mLatitudeTextView.setText(String.format("%s: %f", mLatitudeLabel, mCurrentLocation.getLatitude()));
-        mLongitudeTextView.setText(String.format("%s: %f", mLongitudeLabel, mCurrentLocation.getLongitude()));
-        mLastUpdateTimeTextView.setText(String.format("%s: %s", mLastUpdateTimeLabel, mLastUpdateTime));
+        mLatitudeTextView.setText(String.format("%s: %f", mLatitudeLabel, SingletonDtuRunner.loebsStatus.mCurrentLocation.getLatitude()));
+        mLongitudeTextView.setText(String.format("%s: %f", mLongitudeLabel, SingletonDtuRunner.loebsStatus.mCurrentLocation.getLongitude()));
+        mLastUpdateTimeTextView.setText(String.format("%s: %s", mLastUpdateTimeLabel, SingletonDtuRunner.loebsStatus.mLastUpdateTime));
     }
 
     @Override

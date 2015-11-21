@@ -5,6 +5,7 @@ package dk.dtu.itdiplom.dturunner;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -29,7 +30,9 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
     SingletonDtuRunner singletonDtuRunner;
 
     // Global variables. skal placeres i singleton klasse???
-    static String buildDate;
+//    static String buildDate;
+    final String fragmentLoebTag = "FragmentLoeb";
+
 
     public static final String MY_PREFS_NAME = "MyPrefsFile";
 
@@ -125,6 +128,58 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
     }
 
 
+    /*
+        En foreløb override af onBackPressed. Dette for at stoppe bruge fra at gå ud af løbssiden ned tilbage knappen, uden først at stoppe løbet.
+     */
+    @Override
+    public void onBackPressed() {
+
+        Log.d(LOGTAG, "- onBackPressed.... " + getSupportFragmentManager().getBackStackEntryCount());
+
+        for (int i = 0; i < getSupportFragmentManager().getBackStackEntryCount(); i++     ) {
+            FragmentManager.BackStackEntry entry = getSupportFragmentManager().getBackStackEntryAt(i);
+            if(entry.getName() != null)
+                Log.d(LOGTAG, entry.getName());
+            else
+                Log.d(LOGTAG, "BackStackEntry for Fragment har ikke noget navn...");
+        }
+
+        final String fragmentBackStackName = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
+
+        if(fragmentBackStackName != null &&  fragmentBackStackName == fragmentLoebTag)
+        {
+            Log.d(LOGTAG, "- onBackPressed - fragment found:::" + fragmentBackStackName);
+            //this.finish();
+
+            if(SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet)
+            {
+                // hvis der er et løb igang ønsker vi ikke at gå tilbage...
+            }
+            else
+            {
+
+                getSupportFragmentManager().popBackStack();
+            }
+            // todo jan 21/11-15: Kunne spørge om bruger virkelig vil forlade løbssiden...? men kun hvis løb er i gang...
+        }
+
+
+        //getSupportFragmentManager().findFragmentById(R.id.)
+
+
+            else if (getSupportFragmentManager().findFragmentByTag(fragmentLoebTag) != null) {
+            Log.d(LOGTAG, "- onBackPressed - fragment found!!!");
+            this.finish();
+        }
+        else if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            Log.d(LOGTAG, "- onBackPressed - getBackStackEntryCount == 0...");
+            this.finish();
+        } else {
+                Log.d(LOGTAG, "- onBackPressed - popBackStack()...");
+            getSupportFragmentManager().popBackStack();
+        }
+    }
+
     private void visMainMenuFragment(boolean isSavedInstanceStateNull) {
         Log.d(LOGTAG, ":: i visMainMenuFragment.");
 
@@ -152,10 +207,17 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         Log.d(LOGTAG, ":: i buttonHandlerLoeb.");
 
         FragmentManager fragmentManager = getSupportFragmentManager();
+
+        Fragment fff = fragmentManager.findFragmentByTag(fragmentLoebTag);
+        if(fff != null)
+        {
+            Log.d(LOGTAG, ":: i buttonHandlerLoeb: Fragment with tag loeb er fundet!!! **************");
+        }
+
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentLoeb());
-        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.addToBackStack(fragmentLoebTag);
         fragmentTransaction.commit();
     }
 

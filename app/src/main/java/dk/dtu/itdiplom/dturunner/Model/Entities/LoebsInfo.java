@@ -9,11 +9,7 @@ import dk.dtu.itdiplom.dturunner.Model.PointInfo;
  */
 public class LoebsInfo {
 
-
-
     List<PointInfo> pointInfoList;
-
-
 
     // entitet til SqlLite Database og
     // Kolonne navne

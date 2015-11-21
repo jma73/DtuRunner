@@ -63,15 +63,13 @@ public class DatabaseContract extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
             Log.d("jjSQLiteDatabase", "SQLiteDatabase creating in onCreate");
 
-
-
         db.execSQL(SQL_CREATE_LoebsAktivitet_ENTRIES);
         db.execSQL(SQL_CREATE_PointInfo_ENTRIES);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        // må komme i en senere version...
     }
 
 
