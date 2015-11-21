@@ -16,16 +16,12 @@ public class SingletonDtuRunner extends Application {
     private static SingletonDtuRunner ourInstance = new SingletonDtuRunner();
 
     public static String buildDate;
-    //public static boolean isLoebsAktivitetStartet;
     public static LoebsStatus loebsStatus;
     public GoogleApiClient googleApiClient;
 
     public static SingletonDtuRunner getInstance() {
         return ourInstance;
     }
-
-//    private SingletonDtuRunner() {
-//    }
 
     @Override
     public void onCreate() {
@@ -36,10 +32,9 @@ public class SingletonDtuRunner extends Application {
         buildDate = BuildInfo.GetBuildDate(getApplicationContext());
     }
 
+
+
     public static final boolean EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator"); // false;
     public static boolean udvikling = true;
-
-    // protected GoogleApiClient googleApiClient;
-
 
 }

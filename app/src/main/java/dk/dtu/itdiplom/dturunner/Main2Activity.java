@@ -164,17 +164,11 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         }
 
 
-        //getSupportFragmentManager().findFragmentById(R.id.)
-
-
-            else if (getSupportFragmentManager().findFragmentByTag(fragmentLoebTag) != null) {
-            Log.d(LOGTAG, "- onBackPressed - fragment found!!!");
-            this.finish();
-        }
-        else if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            Log.d(LOGTAG, "- onBackPressed - getBackStackEntryCount == 0...");
-            this.finish();
-        } else {
+//        else if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+//            Log.d(LOGTAG, "- onBackPressed - getBackStackEntryCount == 0...");
+//            this.finish();
+//        }
+        else {
                 Log.d(LOGTAG, "- onBackPressed - popBackStack()...");
             getSupportFragmentManager().popBackStack();
         }
