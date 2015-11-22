@@ -48,8 +48,10 @@ public class LocationUtils {
                 * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
                 * Math.sin(dLon / 2);
         double c = 2 * Math.asin(Math.sqrt(a));
-        double distanceInMeters = Math.round(earthRadius * c);
+        final double distanceInMeters = earthRadius * c;
         return distanceInMeters;
+//        double distanceInMetersRoundedToInt = Math.round(distanceInMeters);
+//        return distanceInMetersRoundedToInt;
     }
 
 
@@ -136,6 +138,9 @@ public class LocationUtils {
 
     public static double getAverageSpeedFromStart(List<PointInfo> pointInfoList)
     {
+        if(pointInfoList.size() == 0)
+            return 0;
+
         double distance = getTotalDistance(pointInfoList);
 
         long milliseconds = getTimeMillisecondsSinceStart(pointInfoList.get(0), pointInfoList.get(pointInfoList.size() - 1));

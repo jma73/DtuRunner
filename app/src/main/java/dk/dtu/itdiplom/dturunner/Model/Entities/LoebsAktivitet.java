@@ -19,21 +19,7 @@ import dk.dtu.itdiplom.dturunner.Utils.LocationUtils;
  */
 public class LoebsAktivitet {
 
-    public String getNavnAlias() {
-        return navnAlias;
-    }
 
-    public void setNavnAlias(String navnAlias) {
-        this.navnAlias = navnAlias;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     String email;
     String navnAlias;
@@ -49,7 +35,7 @@ public class LoebsAktivitet {
     String personId;    // fx. studienummer
     String loebsNote;
     String loebsDato;   // kan vel udgå
-    String loebsProgramType;
+    String loebsProgramType;        // kommer i en senere version
     public List<PointInfo> pointInfoList;
     long starttidspunkt;
 
@@ -108,6 +94,22 @@ public class LoebsAktivitet {
         return getTextHeader();
     }
 
+    public String getNavnAlias() {
+        return navnAlias;
+    }
+
+    public void setNavnAlias(String navnAlias) {
+        this.navnAlias = navnAlias;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getLoebsNote()
     {
         return loebsNote;
@@ -159,18 +161,17 @@ public class LoebsAktivitet {
         return speedSinceLast;
     }
 
-    public double getAverageSpeed()
+    public double getAverageSpeedLatestPoints()
     {
         int numberOfPoints = this.pointInfoList.size();
         if(numberOfPoints < 2)
             return 0;
 
         double averageSpeed = LocationUtils.getAverageSpeedLatestPoints(pointInfoList);
-
         return averageSpeed;
     }
 
-    public double getTotalDistance()
+    public double getTotalDistanceMeters()
     {
         double distance = LocationUtils.getTotalDistance(pointInfoList);
         return distance;
@@ -180,5 +181,4 @@ public class LoebsAktivitet {
     {
         return LocationUtils.getAverageSpeedFromStart(pointInfoList);
     }
-
 }
