@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import dk.dtu.itdiplom.dturunner.Model.Entities.GlobaleKonstanter;
 import dk.dtu.itdiplom.dturunner.R;
 
 /**
@@ -25,15 +26,9 @@ public class FragmentPersonInfo extends Fragment implements View.OnClickListener
     private EditText editTextStudienummer;
     private EditText editTextEmail;
 
-    final String PERSONNAVN_PREF = "personnavn";
-    final String EMAIL_PREF = "email";
-    final String STUDIENUMMER_PREF = "studienummer";
-
-
     public FragmentPersonInfo() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,9 +51,9 @@ public class FragmentPersonInfo extends Fragment implements View.OnClickListener
         SharedPreferences pref = getActivity().getPreferences(0);
 
 
-        String navn = pref.getString(PERSONNAVN_PREF, "");
-        String email = pref.getString(EMAIL_PREF, "");
-        String studienummer = pref.getString(STUDIENUMMER_PREF, "");
+        String navn = pref.getString(GlobaleKonstanter.PREF_PERSONNAVN, "");
+        String email = pref.getString(GlobaleKonstanter.PREF_EMAIL, "");
+        String studienummer = pref.getString(GlobaleKonstanter.PREF_STUDIENUMMER, "");
         if(navn != "")
         {
             editTextPersonNavn.setText(navn);
@@ -87,9 +82,9 @@ public class FragmentPersonInfo extends Fragment implements View.OnClickListener
 
         SharedPreferences pref = getActivity().getPreferences(0);
         SharedPreferences.Editor edt = pref.edit();
-        edt.putString(PERSONNAVN_PREF, navn);
-        edt.putString(EMAIL_PREF, email);
-        edt.putString(STUDIENUMMER_PREF, studienummer);
+        edt.putString(GlobaleKonstanter.PREF_PERSONNAVN, navn);
+        edt.putString(GlobaleKonstanter.PREF_EMAIL, email);
+        edt.putString(GlobaleKonstanter.PREF_STUDIENUMMER, studienummer);
         edt.commit();
 
         Toast.makeText(getActivity(), "Dine oplysninger er gemt!", Toast.LENGTH_SHORT).show();

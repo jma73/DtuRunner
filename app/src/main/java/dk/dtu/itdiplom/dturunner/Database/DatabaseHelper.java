@@ -41,7 +41,6 @@ public class DatabaseHelper {
         public static final String COLUMN_NAME_LOEBSAKTIVITET_PROGRAMTYPE = "programtype";
     }
 
-
     public abstract class PointInfoDb implements BaseColumns
     {
         public static final String TABLE_NAME = "PointInfo";
@@ -57,16 +56,7 @@ public class DatabaseHelper {
         public static final String COLUMN_NAME_DISTANCE = "distance";
         public static final String COLUMN_NAME_HEARTRATE = "heartRate";
 
-
-        //, double latitude, double longitude, double speed, double distance, int heartRate
-
-//        public static final String COLUMN_NAME_TITLE = "title";
-//        public static final String COLUMN_NAME_SUBTITLE = "subtitle";
-
-
     }
-
-
 
     // todo jan - tror nok at jeg skal flytte denne til sin egen klasse...
     public void insertPointData(PointInfo pointInfo, UUID loebsAktivitetId, Context context)
@@ -224,6 +214,7 @@ public class DatabaseHelper {
             if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
+            db.close();     // hvornår skal jeg lukke database forbindelsen?
         }
         return liste;
     }

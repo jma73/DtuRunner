@@ -30,11 +30,7 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
     SingletonDtuRunner singletonDtuRunner;
 
     // Global variables. skal placeres i singleton klasse???
-//    static String buildDate;
     final String fragmentLoebTag = "FragmentLoeb";
-
-
-    public static final String MY_PREFS_NAME = "MyPrefsFile";
 
     private static final String LOGTAG = "Main2Activity";
 
@@ -45,16 +41,6 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
 
         singletonDtuRunner = SingletonDtuRunner.getInstance();
 
-        // todo jan 18/11-15: pt. bliver dette ikke anvendt!
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        //editor.
-
-//        // Setup database:
-//        DatabaseContract database = new DatabaseContract(this);
-//        database.getReadableDatabase();
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //toolbar.setVisibility(View.GONE);
         setSupportActionBar(toolbar);
@@ -64,14 +50,6 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         //  MitFragment_frag fragment = new MitFragment_frag();
 
         visMainMenuFragment(savedInstanceState == null);
-
-//        if (savedInstanceState == null) {
-//            FragmentManager fragmentManager = getFragmentManager();
-//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//            fragmentTransaction.add(R.id.frameLayoutContent, new FragmentForside());
-//            fragmentTransaction.commit();
-//        }
-
 
         // dette er den floating email... bør bare fjernes.... todo jan. 1/11-2015...
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -245,14 +223,12 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentShowOnMap2());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
-
     }
 
     // denne skulle implementeres ifb. med ...
     @Override
     public void onFragmentInteraction(Uri uri) {
-        Log.d(LOGTAG, ":: i onFragmentInteraction.");
+        Log.d(LOGTAG, ":: i onFragmentInteraction." + uri.getFragment());
 
     }
 

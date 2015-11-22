@@ -82,9 +82,6 @@ public class FragmentAbout extends Fragment implements View.OnClickListener
         // Inflate the layout for this fragment
         View rod = inflater.inflate(R.layout.fragment_about, container, false);
 
-        //SingletonDtuRunner singletonDtuRunner = SingletonDtuRunner.getInstance();
-
-
         buttonOmOk = (Button)rod.findViewById(R.id.buttonOmOk);
         buttonOmOk.setOnClickListener(this);
 
@@ -92,14 +89,15 @@ public class FragmentAbout extends Fragment implements View.OnClickListener
         TextView textViewDiverseInfo = (TextView) rod.findViewById(R.id.textViewDiverseInfo);
 
         SharedPreferences pref = getActivity().getPreferences(0);
-        String navn = pref.getString("PERSONNAVN_PREF", "N/A");
+        String navn = pref.getString("personnavn", "N/A");
         Log.d("jjj", "navn:" + navn);
         textViewDiverseInfo.setText(navn);
 
         String sdkBuildVersion =  "Build.VERSION.SDK_INT: " + Build.VERSION.SDK_INT;
 
         String displayText = "0.1.1.0, " + SingletonDtuRunner.buildDate + "\n" + sdkBuildVersion + "\n";
-        textViewVersion.setText(displayText +  navn);
+        String displayText2 = " - " + Build.PRODUCT + "\t" + Build.DEVICE + "\t" + Build.MODEL + "\n";
+        textViewVersion.setText(displayText + "\n" + displayText2+  navn);
 
         return rod;
 

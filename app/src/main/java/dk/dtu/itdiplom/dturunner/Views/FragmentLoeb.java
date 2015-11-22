@@ -59,7 +59,7 @@ public class FragmentLoeb extends Fragment implements
     private Button buttonStartAktivitet;
     private Button mStopUpdatesButton;
     private Button buttonAfslut;
-    private Button buttonShow;
+    //private Button buttonShow;
 
     public FragmentLoeb() {
         // Required empty public constructor
@@ -100,10 +100,10 @@ public class FragmentLoeb extends Fragment implements
 
         buttonStartAktivitet = (Button) rod.findViewById(R.id.buttonStartAktivitet);
         buttonAfslut = (Button) rod.findViewById(R.id.buttonAfslut);
-        buttonShow = (Button) rod.findViewById(R.id.buttonShow);
+//        buttonShow = (Button) rod.findViewById(R.id.buttonShow);
         buttonStartAktivitet.setOnClickListener(this);
         buttonAfslut.setOnClickListener(this);
-        buttonShow.setOnClickListener(this);
+//        buttonShow.setOnClickListener(this);
 
         textViewLocations = (TextView) rod.findViewById(R.id.textViewLocations);
         textViewDistance = (TextView) rod.findViewById(R.id.textViewDistance);
@@ -198,10 +198,10 @@ public class FragmentLoeb extends Fragment implements
         {
             Log.d(TAG, "todo jan - buttonAfslut. Sørg for at lukke løbsaktivitet...");
         }
-        if(v==buttonShow)
-        {
-            showAllLocations();
-        }
+//        if(v==buttonShow)
+//        {
+//            showAllLocations();
+//        }
     }
 
     /**

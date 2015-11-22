@@ -124,15 +124,15 @@
             android:text="Stop" />
 
 
-        <Button
-            android:id="@+id/buttonShow"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="100dp"
-            android:layout_marginLeft="@dimen/small_margin"
-            android:layout_marginStart="@dimen/small_margin"
-            android:enabled="true"
-            android:text="Vis positioner" />
+        <!--<Button-->
+            <!--android:id="@+id/buttonShow"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:layout_marginLeft="@dimen/small_margin"-->
+            <!--android:layout_marginStart="@dimen/small_margin"-->
+            <!--android:enabled="true"-->
+            <!--android:text="Vis positioner" />-->
 
         <Button
             android:id="@+id/buttonAfslut"
