@@ -94,15 +94,19 @@ public class FragmentLoeb extends Fragment implements
         {
             Log.d(TAG, "FragmentLoeb: savedInstanceState is null");
         }
+        if(SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet)
+        {
+            Log.d(TAG, "FragmentLoeb: Der er allerede et løb igang - indlæs data...???");
+
+        }
 
         View rod = inflater.inflate(R.layout.fragment_loeb, container, false);
 
-
         buttonStartAktivitet = (Button) rod.findViewById(R.id.buttonStartAktivitet);
         buttonAfslut = (Button) rod.findViewById(R.id.buttonAfslut);
-//        buttonShow = (Button) rod.findViewById(R.id.buttonShow);
         buttonStartAktivitet.setOnClickListener(this);
         buttonAfslut.setOnClickListener(this);
+//        buttonShow = (Button) rod.findViewById(R.id.buttonShow);
 //        buttonShow.setOnClickListener(this);
 
         textViewLocations = (TextView) rod.findViewById(R.id.textViewLocations);
@@ -121,7 +125,7 @@ public class FragmentLoeb extends Fragment implements
 
 
 
-
+        // todo jan - statig under test:
         if(!SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet) {
             //return rod;
             // todo jan ???
@@ -153,7 +157,7 @@ public class FragmentLoeb extends Fragment implements
         }
         else {
             // reload values...
-            updateUI();
+            updateUIMedLatLonKoordinater();
             int size = SingletonDtuRunner.loebsStatus.locationList.size();
             Log.d(TAG, "- SingletonDtuRunner.loebsStatus.locationList.size() " + size);
         }
@@ -217,6 +221,7 @@ public class FragmentLoeb extends Fragment implements
             Toast.makeText(getActivity(), "Location updates stoppet!", Toast.LENGTH_LONG);
             setButtonsEnabledState();
             stopLocationUpdates();
+
             SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet = false;
         }
     }
@@ -302,7 +307,6 @@ public class FragmentLoeb extends Fragment implements
 
     protected void stopLocationUpdates() {
 
-//        LocationServices.FusedLocationApi.removeLocationUpdates(singletonDtuRunner.googleApiClient, this);
         LocationServices.FusedLocationApi.removeLocationUpdates(SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient, this);
     }
 
@@ -320,7 +324,6 @@ public class FragmentLoeb extends Fragment implements
     public void onStart() {
         super.onStart();
         SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient.connect();
-//        singletonDtuRunner.googleApiClient.connect();
     }
 
 
@@ -340,45 +343,51 @@ public class FragmentLoeb extends Fragment implements
 
         SingletonDtuRunner.loebsStatus.mCurrentLocation = location;
         SingletonDtuRunner.loebsStatus.mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-        updateUI();
+        updateUIMedLatLonKoordinater();
         saveLocation();  // todo
-        //updateUI();
     }
 
     private void saveLocation()
     {
-
-
         SingletonDtuRunner.loebsStatus.locationList.add(SingletonDtuRunner.loebsStatus.mCurrentLocation);
         int size = SingletonDtuRunner.loebsStatus.locationList.size();
-        double distance = 0;
+        double distanceOld = 0;
         double speedSinceLast = 0;
 
-        double timeSinceStart = LocationUtils.getTimeSinceStart(SingletonDtuRunner.loebsStatus.locationList.get(0), SingletonDtuRunner.loebsStatus.locationList.get(size - 1)) / 1000;
+        double timeSinceStart = LocationUtils.getTimeMillisecondsSinceStart(SingletonDtuRunner.loebsStatus.locationList.get(0), SingletonDtuRunner.loebsStatus.locationList.get(size - 1)) / 1000;
         textViewTimer.setText(timeSinceStart + "  sekunder");
 
         if(size > 1)
         {
-            //mDistanceAccumulated += LocationUtils.distFromDouble()
 
-            distance = LocationUtils.getDistanceBetweenPoints(SingletonDtuRunner.loebsStatus.locationList.get(size - 2), SingletonDtuRunner.loebsStatus.mCurrentLocation);
-            speedSinceLast = LocationUtils.getSpeedBetweenPoints(SingletonDtuRunner.loebsStatus.locationList.get(size - 2), SingletonDtuRunner.loebsStatus.mCurrentLocation);
-            double speedSinceStartAverage = LocationUtils.getSpeedBetweenPoints(SingletonDtuRunner.loebsStatus.locationList.get(0), SingletonDtuRunner.loebsStatus.mCurrentLocation);
+            distanceOld = LocationUtils.getDistanceBetweenPoints(SingletonDtuRunner.loebsStatus.locationList.get(size - 2), SingletonDtuRunner.loebsStatus.mCurrentLocation);
+//            speedSinceLast = LocationUtils.getSpeedBetweenPoints(SingletonDtuRunner.loebsStatus.locationList.get(size - 2), SingletonDtuRunner.loebsStatus.mCurrentLocation);
 
-            SingletonDtuRunner.loebsStatus.mDistanceAccumulated +=distance;
-            //double distanceInMeters = mDistanceAccumulated / 1000;
-            textViewDistance.setText(( SingletonDtuRunner.loebsStatus.mDistanceAccumulated + " meter"));
+            //distance = SingletonDtuRunner.loebsStatus.loebsAktivitet.getDistanceBetweenPoints(SingletonDtuRunner.loebsStatus.locationList.get(size - 2), SingletonDtuRunner.loebsStatus.mCurrentLocation);
+
+            // todo jan - dette er sådan skal være hvis det virker...
+            // todo jaman - distanceOld skal beregnes på en anden måde end før...
+
+            speedSinceLast = SingletonDtuRunner.loebsStatus.loebsAktivitet.getCurrentSpeedSinceLastPoint();
+            double speedLatestPoints = SingletonDtuRunner.loebsStatus.loebsAktivitet.getAverageSpeed();
+            double speedSinceStartAverage = SingletonDtuRunner.loebsStatus.loebsAktivitet.getAverageSpeedFromStart();
+
+            SingletonDtuRunner.loebsStatus.mDistanceAccumulated +=distanceOld;
+
+            //textViewDistance.setText(( SingletonDtuRunner.loebsStatus.mDistanceAccumulated + " meter"));
+            textViewDistance.setText(( SingletonDtuRunner.loebsStatus.loebsAktivitet.getTotalDistance() + " meter"));
 
             String speedSinceLastWithDecimals = String.format("%.5f", speedSinceLast);
             textViewSpeed.setText((String.format("%s m/s", speedSinceLastWithDecimals)));
+            String speedLatestPointsAverageWithDecimals = String.format("%.5f", speedLatestPoints);
             String speedSinceStartAverageWithDecimals = String.format("%.5f", speedSinceStartAverage);
-            textViewSpeed2.setText((String.format("%s m/s avg", speedSinceStartAverageWithDecimals)));
+            textViewSpeed2.setText((String.format("%s m/s avg (%s)", speedSinceStartAverageWithDecimals, speedLatestPointsAverageWithDecimals)));
 
 
         }
 
         // todo jan - working here... 9/11-15
-        PointInfo pointInfo = new PointInfo(SingletonDtuRunner.loebsStatus.mCurrentLocation.getTime(), SingletonDtuRunner.loebsStatus.mCurrentLocation.getLatitude(), SingletonDtuRunner.loebsStatus.mCurrentLocation.getLongitude(), speedSinceLast, distance, 1);
+        PointInfo pointInfo = new PointInfo(SingletonDtuRunner.loebsStatus.mCurrentLocation.getTime(), SingletonDtuRunner.loebsStatus.mCurrentLocation.getLatitude(), SingletonDtuRunner.loebsStatus.mCurrentLocation.getLongitude(), speedSinceLast, distanceOld, 1);
         SingletonDtuRunner.loebsStatus.loebsAktivitet.pointInfoList.add(pointInfo);
 
         savePointToDatabase(pointInfo);
@@ -390,6 +399,12 @@ public class FragmentLoeb extends Fragment implements
 
         DatabaseHelper databaseHelper = new DatabaseHelper();
         databaseHelper.insertPointData(pointInfo, SingletonDtuRunner.loebsStatus.loebsAktivitetUUID, getActivity());
+    }
+
+    private void showCurrentValues()
+    {
+        // todo jan 22/11-15: skal opdatere fra værdier på løbsAktivitet...
+        // SingletonDtuRunner.loebsStatus.loebsAktivitet.
     }
 
     private void showAllLocations() {
@@ -411,7 +426,7 @@ public class FragmentLoeb extends Fragment implements
             String dateFormatted = formatter.format(date);
 
             // textViewAppend.append("" + locationArrayList.get(i) + "\n");
-            //textViewLocations.append("" + locationList.get(i).getSpeed() + ", " + dateFormatted);
+            //textViewLocations.append("" + locationList.get(i).getSpeedMetersPerSecond() + ", " + dateFormatted);
             textViewLocations.append("Acc: " + SingletonDtuRunner.loebsStatus.locationList.get(i).getAccuracy() + ", Alt:" + SingletonDtuRunner.loebsStatus.locationList.get(i).getAltitude() + ", " + dateFormatted);
             // textViewLocations.append(" ::: " + TryGetLocationAddress(locationList.get(i)));
             textViewLocations.append(" -->" + SingletonDtuRunner.loebsStatus.locationList.get(i).getLatitude() + ", " + SingletonDtuRunner.loebsStatus.locationList.get(i).getLongitude() + "\n");
@@ -419,11 +434,11 @@ public class FragmentLoeb extends Fragment implements
 
             double distance = LocationUtils.getDistanceBetweenPoints(SingletonDtuRunner.loebsStatus.locationList.get(0).getLatitude(), SingletonDtuRunner.loebsStatus.locationList.get(0).getLongitude(), SingletonDtuRunner.loebsStatus.locationList.get(i).getLatitude(), SingletonDtuRunner.loebsStatus.locationList.get(i).getLongitude());
             //double distance = LocationUtils.distFromDouble(locationList.get(0).getLatitude(), locationList.get(0).getLongitude(), locationList.get(i).getLatitude(), locationList.get(i).getLongitude());
-            long secondsPassed = (SingletonDtuRunner.loebsStatus.locationList.get(i).getTime() - SingletonDtuRunner.loebsStatus.locationList.get(0).getTime()) / 1000;
+            long milliSecondsPassed = (SingletonDtuRunner.loebsStatus.locationList.get(i).getTime() - SingletonDtuRunner.loebsStatus.locationList.get(0).getTime());
             //LocationUtils.distFrom(locationList.get(i).getLatitude(), locationList.get(i).getLongitude(), locationList.get(i).getLatitude(), locationList.get(i).getLongitude() );
-            textViewLocations.append("Distance: " + distance + ", Total seconds: " + secondsPassed);
+            textViewLocations.append("Distance: " + distance + ", Total seconds: " + milliSecondsPassed / 1000);
 
-            double speed = LocationUtils.getSpeed(distance, secondsPassed);
+            double speed = LocationUtils.getSpeedMetersPerSecond(distance, milliSecondsPassed);
             String speedWithDecimals = String.format("Value of a: %.9f", speed);
             if(i > 5)
             {
@@ -466,7 +481,7 @@ public class FragmentLoeb extends Fragment implements
             SingletonDtuRunner.loebsStatus.mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient);
 //            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(singletonDtuRunner.googleApiClient);
             SingletonDtuRunner.loebsStatus.mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-            updateUI();
+            updateUIMedLatLonKoordinater();
         }
 
         // If the user presses the Start Updates button before GoogleApiClient connects, we set
@@ -478,7 +493,7 @@ public class FragmentLoeb extends Fragment implements
     }
 
     // todo jan - denne er ikke nødvendig. overvej formål!
-    private void updateUI() {
+    private void updateUIMedLatLonKoordinater() {
 
         if(SingletonDtuRunner.loebsStatus.mCurrentLocation == null)
         {

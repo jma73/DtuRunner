@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 import dk.dtu.itdiplom.dturunner.Model.PointInfo;
+import dk.dtu.itdiplom.dturunner.Utils.LocationUtils;
 
 /**
  * Created by JanMøller on 09-11-2015.
@@ -139,6 +140,45 @@ public class LoebsAktivitet {
 
     public void setLoebsProgramType(String loebsProgramType) {
         this.loebsProgramType = loebsProgramType;
+    }
+
+    public double getCurrentSpeedSinceLastPoint()
+    {
+        int numberOfPoints = this.pointInfoList.size();
+        if(numberOfPoints < 2)
+            return 0.01;
+
+        final PointInfo lastLocation = this.pointInfoList.get(numberOfPoints - 1);
+
+        double distance = LocationUtils.getDistanceBetweenPoints(this.pointInfoList.get(numberOfPoints - 2), lastLocation);
+
+
+        double speedSinceLast = LocationUtils.getSpeedBetweenPoints(this.pointInfoList.get(numberOfPoints - 2), lastLocation);
+        //double speedSinceStartAverage = LocationUtils.getSpeedBetweenPoints(SingletonDtuRunner.loebsStatus.locationList.get(0), SingletonDtuRunner.loebsStatus.mCurrentLocation);
+
+        return speedSinceLast;
+    }
+
+    public double getAverageSpeed()
+    {
+        int numberOfPoints = this.pointInfoList.size();
+        if(numberOfPoints < 2)
+            return 0;
+
+        double averageSpeed = LocationUtils.getAverageSpeedLatestPoints(pointInfoList);
+
+        return averageSpeed;
+    }
+
+    public double getTotalDistance()
+    {
+        double distance = LocationUtils.getTotalDistance(pointInfoList);
+        return distance;
+    }
+
+    public double getAverageSpeedFromStart()
+    {
+        return LocationUtils.getAverageSpeedFromStart(pointInfoList);
     }
 
 }

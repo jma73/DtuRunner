@@ -21,7 +21,7 @@ public class LoebsStatus {
     public static String mLastUpdateTime;
     public static Location mCurrentLocation;
     public static double mDistanceAccumulated;
-    public static ArrayList<Location> locationList;
+    public static ArrayList<Location> locationList;     // obs: denne skal kun være her under udvikling. Brug PointInfo under LoebsAktivitet.
     public static LoebsAktivitet loebsAktivitet;          // denne introduceres, og skal erstatte flere variabler
 
 }

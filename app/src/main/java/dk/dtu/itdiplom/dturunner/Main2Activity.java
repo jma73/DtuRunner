@@ -39,7 +39,13 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        singletonDtuRunner = SingletonDtuRunner.getInstance();
+        //singletonDtuRunner = SingletonDtuRunner.getInstance();
+
+        if(SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet)
+        {
+            Log.d(LOGTAG, "Der er allerede en løbs aktivitet startet...");
+
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //toolbar.setVisibility(View.GONE);
@@ -47,7 +53,6 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
 
         // todo jan: skal tjekke på savedInstanceState
         //  if (savedInstanceState == null) {
-        //  MitFragment_frag fragment = new MitFragment_frag();
 
         visMainMenuFragment(savedInstanceState == null);
 
@@ -122,30 +127,37 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
                 Log.d(LOGTAG, "BackStackEntry for Fragment har ikke noget navn...");
         }
 
-        final String fragmentBackStackName = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
-
-        if(fragmentBackStackName != null &&  fragmentBackStackName == fragmentLoebTag)
+        if(getSupportFragmentManager().getBackStackEntryCount() > 0)
         {
-            Log.d(LOGTAG, "- onBackPressed - fragment found:::" + fragmentBackStackName);
-            //this.finish();
+            final String fragmentBackStackName = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
 
-            if(SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet)
+            if(fragmentBackStackName != null &&  fragmentBackStackName == fragmentLoebTag)
             {
-                // hvis der er et løb igang ønsker vi ikke at gå tilbage...
+                Log.d(LOGTAG, "- onBackPressed - fragment found:::" + fragmentBackStackName);
+                //this.finish();
+
+                if(SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet)
+                {
+                    // hvis der er et løb igang ønsker vi ikke at gå tilbage...
+                }
+                else
+                {
+
+                    getSupportFragmentManager().popBackStack();
+                }
+                // todo jan 21/11-15: Kunne spørge om bruger virkelig vil forlade løbssiden...? men kun hvis løb er i gang...
             }
-            else
-            {
-
+            else {
+                Log.d(LOGTAG, "- onBackPressed - popBackStack()...");
                 getSupportFragmentManager().popBackStack();
             }
-            // todo jan 21/11-15: Kunne spørge om bruger virkelig vil forlade løbssiden...? men kun hvis løb er i gang...
         }
 
 
-//        else if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-//            Log.d(LOGTAG, "- onBackPressed - getBackStackEntryCount == 0...");
-//            this.finish();
-//        }
+        else if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            Log.d(LOGTAG, "- onBackPressed - getBackStackEntryCount == 0...");
+            this.finish();
+        }
         else {
                 Log.d(LOGTAG, "- onBackPressed - popBackStack()...");
             getSupportFragmentManager().popBackStack();

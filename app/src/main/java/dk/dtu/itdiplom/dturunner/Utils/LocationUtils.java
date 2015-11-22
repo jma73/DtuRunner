@@ -3,6 +3,10 @@ package dk.dtu.itdiplom.dturunner.Utils;
 import android.location.Location;
 import android.util.Log;
 
+import java.util.List;
+
+import dk.dtu.itdiplom.dturunner.Model.PointInfo;
+
 /**
  * Created by JanMøller on 05-11-2015.
  */
@@ -53,7 +57,7 @@ public class LocationUtils {
     min egen test. skal nok bare slettes...
       http://stackoverflow.com/questions/21410698/calculating-speed-for-a-navigation-app-without-getspeed-method
      */
-    long getSpeed(Location location, long distanceInMeters)
+    long getSpeedMetersPerSecond(Location location, long distanceInMeters)
     {
         long lastTimeStamp = location.getTime();
         long timeDelta = (location.getTime() - lastTimeStamp)/1000;
@@ -68,13 +72,79 @@ public class LocationUtils {
     /*
         Det er vist blot dette der skal til...
      */
-    public static double getSpeed(double distanceInMeters, long timeDelta)
+    public static double getSpeedMetersPerSecond(double distanceInMeters, long timeDelta)
     {
-        double speed = (distanceInMeters/timeDelta);
+        double speed = (distanceInMeters/timeDelta) * 1000;
         return speed;
     }
 
+    /*
+        Med PointInfo
+     */
+    public static double getDistanceBetweenPoints(PointInfo location1, PointInfo location2){
 
+        double lat1 = location1.getLatitude();
+        double lng1 = location1.getLongitude();
+        double lat2 = location2.getLatitude();
+        double lng2 = location2.getLongitude();
+
+        return getDistanceBetweenPoints(lat1, lng1, lat2, lng2);
+    }
+
+    public static double getSpeedBetweenPoints(PointInfo location1, PointInfo location2){
+
+        // todo jan - 8/11-15: Stadig under test!!!
+        double distanceInMeters = getDistanceBetweenPoints(location1, location2);
+
+        long time1 = location1.getTimestamp();
+        long time2 = location2.getTimestamp();
+
+        long secondsPassed = (location2.getTimestamp() - location1.getTimestamp()) / 1000;
+
+        Log.d("jj", "distanceInMeters: " + distanceInMeters);
+        Log.d("jj", "secondsPassed: " + secondsPassed);
+        Log.d("jj", "time1: " + time1);
+        Log.d("jj", "time2: " + time2);
+
+        if(distanceInMeters == 0)
+            return 0;
+
+        return distanceInMeters / secondsPassed;
+    }
+
+
+    public static double getAverageSpeedLatestPoints(List<PointInfo> pointInfoListe)
+    {
+        int size = pointInfoListe.size();
+        double avgSpeed = 0;
+//        PointInfo lastPointInfo = pointInfoListe.get(size -1);
+        Log.d("jjLocationUtils", "Tester avg speed: " + avgSpeed);
+
+        int maxNumberOfPointToGoThrugh = 4;
+        if(size < maxNumberOfPointToGoThrugh)
+        {
+            maxNumberOfPointToGoThrugh = size -1;
+        }
+        for (int i = size -1; i > size - maxNumberOfPointToGoThrugh; i--)
+        {
+            avgSpeed += getSpeedBetweenPoints(pointInfoListe.get(i - 1), pointInfoListe.get(i));
+            Log.d("jjLocationUtils", String.format("Tester avg speed: %s , %s . i=%s.", avgSpeed, maxNumberOfPointToGoThrugh, i));
+        }
+        return avgSpeed / (maxNumberOfPointToGoThrugh - 1);
+    }
+
+
+    public static double getAverageSpeedFromStart(List<PointInfo> pointInfoList)
+    {
+        double distance = getTotalDistance(pointInfoList);
+
+        long milliseconds = getTimeMillisecondsSinceStart(pointInfoList.get(0), pointInfoList.get(pointInfoList.size() - 1));
+        return getSpeedMetersPerSecond(distance, milliseconds);
+    }
+
+    /*
+        Med Location objektet
+     */
     public static double getDistanceBetweenPoints(Location location1, Location location2){
 
         double lat1 = location1.getLatitude();
@@ -118,7 +188,34 @@ public class LocationUtils {
         return distanceInMeters / secondsPassed;
     }
 
-    public static long getTimeSinceStart(Location location0, Location locationN) {
+    public static long getTimeMillisecondsSinceStart(Location location0, Location locationN) {
         return locationN.getTime() - location0.getTime();
     }
+
+    public static long getTimeMillisecondsSinceStart(PointInfo location0, PointInfo locationN) {
+        return locationN.getTimestamp() - location0.getTimestamp();
+    }
+
+    public static double getTotalDistance(List<PointInfo> pointInfoList) {
+
+        PointInfo point1 = null, point2 = null;
+        double totalDistance = 0;
+        for (PointInfo pi :pointInfoList) {
+            point1 = pi;
+            if(point2 == null)
+            {
+                point2 = point1;
+                continue;
+            }
+            else
+            {
+                totalDistance += getDistanceBetweenPoints(point1, point2);
+            }
+
+            point2 = point1;
+        }
+
+        return totalDistance;
+    }
+
 }
