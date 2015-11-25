@@ -53,7 +53,7 @@ public class LocationHelper {
     public static synchronized void buildGoogleApiClient(Context context, FragmentLoeb fragmentLoeb) {
 
         Log.i(TAG, "Building GoogleApiClient");
-        SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient = new GoogleApiClient.Builder(context)    // todo jan - måtte ændre fra this til getContext() eller getActivity(). brug getActivity() siger Jakob
+        SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(fragmentLoeb)
                 .addOnConnectionFailedListener(fragmentLoeb)
                 .addApi(LocationServices.API)               // note jan - her vælges Location API... Der er også en FusedLocationApi... Dette er OK!
