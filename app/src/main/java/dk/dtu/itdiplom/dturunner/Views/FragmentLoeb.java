@@ -93,6 +93,7 @@ public class FragmentLoeb extends Fragment implements
         if(savedInstanceState == null)
         {
             Log.d(TAG, "FragmentLoeb: savedInstanceState is null");
+            setRetainInstance(true);
         }
         if(SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet)
         {

@@ -12,16 +12,14 @@ import java.util.UUID;
  */
 public class LoebsStatus {
 
+    public boolean isLoebsAktivitetStartet;
+    public UUID loebsAktivitetUUID;
+    public LocationGoogleApi locationGoogleApi;
 
-    public static boolean isLoebsAktivitetStartet;
-    public static UUID loebsAktivitetUUID;
-
-    public static LocationGoogleApi locationGoogleApi;
-
-    public static String mLastUpdateTime;
-    public static Location mCurrentLocation;
-    //public static double mDistanceAccumulated;          // denne kan måske godt udgå
-    public static ArrayList<Location> locationList;     // obs: denne skal kun være her under udvikling. Brug PointInfo under LoebsAktivitet.
-    public static LoebsAktivitet loebsAktivitet;          // denne introduceres, og skal erstatte flere variabler
+    public String mLastUpdateTime;
+    public Location mCurrentLocation;
+    //public double mDistanceAccumulated;          // denne kan måske godt udgå
+    public ArrayList<Location> locationList;     // obs: denne skal kun være her under udvikling. Brug PointInfo under LoebsAktivitet.
+    public LoebsAktivitet loebsAktivitet;          // denne introduceres, og skal erstatte flere variabler
 
 }

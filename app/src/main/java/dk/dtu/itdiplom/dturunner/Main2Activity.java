@@ -39,12 +39,9 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        //singletonDtuRunner = SingletonDtuRunner.getInstance();
-
         if(SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet)
         {
             Log.d(LOGTAG, "Der er allerede en løbs aktivitet startet...");
-
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -118,6 +115,11 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
     public void onBackPressed() {
 
         Log.d(LOGTAG, "- onBackPressed.... " + getSupportFragmentManager().getBackStackEntryCount());
+        if(SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet)
+        {
+            // hvis der er et løb igang ønsker vi ikke at gå tilbage...
+            Log.d(LOGTAG, "BackStackEntry for Fragment har ikke noget navnxxxxxxxx...");
+        }
 
         for (int i = 0; i < getSupportFragmentManager().getBackStackEntryCount(); i++     ) {
             FragmentManager.BackStackEntry entry = getSupportFragmentManager().getBackStackEntryAt(i);

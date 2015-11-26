@@ -16,8 +16,8 @@ public class SingletonDtuRunner extends Application {
     private static SingletonDtuRunner ourInstance = new SingletonDtuRunner();
 
     public static String buildDate;
-    public static LoebsStatus loebsStatus;
-    public GoogleApiClient googleApiClient;
+    public static LoebsStatus loebsStatus = new LoebsStatus();
+//    public GoogleApiClient googleApiClient;
 
     public static SingletonDtuRunner getInstance() {
         return ourInstance;
@@ -28,7 +28,6 @@ public class SingletonDtuRunner extends Application {
         Log.d("SingletonDtuRunner", "onCreate() kaldt");
         super.onCreate();
         ourInstance = this;
-
         buildDate = BuildInfo.GetBuildDate(getApplicationContext());
     }
 
