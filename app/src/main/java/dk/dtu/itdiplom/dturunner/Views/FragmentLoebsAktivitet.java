@@ -60,9 +60,13 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
         //loebsAktivitetSelected.pointInfoList    // todo jan - mangler at indlæse punkterne.
 
         String loebsAktivitetInfoString = String.format("Dato: %s \n" +
-                " Starttidspunkt %s \n\tDistance: XX meter \n\tTid: yy minutter \n " +
-                        " Uuid %s ",
-                loebsAktivitetSelected.getStarttimeFormatted(), loebsAktivitetSelected.getStarttidspunkt(), uuid);
+                " Starttidspunkt %s \n\tDistance: %s meter \n\tTid: %s (sekunder!)minutter \n " +
+                        "\n Uuid %s ",
+                loebsAktivitetSelected.getStarttimeFormatted(),
+                loebsAktivitetSelected.getStarttidspunkt(),
+                loebsAktivitetSelected.getTotalDistanceMeters(),
+                loebsAktivitetSelected.getTimeMillisecondsSinceStart() / (60 / 60 * 1000),  // todo jan skal vises pænt. pt. i sekunder.
+                uuid);
 
         tv.setText(loebsAktivitetInfoString);
 

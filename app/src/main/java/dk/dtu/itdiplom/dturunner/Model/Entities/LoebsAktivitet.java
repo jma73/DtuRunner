@@ -3,6 +3,7 @@ package dk.dtu.itdiplom.dturunner.Model.Entities;
 //import java.sql.Time;
 import android.support.annotation.NonNull;
 import android.text.format.Time;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,8 +19,6 @@ import dk.dtu.itdiplom.dturunner.Utils.LocationUtils;
  * Denne klasse skal indeholde de værdier som der er brug for ifb. med en løbsaktivitet.
  */
 public class LoebsAktivitet {
-
-
 
     String email;
     String navnAlias;
@@ -47,7 +46,7 @@ public class LoebsAktivitet {
 
     /*
         Denne konstructør skal anvendes når der startes et nyt løb.
-        her new nyt uuid og tiden op.
+        her new'es nyt uuid op, og tiden sættes.
      */
     public LoebsAktivitet() {
 
@@ -173,12 +172,28 @@ public class LoebsAktivitet {
 
     public double getTotalDistanceMeters()
     {
-        double distance = LocationUtils.getTotalDistance(pointInfoList);
+        double distance = 0;
+        if(pointInfoList == null)
+        {
+            Log.d("LoebsAktivitet", "pointInfoList er null. Dette er en fejl! todo jan...");
+        }
+
+        if(pointInfoList.size() > 0)
+            distance = LocationUtils.getTotalDistance(pointInfoList);
+
         return distance;
     }
 
     public double getAverageSpeedFromStart()
     {
         return LocationUtils.getAverageSpeedFromStart(pointInfoList);
+    }
+
+    public long getTimeMillisecondsSinceStart()
+    {
+        if(pointInfoList.size() == 0)
+            return 0;
+
+        return LocationUtils.getTimeMillisecondsSinceStart(pointInfoList.get(0), pointInfoList.get(pointInfoList.size() - 1));
     }
 }

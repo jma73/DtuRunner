@@ -42,7 +42,7 @@ public class DatabaseContract extends SQLiteOpenHelper {
                     DatabaseHelper.LoebsAktivitetDb._ID + " INTEGER PRIMARY KEY," +
                     DatabaseHelper.LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_LOEBSAKTIVITETS_ID + TEXT_TYPE + COMMA_SEP +    // guid ?
                     DatabaseHelper.LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_PROGRAMTYPE + TEXT_TYPE + COMMA_SEP +
-                    DatabaseHelper.LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_STARTTIDSPUNKT + TEXT_TYPE + COMMA_SEP +
+                DatabaseHelper.LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_STARTTIDSPUNKT + TEXT_TYPE + COMMA_SEP +
                     DatabaseHelper.LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_NAVN + TEXT_TYPE + COMMA_SEP +
                     DatabaseHelper.LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_NOTE + TEXT_TYPE + COMMA_SEP +
                     DatabaseHelper.LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_PERSONID + TEXT_TYPE + COMMA_SEP +

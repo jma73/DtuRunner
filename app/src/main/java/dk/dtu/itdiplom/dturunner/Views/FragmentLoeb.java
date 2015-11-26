@@ -1,5 +1,7 @@
 package dk.dtu.itdiplom.dturunner.Views;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -21,8 +23,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import dk.dtu.itdiplom.dturunner.Database.DatabaseHelper;
+import dk.dtu.itdiplom.dturunner.Model.Entities.GlobaleKonstanter;
 import dk.dtu.itdiplom.dturunner.Model.Entities.LoebsAktivitet;
 import dk.dtu.itdiplom.dturunner.Model.LocationHelper;
 import dk.dtu.itdiplom.dturunner.Model.PointInfo;
@@ -40,7 +45,6 @@ public class FragmentLoeb extends Fragment implements
     protected static final String TAG = "JJ-location-updates";
     final String fragmentLoebTag = "FragmentLoeb";
 
-
     // Labels.
     protected String mLatitudeLabel;
     protected String mLongitudeLabel;
@@ -56,8 +60,8 @@ public class FragmentLoeb extends Fragment implements
     private TextView textViewSpeed2;
     private TextView textViewTimer;
 
-    private Button buttonStartAktivitet;
-    private Button mStopUpdatesButton;
+    private Button buttonStartLoebsAktivitet;
+    private Button buttonStopLoebsAktivitet;
     private Button buttonAfslut;
     //private Button buttonShow;
 
@@ -66,26 +70,12 @@ public class FragmentLoeb extends Fragment implements
     }
 
 //    @Override
-//    public void onBackPressed() {
-//
-//        super.getActivity().getSupportFragmentManager();
-//
-//        Log.d(TAG, "- onBackPressed.... " + getActivity().getSupportFragmentManager().getBackStackEntryCount());
-//
-//        //getSupportFragmentManager().findFragmentById(R.id.)
-//
-//        if (getActivity().getSupportFragmentManager().findFragmentByTag(fragmentLoebTag) != null) {
-//            Log.d(TAG, "- onBackPressed - fragment found!!!");
-//            getActivity().finish();
-//        }
-//        else if (getActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
-//            Log.d(TAG, "- onBackPressed - getBackStackEntryCount == 0...");
-//            getActivity().finish();
-//        } else {
-//            getActivity().getSupportFragmentManager().popBackStack();
-//        }
+////    public void onAttach(Activity activity)   // This method was deprecated in API level 23... hvad så??? todo jan
+//    public void onAttach(Context activity)
+//    {
+////        super.onAttach(activity);
+//        minContext = activity;
 //    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,17 +85,37 @@ public class FragmentLoeb extends Fragment implements
             Log.d(TAG, "FragmentLoeb: savedInstanceState is null");
             setRetainInstance(true);
         }
+        else
+        {
+            setButtonsEnabledState();
+        }
         if(SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet)
         {
             Log.d(TAG, "FragmentLoeb: Der er allerede et løb igang - indlæs data...???");
 
         }
 
+        Timer timer = new Timer();
+        TimerTask timertask = new TimerTask() {
+            @Override
+            public void run() {
+                // todo jan: lav metode. til at opdatere tiden... og evt. andre views.
+                //      og task skal først startes når start knappen trykkes.
+
+                Log.d(TAG, "timertask");
+            }
+        };
+        int period = 991000;
+        timer.schedule(timertask, 1000, period);
+            //timertask.run();  ikke nødvendigt??
+
+
+
         View rod = inflater.inflate(R.layout.fragment_loeb, container, false);
 
-        buttonStartAktivitet = (Button) rod.findViewById(R.id.buttonStartAktivitet);
+        buttonStartLoebsAktivitet = (Button) rod.findViewById(R.id.buttonStartAktivitet);
         buttonAfslut = (Button) rod.findViewById(R.id.buttonAfslut);
-        buttonStartAktivitet.setOnClickListener(this);
+        buttonStartLoebsAktivitet.setOnClickListener(this);
         buttonAfslut.setOnClickListener(this);
 //        buttonShow = (Button) rod.findViewById(R.id.buttonShow);
 //        buttonShow.setOnClickListener(this);
@@ -116,15 +126,12 @@ public class FragmentLoeb extends Fragment implements
         textViewSpeed2 = (TextView) rod.findViewById(R.id.textViewSpeed2);
         textViewTimer = (TextView) rod.findViewById(R.id.textViewTimer);
 
-        mStopUpdatesButton = (Button) rod.findViewById(R.id.buttonStop);
-        mStopUpdatesButton.setOnClickListener(this);
+        buttonStopLoebsAktivitet = (Button) rod.findViewById(R.id.buttonStop);
+        buttonStopLoebsAktivitet.setOnClickListener(this);
 
         mLatitudeTextView = (TextView) rod.findViewById(R.id.latitude_text);
         mLongitudeTextView = (TextView) rod.findViewById(R.id.longitude_text);
         mLastUpdateTimeTextView = (TextView) rod.findViewById(R.id.last_update_time_text);
-
-
-
 
         // todo jan - statig under test:
         if(!SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet) {
@@ -190,17 +197,19 @@ public class FragmentLoeb extends Fragment implements
 
     @Override
     public void onClick(View v) {
-        if(v== buttonStartAktivitet)
+        if(v== buttonStartLoebsAktivitet)
         {
             // 1) tjek for location enabled
             startLoebsAktivitetOgLocationUpdates();
         }
-        if(v==mStopUpdatesButton)
+        if(v== buttonStopLoebsAktivitet)
         {
             stopUpdatesButtonHandler(v);    // todo jan - refactor ect.
         }
         if(v==buttonAfslut)
         {
+            // todo jan udskfit stopUpdatesButtonHandler. den er der blot for at kunne stoppe et løb, hvis stop knappen ikke er aktiv.
+            stopUpdatesButtonHandler(v);
             Log.d(TAG, "todo jan - buttonAfslut. Sørg for at lukke løbsaktivitet...");
         }
 //        if(v==buttonShow)
@@ -217,13 +226,14 @@ public class FragmentLoeb extends Fragment implements
     public void stopUpdatesButtonHandler(View view) {
         if(getActivity() == null) return;   // hvis activity context er null er vi allerede ude af fragment.
 
+        SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet = false;
+
         if (SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates) {
             SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates = false;
             Toast.makeText(getActivity(), "Location updates stoppet!", Toast.LENGTH_LONG);
             setButtonsEnabledState();
             stopLocationUpdates();
 
-            SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet = false;
         }
     }
 
@@ -239,8 +249,9 @@ public class FragmentLoeb extends Fragment implements
             // todo jan - aktiver knapper? mm
         }
 
-//        SingletonDtuRunner.isLoebsAktivitetStartet = true;
         SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet = true;
+        Log.d(TAG, "SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet er nu sat til true!");
+
         if (!SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates)
         {
             boolean googleApiStatus = startLocationUpdates();
@@ -250,6 +261,7 @@ public class FragmentLoeb extends Fragment implements
 
             if(googleApiStatus)
             {
+                SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet = true;
                 SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates = true;
                 Toast.makeText(getActivity(), "Location updates startet!", Toast.LENGTH_LONG);
                 setButtonsEnabledState();
@@ -268,9 +280,20 @@ public class FragmentLoeb extends Fragment implements
 
     private void opretLoebsAktivitet() {
         // opret løb:
+
+
+
         LoebsAktivitet loebsAktivitet = new LoebsAktivitet();
-        loebsAktivitet.setNavnAlias("TestNavn");
-        loebsAktivitet.setEmail("Test email");
+
+        SharedPreferences pref = getActivity().getPreferences(0);
+
+
+        String navn = pref.getString(GlobaleKonstanter.PREF_PERSONNAVN, "");
+        String email = pref.getString(GlobaleKonstanter.PREF_EMAIL, "");
+        String studienummer = pref.getString(GlobaleKonstanter.PREF_STUDIENUMMER, "");
+
+        loebsAktivitet.setNavnAlias(navn + " " + studienummer);
+        loebsAktivitet.setEmail(email);
         loebsAktivitet.setLoebsNote("Dette er et test løb! skal have input fra bruger...");
         loebsAktivitet.setPersonId("todo");
         //loebsAktivitet.setStarttidspunkt();
@@ -287,15 +310,11 @@ public class FragmentLoeb extends Fragment implements
 
         // tjek for googleAPI:
 
-
-        // The final argument to {@code requestLocationUpdates()} is a LocationListener
-        // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
-
         try
         {
             LocationServices.FusedLocationApi.requestLocationUpdates(
-//                    singletonDtuRunner.googleApiClient, locationRequest, this);
-                    SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient, SingletonDtuRunner.loebsStatus.locationGoogleApi.locationRequest, this);
+                    SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient,
+                    SingletonDtuRunner.loebsStatus.locationGoogleApi.locationRequest, this);
             return true;
         }
         catch (Exception exception)
@@ -312,12 +331,12 @@ public class FragmentLoeb extends Fragment implements
     }
 
     private void setButtonsEnabledState() {
-        if (SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates) {
-            buttonStartAktivitet.setEnabled(false);
-            mStopUpdatesButton.setEnabled(true);
+        if (SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet) {
+            buttonStartLoebsAktivitet.setEnabled(false);
+            buttonStopLoebsAktivitet.setEnabled(true);
         } else {
-            buttonStartAktivitet.setEnabled(true);
-            mStopUpdatesButton.setEnabled(false);
+            buttonStartLoebsAktivitet.setEnabled(true);
+            buttonStopLoebsAktivitet.setEnabled(false);
         }
     }
 

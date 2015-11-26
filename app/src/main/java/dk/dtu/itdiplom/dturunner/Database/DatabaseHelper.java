@@ -137,12 +137,11 @@ public class DatabaseHelper {
         DatabaseContract sqliteRepo = new DatabaseContract(context);
         SQLiteDatabase db = sqliteRepo.getReadableDatabase();
 
-        List<LoebsAktivitet> liste = new ArrayList<>();     // der bør kun være een dog.
-
+        List<LoebsAktivitet> liste = new ArrayList<>();
 
 
         String query = String.format("SELECT * FROM %s WHERE %s = '%s'", LoebsAktivitetDb.TABLE_NAME, LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_LOEBSAKTIVITETS_ID, uuid.toString());
-        db.rawQuery(query, null);
+        //db.rawQuery(query, null);
 
         Cursor cursor = db.rawQuery(query, null);
         try {
@@ -156,6 +155,17 @@ public class DatabaseHelper {
                     String starttid = cursor.getString(cursor.getColumnIndex(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_STARTTIDSPUNKT));
                     loebsAktivitet.setLoebsDato(starttid);
                     loebsAktivitet.setStarttidspunkt(cursor.getLong(cursor.getColumnIndex(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_STARTTIDSPUNKT)));
+
+                    // todo jan - skal indlæse alle punkterne også!
+//                    List<PointInfo> pointInfoList = new List<>();
+                    List<PointInfo> pointInfoList = hentPointInfoList(context, loebsAktivitetsUUID);
+                    loebsAktivitet.pointInfoList = pointInfoList;
+
+                    // todo jan: skal have lavet beregnere på LoebsAktivitet til at beregne distance, gennemsnits fart mm.
+
+//                    loebsAktivitet.setLoebsNote(String.format(" Dette er en test: Antal løbspunkter: %s , Distance %s meter.",
+//                            pointInfoList.size(), loebsAktivitet.getTotalDistanceMeters()));
+
                     liste.add(loebsAktivitet);
 
                 } while(cursor.moveToNext());
@@ -175,6 +185,48 @@ public class DatabaseHelper {
 
         return liste.get(0);
 
+    }
+
+    private List<PointInfo> hentPointInfoList(Context context, UUID loebsAktivitetsUUID) {
+
+        DatabaseContract sqliteRepo = new DatabaseContract(context);
+        SQLiteDatabase db = sqliteRepo.getReadableDatabase();
+
+        List<PointInfo> pointInfoList = new ArrayList<>();
+
+        // todo jan working here
+
+        String query = String.format("SELECT * FROM %s WHERE %s = '%s'", PointInfoDb.TABLE_NAME, PointInfoDb.COLUMN_NAME_LOEBS_ID, loebsAktivitetsUUID.toString());
+
+        Cursor cursor = db.rawQuery(query, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+
+                    double latitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(PointInfoDb.COLUMN_NAME_LATITUDE)));
+                    double longitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(PointInfoDb.COLUMN_NAME_LONGITUDE)));
+
+                    long timestamp  = Long.parseLong(cursor.getString(cursor.getColumnIndex(PointInfoDb.COLUMN_NAME_TIMESTAMP)));
+                    int heartRate = -1;//   cursor.getString(cursor.getColumnIndex(PointInfoDb.COLUMN_NAME_HEARTRATE)); // todo jan - må komme i en senere version
+                    double speed = Double.parseDouble(cursor.getString(cursor.getColumnIndex(PointInfoDb.COLUMN_NAME_DISTANCE)));
+                    double distance = Double.parseDouble(cursor.getString(cursor.getColumnIndex(PointInfoDb.COLUMN_NAME_DISTANCE)));
+                    PointInfo pointInfo = new PointInfo(timestamp, latitude, longitude, speed, distance, heartRate) ;
+
+                    pointInfoList.add(pointInfo);
+
+                } while(cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.d("DatabaseFejl.DTURunner", "Error while trying to get posts from database... " + query);
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+
+
+
+        return pointInfoList;
     }
 
     public List<LoebsAktivitet> hentLoebsAktivitetListe(Context context)

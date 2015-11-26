@@ -2,8 +2,10 @@ package dk.dtu.itdiplom.dturunner;
 
 //import android.app.FragmentManager;
 //import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -48,10 +50,25 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         //toolbar.setVisibility(View.GONE);
         setSupportActionBar(toolbar);
 
+        if(savedInstanceState == null)
+        {
+            Log.d(LOGTAG, "...savedInstanceState == null...");
+
+            FragmentManager supportFragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.frameLayoutContent, new FragmentForside());
+            fragmentTransaction.commit();
+        }
+
+        // todo jan - dette er blot en test af versioner
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+        {
+            Log.d(LOGTAG, "hmmm. det er en ældre version... ");
+        }
         // todo jan: skal tjekke på savedInstanceState
         //  if (savedInstanceState == null) {
 
-        visMainMenuFragment(savedInstanceState == null);
+        //visMainMenuFragment(savedInstanceState == null);
 
         // dette er den floating email... bør bare fjernes.... todo jan. 1/11-2015...
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -169,6 +186,9 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
     private void visMainMenuFragment(boolean isSavedInstanceStateNull) {
         Log.d(LOGTAG, ":: i visMainMenuFragment.");
 
+        // todo jan - denne metode skal udgå. jeg har flyttet kode op i onCreate. så nu er det kun fra menu denne metode kaldes. dvs. den skal rettes til...
+
+
         if(isSavedInstanceStateNull)
         {
             android.support.v4.app.FragmentManager supportFragmentManager = getSupportFragmentManager();
@@ -246,10 +266,10 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
 
     }
 
-    public void afslutLoebButtonHandler(View view) {
-        // todo jan 21/11 - denne skal ikke være her!
-        visMainMenuFragment(false);
-    }
+//    public void afslutLoebButtonHandler(View view) {
+//        // todo jan 21/11 - denne skal ikke være her!
+//        visMainMenuFragment(false);
+//    }
 
     public void buttonHandlerPersonInfo(View view) {
         Log.d(LOGTAG, ":: i buttonHandlerPersonInfo.");
