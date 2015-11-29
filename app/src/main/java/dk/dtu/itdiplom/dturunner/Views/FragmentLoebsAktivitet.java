@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.UUID;
 
 import dk.dtu.itdiplom.dturunner.Database.DatabaseHelper;
+import dk.dtu.itdiplom.dturunner.Model.FileHelper;
 import dk.dtu.itdiplom.dturunner.Model.FileHelperTest;
 import dk.dtu.itdiplom.dturunner.Model.Entities.LoebsAktivitet;
 import dk.dtu.itdiplom.dturunner.R;
@@ -27,7 +28,7 @@ import dk.dtu.itdiplom.dturunner.R;
  */
 public class FragmentLoebsAktivitet extends Fragment implements View.OnClickListener {
 
-
+    LoebsAktivitet loebsAktivitetSelected;
     Button buttonSendLoebsdataEmail, buttonSletLoebsAkt;
     private String uuid;
 
@@ -56,7 +57,7 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
         // todo jan: hent og vis løbsAktivitet
 
 
-        LoebsAktivitet loebsAktivitetSelected = new DatabaseHelper().hentLoebsAktivitet(getActivity(), UUID.fromString(uuid));
+        loebsAktivitetSelected = new DatabaseHelper().hentLoebsAktivitet(getActivity(), UUID.fromString(uuid));
         //loebsAktivitetSelected.pointInfoList    // todo jan - mangler at indlæse punkterne.
 
         String loebsAktivitetInfoString = String.format("Dato: %s \n" +
@@ -97,7 +98,12 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
 
 
         // ny til external
-        File fff = FileHelperTest.testSaveFileExternalStorage(getActivity(), "some content...");
+//        File fff = FileHelperTest.testSaveFileExternalStorage(getActivity(), "some content...");
+
+//        File fff = FileHelper.saveFileToExternalStorageLobsAktivitet(getActivity(), this.loebsAktivitetSelected);
+        File fff = FileHelper.saveFileExternalStorage2(getActivity(), this.loebsAktivitetSelected);
+
+
         //File externalFilesDir = getActivity().getExternalFilesDir(null);
         Uri uri2 = Uri.fromFile(fff);
 

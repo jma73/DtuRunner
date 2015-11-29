@@ -21,6 +21,11 @@ public class PointInfo {
     //Timestamp timestamp2;
     long timestamp;
     double latitude;
+    double longitude;
+    double speed;
+    double distance;
+    int heartRate;
+
 
     public long getTimestamp() {
         return timestamp;
@@ -50,10 +55,7 @@ public class PointInfo {
         return separator;
     }
 
-    double longitude;
-    double speed;
-    double distance;
-    int heartRate;
+
 
     // separator tegn. Kunne laves til at blive skiftet ud.
     String separator = "\t";

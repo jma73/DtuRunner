@@ -16,21 +16,21 @@ import dk.dtu.itdiplom.dturunner.Model.Entities.LoebsAktivitet;
  */
 public class FileHelper {
 
+    static final String LOGTAG = "jjFileHelper";
 
-    public static File saveFileToExternalStorageLobsAktivitet(Context context, String loebsInfoContent, LoebsAktivitet loebsAktivitet)
+    public static File saveFileToExternalStorageLobsAktivitet(Context context, LoebsAktivitet loebsAktivitet)
     {
-        
-
-        return saveFileExternalStorage(context, loebsInfoContent);
+        String loebsData = makePointInfoString(loebsAktivitet.pointInfoList);
+        return saveFileExternalStorage(context, loebsData);
     }
     
-    private String makePointInfoString(List<PointInfo> pointInfoList)
+    private static String makePointInfoString(List<PointInfo> pointInfoList)
     {
         String separator = "\t";
 
         String line = "header\n";
-        for (PointInfo po: pointInfoList) {
-            line = "" + po.longitude;
+        for (PointInfo pointInfo: pointInfoList) {
+            line = "" + pointInfo.getTimestamp() + separator + pointInfo.getLatitude() + pointInfo.getLongitude() + pointInfo.getDistance() + pointInfo.getHeartRate();
             line+="\n";
         }
         return line;
@@ -41,7 +41,7 @@ public class FileHelper {
     /*
         Gem fil til external storage, så den kan sendes på mail.
      */
-    public static File saveFileExternalStorage(Context context, String loebsInfoContent)
+    private static File saveFileExternalStorage(Context context, String loebsInfoContent)
     {
 
         String filename = "dtuRunner_latest.txt";
@@ -53,13 +53,16 @@ public class FileHelper {
             // current application.
             // If the file does not exists, it is created.
 
-            Log.d("jj", "file write: " + context.getExternalFilesDir(null));
+            Log.d(LOGTAG, "file write(getExternalFilesDir): " + context.getExternalFilesDir(null));
+
 
             if (!fullFilename.exists())
                 fullFilename.createNewFile();
             // Adds a line to the trace file    - todo jan: lav om til ikke append, hvis det bliver samme fil
             BufferedWriter writer = new BufferedWriter(new FileWriter(fullFilename, true /*append*/));
-            writer.write("This is a test trace file.");
+            //writer.write("This is a test trace file.");
+            writer.write("Header info skal være her 1...");
+            writer.write(loebsInfoContent);
             writer.close();
 
             // Refresh the data so it can seen when the device is plugged in a
@@ -75,8 +78,69 @@ public class FileHelper {
         }
         catch (IOException e)
         {
-            Log.e("jj.FileTest", "Fejl opstod ved skrivning af fil. " + e.getMessage() + "\n" + e.getStackTrace());
+            Log.e(LOGTAG, "Fejl opstod ved skrivning af fil. " + e.getMessage() + "\n" + e.getStackTrace());
         }
         return fullFilename;
     }
+
+
+
+
+    /*
+        Gem fil til external storage, så den kan sendes på mail.
+     */
+    public static File saveFileExternalStorage2(Context context, LoebsAktivitet loebsAktivitet)
+    {
+
+        String separator = "\t";
+
+        String filename = "dtuRunner_latest.txt";
+        File fullFilename = new File(context.getExternalFilesDir(null), filename);
+
+        try
+        {
+            // Creates a trace file in the primary external storage space of the
+            // current application.
+            // If the file does not exists, it is created.
+
+            Log.d(LOGTAG, "file write(getExternalFilesDir): " + context.getExternalFilesDir(null));
+
+
+            if (!fullFilename.exists())
+                fullFilename.createNewFile();
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fullFilename, false /*append*/));
+
+            writer.write("Header info skal være her 2...");
+            writer.write("Navn/Alias: " + loebsAktivitet.getNavnAlias());
+            writer.write("Gennnemsnitsfart: " + loebsAktivitet.getAverageSpeedFromStart() + " m/s.");
+            writer.write("Distance i alt: " + loebsAktivitet.getTotalDistanceMeters() + " meter.");
+            writer.write("" + loebsAktivitet.getTextHeader());
+            writer.write("" + loebsAktivitet.getLoebsNote());
+            writer.write("uuid: " + loebsAktivitet.getLoebsAktivitetUuid());
+
+            String lineHeader = "header\n";
+            writer.write(lineHeader);
+            String headerTypes = String.format("%s%s%s%s%s%s%s%s%s%s",
+                    "Tid", separator, "Latitude", separator, "Longitude", separator, "Distance", separator, "Heartrate", separator);
+            writer.write(headerTypes);
+
+            String line = "";
+            for (PointInfo pointInfo: loebsAktivitet.pointInfoList) {
+                line = "" + pointInfo.getTimestamp() + separator + pointInfo.getLatitude() + separator + pointInfo.getLongitude()
+                        + separator + pointInfo.getDistance() + separator + pointInfo.getHeartRate();
+                line+="\n";
+                writer.write(line);
+            }
+
+//            writer.write(line);
+            writer.close();
+
+        }
+        catch (IOException e)
+        {
+            Log.e(LOGTAG, "Fejl opstod ved skrivning af fil. " + e.getMessage() + "\n" + e.getStackTrace());
+        }
+        return fullFilename;
+    }
+
 }
