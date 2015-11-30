@@ -147,7 +147,7 @@ public class LoebsAktivitet {
     {
         int numberOfPoints = this.pointInfoList.size();
         if(numberOfPoints < 2)
-            return 0.01;
+            return 0;
 
         final PointInfo lastLocation = this.pointInfoList.get(numberOfPoints - 1);
 

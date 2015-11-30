@@ -1,4 +1,4 @@
-package dk.dtu.itdiplom.dturunner.Model;
+package dk.dtu.itdiplom.dturunner.Model.Entities;
 
 /**
  * Created by JanMøller on 14-11-2015.

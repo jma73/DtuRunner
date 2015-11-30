@@ -17,8 +17,7 @@ import java.io.File;
 import java.util.UUID;
 
 import dk.dtu.itdiplom.dturunner.Database.DatabaseHelper;
-import dk.dtu.itdiplom.dturunner.Model.FileHelper;
-import dk.dtu.itdiplom.dturunner.Model.FileHelperTest;
+import dk.dtu.itdiplom.dturunner.Utils.FileHelper;
 import dk.dtu.itdiplom.dturunner.Model.Entities.LoebsAktivitet;
 import dk.dtu.itdiplom.dturunner.R;
 

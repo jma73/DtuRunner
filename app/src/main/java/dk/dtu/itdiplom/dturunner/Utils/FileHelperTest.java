@@ -1,4 +1,4 @@
-package dk.dtu.itdiplom.dturunner.Model;
+package dk.dtu.itdiplom.dturunner.Utils;
 
 import android.content.Context;
 import android.media.MediaScannerConnection;

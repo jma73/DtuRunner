@@ -4,11 +4,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 
 /**
+ *
  * Created by JanMøller on 21-11-2015.
  */
 public class LocationGoogleApi {
-
-
 
 
 

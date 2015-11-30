@@ -1,4 +1,4 @@
-package dk.dtu.itdiplom.dturunner.Utils;
+package dk.dtu.itdiplom.dturunner.Slettes;
 
 import android.content.Context;
 

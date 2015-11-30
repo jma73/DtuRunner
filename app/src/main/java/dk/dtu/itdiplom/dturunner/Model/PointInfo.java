@@ -9,6 +9,13 @@ import java.sql.Timestamp;
  */
 public class PointInfo {
 
+    long timestamp;
+    double latitude;
+    double longitude;
+    double speed;
+    double distance;
+    int heartRate;
+
     public PointInfo(long timestamp, double latitude, double longitude, double speed, double distance, int heartRate) {
         this.timestamp = timestamp;
         this.latitude = latitude;
@@ -17,15 +24,6 @@ public class PointInfo {
         this.distance = distance;
         this.heartRate = heartRate;
     }
-
-    //Timestamp timestamp2;
-    long timestamp;
-    double latitude;
-    double longitude;
-    double speed;
-    double distance;
-    int heartRate;
-
 
     public long getTimestamp() {
         return timestamp;

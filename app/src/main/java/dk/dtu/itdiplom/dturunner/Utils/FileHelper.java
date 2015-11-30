@@ -1,4 +1,4 @@
-package dk.dtu.itdiplom.dturunner.Model;
+package dk.dtu.itdiplom.dturunner.Utils;
 
 import android.content.Context;
 import android.util.Log;
@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 import dk.dtu.itdiplom.dturunner.Model.Entities.LoebsAktivitet;
+import dk.dtu.itdiplom.dturunner.Model.PointInfo;
 
 /**
  * Created by JanMøller on 17-11-2015.
