@@ -6,9 +6,18 @@
     <!-- TODO: Update blank fragment layout -->
     <TextView android:layout_width="match_parent" android:layout_height="fill_parent"
         android:text="2 2 2 22 22 2 22 222 hello_blank_fragment 2 222" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="jjjjBLIVER DENNE BRUGT3??????"
+        android:gravity="right"
+        android:layout_height="wrap_content" />
+
+
     <fragment
         class="com.google.android.gms.maps.SupportMapFragment"
-        android:id="@+id/map"
+        android:id="@+id/map2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </FrameLayout>

@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -36,6 +37,10 @@ public class MapActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        Log.d("jjTest", "onCreate in MapActivity");
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -107,6 +112,8 @@ public class MapActivity extends AppCompatActivity implements
         @Override
         public void onLocationChanged(Location location) {
 
+            Toast.makeText(this,"Location Changed",Toast.LENGTH_SHORT).show();
+
             //place marker at current position
             mGoogleMap.clear();
             latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -116,7 +123,6 @@ public class MapActivity extends AppCompatActivity implements
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
             Marker m = mGoogleMap.addMarker(markerOptions);
 
-            Toast.makeText(this,"Location Changed",Toast.LENGTH_SHORT).show();
 
             //If you only need one location, unregister the listener
             //LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);

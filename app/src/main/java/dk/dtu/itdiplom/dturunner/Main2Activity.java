@@ -242,22 +242,22 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
     }
 
 
-    public void buttonHandlerTestLocation(View view) {
-
-        // todo jan 16/11-15: denne skal formentlig udgå igen!!!
-
-        FragmentShowOnMap fragmentShowOnMap = new FragmentShowOnMap();
-        FragmentShowOnMap2 fragmentShowOnMap2 = new FragmentShowOnMap2();
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        //fragmentTransaction.add(R.id.frameLayoutContent, frag);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-
-        fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentShowOnMap2());
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
+//    public void buttonHandlerTestLocation(View view) {
+//
+//        // todo jan 16/11-15: denne skal formentlig udgå igen!!!
+//
+//        FragmentShowOnMap fragmentShowOnMap = new FragmentShowOnMap();
+//        FragmentShowOnMap2 fragmentShowOnMap2 = new FragmentShowOnMap2();
+//
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        //fragmentTransaction.add(R.id.frameLayoutContent, frag);
+//        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//
+//        fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentShowOnMap2());
+//        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.commit();
+//    }
 
     // denne skulle implementeres ifb. med ...
     @Override
