@@ -50,14 +50,10 @@ public class FragmentPersonInfo extends Fragment implements View.OnClickListener
     private void loadSharedPrefs() {
         SharedPreferences pref = getActivity().getPreferences(0);
 
-
         String navn = pref.getString(GlobaleKonstanter.PREF_PERSONNAVN, "");
         String email = pref.getString(GlobaleKonstanter.PREF_EMAIL, "");
         String studienummer = pref.getString(GlobaleKonstanter.PREF_STUDIENUMMER, "");
-        if(navn != "")
-        {
-            editTextPersonNavn.setText(navn);
-        }
+        editTextPersonNavn.setText(navn);
         editTextStudienummer.setText(studienummer);
         editTextEmail.setText(email);
     }

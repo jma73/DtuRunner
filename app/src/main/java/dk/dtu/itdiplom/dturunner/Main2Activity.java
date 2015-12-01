@@ -1,13 +1,8 @@
 package dk.dtu.itdiplom.dturunner;
 
-//import android.app.FragmentManager;
-//import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -18,22 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import dk.dtu.itdiplom.dturunner.Utils.BuildInfo;
 import dk.dtu.itdiplom.dturunner.Views.FragmentAbout;
 import dk.dtu.itdiplom.dturunner.Views.FragmentForside;
-import dk.dtu.itdiplom.dturunner.Views.FragmentLoeb;
 import dk.dtu.itdiplom.dturunner.Views.FragmentLoebsHistorik;
 import dk.dtu.itdiplom.dturunner.Views.FragmentPersonInfo;
-import dk.dtu.itdiplom.dturunner.Views.FragmentShowOnMap;
-import dk.dtu.itdiplom.dturunner.Views.FragmentShowOnMap2;
 
 public class Main2Activity extends AppCompatActivity implements FragmentAbout.OnFragmentInteractionListener
 {
-    SingletonDtuRunner singletonDtuRunner;
-
-    // Global variables. skal placeres i singleton klasse???
-    final String fragmentLoebTag = "FragmentLoeb";
-
     private static final String LOGTAG = "Main2Activity";
 
     @Override
@@ -65,10 +51,6 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         {
             Log.d(LOGTAG, "hmmm. det er en ældre version... ");
         }
-        // todo jan: skal tjekke på savedInstanceState
-        //  if (savedInstanceState == null) {
-
-        //visMainMenuFragment(savedInstanceState == null);
 
         // dette er den floating email... bør bare fjernes.... todo jan. 1/11-2015...
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -96,7 +78,7 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(LOGTAG, " in onOptionsItemSelected " + item.getItemId());
         if (item.getItemId() == 200) {
-            visMainMenuFragment(false);
+            visMainMenuFragment();
         }
         else if (item.getItemId() == 110) {
 //            visMainMenuFragment(false);
@@ -121,7 +103,7 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
             Toast.makeText(this, "Kommer senere!!!", Toast.LENGTH_LONG);
         }
 
-    return true;    // todo jan: skal der returnes andet?
+        return true;    // todo jan: skal der returnes andet?
     }
 
 
@@ -150,7 +132,7 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         {
             final String fragmentBackStackName = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
 
-            if(fragmentBackStackName != null &&  fragmentBackStackName == fragmentLoebTag)
+            if(fragmentBackStackName != null &&  fragmentBackStackName == SingletonDtuRunner.fragmentLoebTag)
             {
                 Log.d(LOGTAG, "- onBackPressed - fragment found:::" + fragmentBackStackName);
                 //this.finish();
@@ -183,74 +165,20 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         }
     }
 
-    private void visMainMenuFragment(boolean isSavedInstanceStateNull) {
+    private void visMainMenuFragment() {
+
         Log.d(LOGTAG, ":: i visMainMenuFragment.");
 
-        // todo jan - denne metode skal udgå. jeg har flyttet kode op i onCreate. så nu er det kun fra menu denne metode kaldes. dvs. den skal rettes til...
-
-
-        if(isSavedInstanceStateNull)
-        {
-            android.support.v4.app.FragmentManager supportFragmentManager = getSupportFragmentManager();
-            android.support.v4.app.FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
-            fragmentTransaction.add(R.id.frameLayoutContent, new FragmentForside());
-            fragmentTransaction.commit();
-        }
-        else
-        {
-            // todo jan 16/11-15: test af pop stack
-            FragmentManager fm = getSupportFragmentManager();
-            fm.popBackStackImmediate();     // hvad hvis vi er på hoved menuen??
-        }
-
-        // todo jan: Husk der skal laves et tjek for: Fragment == null. ellers skal der ikke new'es.
-        //
-
+        FragmentManager fm = getSupportFragmentManager();
+        fm.popBackStackImmediate();
     }
 
-    public void buttonHandlerLoeb(View view) {
 
-        Log.d(LOGTAG, ":: i buttonHandlerLoeb.");
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        Fragment fragment = fragmentManager.findFragmentByTag(fragmentLoebTag);
-        if(fragment != null)
-        {
-            Log.d(LOGTAG, ":: i buttonHandlerLoeb: Fragment with tag loeb er fundet!!! **************");
-        }
-
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentLoeb());
-        fragmentTransaction.addToBackStack(fragmentLoebTag);
-        fragmentTransaction.commit();
-    }
-
-    public void buttonHandlerOm(View view) {
-        
-        Log.d(LOGTAG, ":: i buttonHandlerOm.");
-        singletonDtuRunner.buildDate = BuildInfo.GetBuildDate(this);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentAbout());
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
-
-    // denne skulle implementeres ifb. med ...
+    // denne skulle implementeres ifb. med FragmentAbout.OnFragmentInteractionListener.
     @Override
     public void onFragmentInteraction(Uri uri) {
         Log.d(LOGTAG, ":: i onFragmentInteraction." + uri.getFragment());
-
     }
-
-//    public void afslutLoebButtonHandler(View view) {
-//        // todo jan 21/11 - denne skal ikke være her!
-//        visMainMenuFragment(false);
-//    }
 
     public void buttonHandlerPersonInfo(View view) {
         Log.d(LOGTAG, ":: i buttonHandlerPersonInfo.");
@@ -267,12 +195,5 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         fragmentTransaction.commit();
     }
 
-    public void buttonHandlerLoebsHistorik(View view) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentLoebsHistorik());
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
+
 }

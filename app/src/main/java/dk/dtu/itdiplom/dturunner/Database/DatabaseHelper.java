@@ -21,6 +21,7 @@ import dk.dtu.itdiplom.dturunner.Model.PointInfo;
 // todo jan rename class til mere generelt navn.
 public class DatabaseHelper {
 
+    final String LOGTAG = "jjDatabaseHelper";
 
     public DatabaseHelper()
     {}
@@ -31,7 +32,6 @@ public class DatabaseHelper {
         public static final String TABLE_NAME = "LoebsAktivitet";
 
         //public static final String COLUMN_NAME_NULLABLE = "XXX";  // ikke behov for null.
-
         public static final String COLUMN_NAME_LOEBSAKTIVITET_LOEBSAKTIVITETS_ID = "loebsaktivitetid";
         public static final String COLUMN_NAME_LOEBSAKTIVITET_NOTE = "note";
         public static final String COLUMN_NAME_LOEBSAKTIVITET_NAVN = "navn";
@@ -46,7 +46,6 @@ public class DatabaseHelper {
         public static final String TABLE_NAME = "PointInfo";
 
         //public static final String COLUMN_NAME_NULLABLE = "loebsaktivitetid";
-
         public static final String COLUMN_NAME_LOEBS_ID = "loebsaktivitetid";
         public static final String COLUMN_NAME_ENTRY_ID = "entryid";            // kan fjernes.
         public static final String COLUMN_NAME_TIMESTAMP = "timestamp";
@@ -61,15 +60,15 @@ public class DatabaseHelper {
     // todo jan - tror nok at jeg skal flytte denne til sin egen klasse...
     public void insertPointData(PointInfo pointInfo, UUID loebsAktivitetId, Context context)
     {
-        Log.d("JJdatabase", "insertPointData");
+        Log.d(LOGTAG, "insertPointData");
 
         // Gets the data repository in write mode
         DatabaseContract sqliteRepo = new DatabaseContract(context);
         SQLiteDatabase db = sqliteRepo.getWritableDatabase();
 
-// Create a new map of values, where column names are the keys
+        // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.PointInfoDb.COLUMN_NAME_ENTRY_ID, "1");  // ????
+        values.put(DatabaseHelper.PointInfoDb.COLUMN_NAME_ENTRY_ID, "1");  // Anvendes ikke!
         values.put(DatabaseHelper.PointInfoDb.COLUMN_NAME_LOEBS_ID, loebsAktivitetId.toString());
         values.put(DatabaseHelper.PointInfoDb.COLUMN_NAME_LATITUDE, pointInfo.getLatitude());
         values.put(DatabaseHelper.PointInfoDb.COLUMN_NAME_LONGITUDE, pointInfo.getLongitude());
@@ -78,18 +77,18 @@ public class DatabaseHelper {
         values.put(DatabaseHelper.PointInfoDb.COLUMN_NAME_HEARTRATE, pointInfo.getHeartRate());
         values.put(DatabaseHelper.PointInfoDb.COLUMN_NAME_TIMESTAMP, pointInfo.getTimestamp());
 
-// Insert the new row, returning the primary key value of the new row
+        // Insert the new row, returning the primary key value of the new row
         long newRowId;
         newRowId = db.insert(
                 DatabaseHelper.PointInfoDb.TABLE_NAME,
                 null,
-//                DatabaseHelper.PointInfoDb.COLUMN_NAME_NULLABLE,
                 values);
+        db.close();
     }
 
     public UUID insertLoebsAktivitet(LoebsAktivitet loebsAktivitet, Context context)
     {
-        Log.d("JJdatabase", "insertLoebsAktivitet");
+        Log.d(LOGTAG, "insertLoebsAktivitet");
 
         // Gets the data repository in write mode
         DatabaseContract sqliteRepo = new DatabaseContract(context);
@@ -115,19 +114,22 @@ public class DatabaseHelper {
                 null,
                 values);
 
+        db.close();
+
         return loebsAktivitet.getLoebsAktivitetUuid();
     }
 
     public boolean sletLoebsAktivitet(Context context, UUID uuid)
     {
-        Log.d("JJdatabase", "SletLoebsAktivitet");
+        Log.d(LOGTAG, "SletLoebsAktivitet");
 
         // Gets the data repository in write mode
         DatabaseContract sqliteRepo = new DatabaseContract(context);
         SQLiteDatabase db = sqliteRepo.getWritableDatabase();
 
         int rows = db.delete(LoebsAktivitetDb.TABLE_NAME, LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_LOEBSAKTIVITETS_ID + " = '" + uuid + "'", null);
-        // db.getPath()
+        db.close();
+
         return rows > 0;
     }
 
@@ -138,7 +140,6 @@ public class DatabaseHelper {
         SQLiteDatabase db = sqliteRepo.getReadableDatabase();
 
         List<LoebsAktivitet> liste = new ArrayList<>();
-
 
         String query = String.format("SELECT * FROM %s WHERE %s = '%s'", LoebsAktivitetDb.TABLE_NAME, LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_LOEBSAKTIVITETS_ID, uuid.toString());
         //db.rawQuery(query, null);
@@ -176,11 +177,12 @@ public class DatabaseHelper {
             if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
+            db.close();
         }
 
         if(liste.size() > 1)
         {
-            Log.e("JJDatabase", String.format("Der blev fundet flere LoebsAktivitet for uuid %s. Det burde ikke kunne ske...", uuid));
+            Log.e(LOGTAG, String.format("Der blev fundet flere LoebsAktivitet for uuid %s. Det burde ikke kunne ske...", uuid));
         }
 
         return liste.get(0);
@@ -222,6 +224,7 @@ public class DatabaseHelper {
             if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
+            db.close();
         }
 
 

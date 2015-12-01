@@ -15,9 +15,10 @@ import dk.dtu.itdiplom.dturunner.Utils.BuildInfo;
 public class SingletonDtuRunner extends Application {
     private static SingletonDtuRunner ourInstance = new SingletonDtuRunner();
 
+    public static String fragmentLoebTag = "FragmentLoeb";
+
     public static String buildDate;
     public static LoebsStatus loebsStatus = new LoebsStatus();
-//    public GoogleApiClient googleApiClient;
 
     public static SingletonDtuRunner getInstance() {
         return ourInstance;
@@ -32,8 +33,8 @@ public class SingletonDtuRunner extends Application {
     }
 
 
-
+    // todo jan - til anvendelse fremover. taget fra
     public static final boolean EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator"); // false;
-    public static boolean udvikling = true;
+    public static boolean erUnderUdvikling = true;
 
 }

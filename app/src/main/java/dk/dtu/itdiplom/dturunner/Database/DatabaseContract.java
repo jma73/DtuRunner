@@ -10,9 +10,6 @@ import android.util.Log;
  *                                  https://www.youtube.com/watch?v=p6UgUYSkDmE&feature=youtu.be&t=560
  */
 public class DatabaseContract extends SQLiteOpenHelper {
-//    public DatabaseContract(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-//        super(context, name, factory, version);
-//    }
 
     public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "DtuRunner2.db";
@@ -24,7 +21,6 @@ public class DatabaseContract extends SQLiteOpenHelper {
     
     private static final String SQL_CREATE_PointInfo_ENTRIES =
             "CREATE TABLE " + DatabaseHelper.PointInfoDb.TABLE_NAME + " (" +
-
                     DatabaseHelper.PointInfoDb._ID + " INTEGER PRIMARY KEY," +
                     DatabaseHelper.PointInfoDb.COLUMN_NAME_ENTRY_ID + INTEGER_TYPE + COMMA_SEP +
                     DatabaseHelper.PointInfoDb.COLUMN_NAME_LOEBS_ID + TEXT_TYPE + COMMA_SEP +      // skal være guid. derfor TEXT.
@@ -38,25 +34,19 @@ public class DatabaseContract extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_LoebsAktivitet_ENTRIES =
             "CREATE TABLE " + DatabaseHelper.LoebsAktivitetDb.TABLE_NAME + " (" +
-
                     DatabaseHelper.LoebsAktivitetDb._ID + " INTEGER PRIMARY KEY," +
                     DatabaseHelper.LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_LOEBSAKTIVITETS_ID + TEXT_TYPE + COMMA_SEP +    // guid ?
                     DatabaseHelper.LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_PROGRAMTYPE + TEXT_TYPE + COMMA_SEP +
-                DatabaseHelper.LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_STARTTIDSPUNKT + TEXT_TYPE + COMMA_SEP +
+                    DatabaseHelper.LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_STARTTIDSPUNKT + TEXT_TYPE + COMMA_SEP +
                     DatabaseHelper.LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_NAVN + TEXT_TYPE + COMMA_SEP +
                     DatabaseHelper.LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_NOTE + TEXT_TYPE + COMMA_SEP +
                     DatabaseHelper.LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_PERSONID + TEXT_TYPE + COMMA_SEP +
                     DatabaseHelper.LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_EMAIL + TEXT_TYPE +
                     " )";
 
-
-
-
     public DatabaseContract(Context context)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-
-
     }
 
     @Override
@@ -71,6 +61,4 @@ public class DatabaseContract extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // må komme i en senere version...
     }
-
-
 }

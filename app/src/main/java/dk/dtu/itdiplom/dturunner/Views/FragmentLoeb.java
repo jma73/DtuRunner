@@ -1,6 +1,5 @@
 package dk.dtu.itdiplom.dturunner.Views;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
@@ -42,7 +41,7 @@ public class FragmentLoeb extends Fragment implements
         View.OnClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
-    protected static final String TAG = "JJ-location-updates";
+    protected static final String TAG = "jjFragmentLoeb";
     final String fragmentLoebTag = "FragmentLoeb";
 
     // Labels.
@@ -95,6 +94,7 @@ public class FragmentLoeb extends Fragment implements
 
         }
 
+        // todo jan 1/12-15: ikke færdig med dette:
         Timer timer = new Timer();
         TimerTask timertask = new TimerTask() {
             @Override
@@ -117,17 +117,14 @@ public class FragmentLoeb extends Fragment implements
         buttonAfslut = (Button) rod.findViewById(R.id.buttonAfslut);
         buttonStartLoebsAktivitet.setOnClickListener(this);
         buttonAfslut.setOnClickListener(this);
-//        buttonShow = (Button) rod.findViewById(R.id.buttonShow);
-//        buttonShow.setOnClickListener(this);
+        buttonStopLoebsAktivitet = (Button) rod.findViewById(R.id.buttonStop);
+        buttonStopLoebsAktivitet.setOnClickListener(this);
 
         textViewLocations = (TextView) rod.findViewById(R.id.textViewLocations);
         textViewDistance = (TextView) rod.findViewById(R.id.textViewDistance);
         textViewSpeed = (TextView) rod.findViewById(R.id.textViewSpeed);
         textViewSpeed2 = (TextView) rod.findViewById(R.id.textViewSpeed2);
         textViewTimer = (TextView) rod.findViewById(R.id.textViewTimer);
-
-        buttonStopLoebsAktivitet = (Button) rod.findViewById(R.id.buttonStop);
-        buttonStopLoebsAktivitet.setOnClickListener(this);
 
         mLatitudeTextView = (TextView) rod.findViewById(R.id.latitude_text);
         mLongitudeTextView = (TextView) rod.findViewById(R.id.longitude_text);
@@ -281,8 +278,6 @@ public class FragmentLoeb extends Fragment implements
     private void opretLoebsAktivitet() {
         // opret løb:
 
-
-
         LoebsAktivitet loebsAktivitet = new LoebsAktivitet();
 
         SharedPreferences pref = getActivity().getPreferences(0);
@@ -295,7 +290,7 @@ public class FragmentLoeb extends Fragment implements
         loebsAktivitet.setNavnAlias(navn + " " + studienummer);
         loebsAktivitet.setEmail(email);
         loebsAktivitet.setLoebsNote("Dette er et test løb! skal have input fra bruger...");
-        loebsAktivitet.setPersonId("todo");
+        loebsAktivitet.setPersonId(studienummer);
         //loebsAktivitet.setStarttidspunkt();
 
         // todo jan kan det gøre pænere? dvs. uden new hver gang... eller static...
