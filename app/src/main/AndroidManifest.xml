@@ -31,10 +31,12 @@
             android:label="@string/title_activity_map"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+
+        <!-- todo jan: slåes til igen:  android:screenOrientation="portrait"-->
         <activity
             android:name=".Main2Activity"
             android:label="@string/title_activity_main2"
-            android:screenOrientation="portrait"
+
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
