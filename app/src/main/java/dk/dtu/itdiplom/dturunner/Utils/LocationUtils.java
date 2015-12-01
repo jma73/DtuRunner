@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import dk.dtu.itdiplom.dturunner.Model.PointInfo;
+import dk.dtu.itdiplom.dturunner.SingletonDtuRunner;
 
 /**
  * Created by JanMøller on 05-11-2015.
@@ -183,11 +184,13 @@ public class LocationUtils {
 
         long secondsPassed = (location2.getTime() - location1.getTime()) / 1000;
 
-        Log.d("jj", "distanceInMeters: " + distanceInMeters);
-        Log.d("jj", "secondsPassed: " + secondsPassed);
-        Log.d("jj", "time1: " + time1);
-        Log.d("jj", "time2: " + time2);
-
+        if(SingletonDtuRunner.erUnderUdviklingFlag) {
+            Log.d("jj", "distanceInMeters: " + distanceInMeters);
+            Log.d("jj", "secondsPassed: " + secondsPassed);
+            Log.d("jj", "time1: " + time1);
+            Log.d("jj", "time2: " + time2);
+        }
+        
         if(distanceInMeters == 0)
             return 0;
 
@@ -198,15 +201,15 @@ public class LocationUtils {
         return locationN.getTime() - location0.getTime();
     }
 
-    public static String displayTimerFormat(long millis)
+    public static String displayTimerFormat(long milliseconds)
     {
-        // long millis = getTimeMillisecondsSinceStart(location0, locationN);
+        // long milliseconds = getTimeMillisecondsSinceStart(location0, locationN);
         return String.format("%02d:%02d:%02d",
-                TimeUnit.MILLISECONDS.toHours(millis),
-                TimeUnit.MILLISECONDS.toMinutes(millis) -
-                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
-                TimeUnit.MILLISECONDS.toSeconds(millis) -
-                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+                TimeUnit.MILLISECONDS.toHours(milliseconds),
+                TimeUnit.MILLISECONDS.toMinutes(milliseconds) -
+                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(milliseconds)),
+                TimeUnit.MILLISECONDS.toSeconds(milliseconds) -
+                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliseconds)));
     }
 
     public static long getTimeMillisecondsSinceStart(PointInfo location0, PointInfo locationN) {

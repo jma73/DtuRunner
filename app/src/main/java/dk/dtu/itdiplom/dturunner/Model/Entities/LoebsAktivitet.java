@@ -71,7 +71,7 @@ public class LoebsAktivitet {
     {
         String date = getStarttimeFormatted();
         String distance = getTotalDistanceMetersFormatted(true);
-        return String.format(" %s %s ", date, distance);
+        return String.format(" %s - Distance: %s ", date, distance);
     }
 
     @NonNull
@@ -187,8 +187,11 @@ public class LoebsAktivitet {
     public String getTotalDistanceMetersFormatted(boolean medEnhedsAngivelse)
     {
         double distance = getTotalDistanceMeters();
-        if(medEnhedsAngivelse)
-            return String.format("%.1f meter", distance);
+        if(medEnhedsAngivelse){
+            if(distance > 1200)
+                return String.format("%.1f km", distance / 1000);
+            return String.format("%.1f m", distance);
+        }
         return String.format("%.1f", distance);
     }
 
