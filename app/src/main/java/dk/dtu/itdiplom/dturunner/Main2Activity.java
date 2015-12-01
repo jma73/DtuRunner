@@ -126,7 +126,7 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
 
 
     /*
-        En foreløb override af onBackPressed. Dette for at stoppe bruge fra at gå ud af løbssiden ned tilbage knappen, uden først at stoppe løbet.
+        En foreløbig override af onBackPressed. Dette for at stoppe bruge fra at gå ud af løbssiden ned tilbage knappen, uden først at stoppe løbet.
      */
     @Override
     public void onBackPressed() {
@@ -214,8 +214,8 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        Fragment fff = fragmentManager.findFragmentByTag(fragmentLoebTag);
-        if(fff != null)
+        Fragment fragment = fragmentManager.findFragmentByTag(fragmentLoebTag);
+        if(fragment != null)
         {
             Log.d(LOGTAG, ":: i buttonHandlerLoeb: Fragment with tag loeb er fundet!!! **************");
         }
@@ -230,7 +230,6 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
     public void buttonHandlerOm(View view) {
         
         Log.d(LOGTAG, ":: i buttonHandlerOm.");
-        // todo jan - ændres hvis Singleton ikke skal new'es.
         singletonDtuRunner.buildDate = BuildInfo.GetBuildDate(this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -240,24 +239,6 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
-
-
-//    public void buttonHandlerTestLocation(View view) {
-//
-//        // todo jan 16/11-15: denne skal formentlig udgå igen!!!
-//
-//        FragmentShowOnMap fragmentShowOnMap = new FragmentShowOnMap();
-//        FragmentShowOnMap2 fragmentShowOnMap2 = new FragmentShowOnMap2();
-//
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        //fragmentTransaction.add(R.id.frameLayoutContent, frag);
-//        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//
-//        fragmentTransaction.replace(R.id.frameLayoutContent, new FragmentShowOnMap2());
-//        fragmentTransaction.addToBackStack(null);
-//        fragmentTransaction.commit();
-//    }
 
     // denne skulle implementeres ifb. med ...
     @Override

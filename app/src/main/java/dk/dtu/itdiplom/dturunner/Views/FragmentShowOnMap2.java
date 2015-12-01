@@ -1,9 +1,11 @@
 package dk.dtu.itdiplom.dturunner.Views;
 
 
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +18,12 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import dk.dtu.itdiplom.dturunner.R;
 
@@ -36,12 +38,8 @@ public class FragmentShowOnMap2 extends Fragment
     LocationRequest mLocationRequest;
     GoogleApiClient mGoogleApiClient;
     LatLng latLng;
-    GoogleMap mGoogleMap;
-    SupportMapFragment mFragment;
-
-
-    private SupportMapFragment mMapFragment;
-    private GoogleMap mMapGoogleMap;
+    private SupportMapFragment mapFragment;
+    private GoogleMap mapGoogleMap;
 
     public FragmentShowOnMap2() {
         // Required empty public constructor
@@ -57,18 +55,21 @@ public class FragmentShowOnMap2 extends Fragment
         Log.d("jjTest", "onCreateView in FragmentShowOnMap2");
 
         // pga. man ikke kan skabe et SupportFragment i onCreateView, løses det på denne måde:
-        mMapFragment = new SupportMapFragment() {
+        //  http://stackoverflow.com/questions/14047257/how-do-i-know-the-map-is-ready-to-get-used-when-using-the-supportmapfragment/14956903#14956903
+        //          ref.: http://stackoverflow.com/questions/25051246/how-to-use-supportmapfragment-inside-a-fragment
+
+        mapFragment = new SupportMapFragment() {
             @Override
             public void onActivityCreated(Bundle savedInstanceState) {
                 super.onActivityCreated(savedInstanceState);
-                mMapGoogleMap = mMapFragment.getMap();
-                if (mMapGoogleMap != null) {
-                    setupMap();
+                mapFragment.setEnterTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                mapGoogleMap = mapFragment.getMap();
+                if (mapGoogleMap != null) {
+                    setupMap(); // her indlæses markers mm.
                 }
             }
         };
-        getChildFragmentManager().beginTransaction().add(R.id.map2, mMapFragment).commit();
-
+        getChildFragmentManager().beginTransaction().add(R.id.map2, mapFragment).commit();
 
 //        mFragment = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map2);
 //        if(mFragment == null)
@@ -83,9 +84,7 @@ public class FragmentShowOnMap2 extends Fragment
 //
 //        mGoogleMap.addMarker(markerOptions);
 
-
         return rod;
-
     }
 
     /*
@@ -101,25 +100,33 @@ public class FragmentShowOnMap2 extends Fragment
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(dtuCampus);
         markerOptions.title("Current Position");
-        mMapGoogleMap.addMarker(markerOptions);
+        mapGoogleMap.addMarker(markerOptions);
 
         MarkerOptions markerOptions2 = new MarkerOptions();
         markerOptions2.position(lautrupVang1);
         markerOptions2.title("Position lautrupVang1");
         // markerOptions2.title("Current Position");
-        mMapGoogleMap.addMarker(markerOptions2);
+        mapGoogleMap.addMarker(markerOptions2);
 
-        Marker kiel = mMapGoogleMap.addMarker(new MarkerOptions()
+        Marker marker = mapGoogleMap.addMarker(new MarkerOptions()
                 .position(lautrupVang4)
                 .title("lautrupVang4")
                 .snippet("LautrupVang 4")
-                .flat(true)
 //                .icon(BitmapDescriptorFactory                       .fromResource(R.drawable.mr_ic_play_dark)
 //                )
         );
 
-        // Zoom - 1 ud, 15 meget tæt på.
-        mMapGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dtuCampus, 15));
+        PolylineOptions rectOptions = new PolylineOptions()
+                .width(3)
+                .color(Color.BLUE)
+                .add(dtuCampus,
+                        lautrupVang4,
+                        lautrupVang1
+                );
+        mapGoogleMap.addPolyline(rectOptions);
+
+        // Zoom - 1 = langt ude, 15 tæt på.
+        mapGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dtuCampus, 15));
 
     }
 
@@ -142,13 +149,13 @@ public class FragmentShowOnMap2 extends Fragment
         Log.d("jjTest", "onLocationChanged");
 
 //place marker at current position
-        mGoogleMap.clear();
+        mapGoogleMap.clear();
         latLng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-        Marker m = mGoogleMap.addMarker(markerOptions);
+        Marker m = mapGoogleMap.addMarker(markerOptions);
 
         Toast.makeText(getActivity(), "Location Changed", Toast.LENGTH_SHORT).show();
 
