@@ -4,8 +4,6 @@ import android.app.Application;
 import android.os.Build;
 import android.util.Log;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-
 import dk.dtu.itdiplom.dturunner.Model.Entities.LoebsStatus;
 import dk.dtu.itdiplom.dturunner.Utils.BuildInfo;
 
@@ -35,6 +33,6 @@ public class SingletonDtuRunner extends Application {
 
     // todo jan - til anvendelse fremover. taget fra
     public static final boolean EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator"); // false;
-    public static boolean erUnderUdvikling = true;
+    public static boolean erUnderUdviklingFlag = true;
 
 }

@@ -70,7 +70,8 @@ public class LoebsAktivitet {
     public String getTextHeader()
     {
         String date = getStarttimeFormatted();
-        return String.format(" %s ", date);
+        String distance = getTotalDistanceMetersFormatted(true);
+        return String.format(" %s %s ", date, distance);
     }
 
     @NonNull
@@ -84,8 +85,6 @@ public class LoebsAktivitet {
         String date = getStarttimeFormatted();
         return String.format(" :: %s %s %s %s ", date, loebsDato, loebsAktivitetUuid, starttidspunkt);
     }
-
-
 
     // note jan: toString giver teksten i ListView'et / adapteren.
     public String toString()
@@ -176,12 +175,21 @@ public class LoebsAktivitet {
         if(pointInfoList == null)
         {
             Log.d("LoebsAktivitet", "pointInfoList er null. Dette er en fejl! todo jan...");
+            return distance;
         }
 
         if(pointInfoList.size() > 0)
             distance = LocationUtils.getTotalDistance(pointInfoList);
 
         return distance;
+    }
+
+    public String getTotalDistanceMetersFormatted(boolean medEnhedsAngivelse)
+    {
+        double distance = getTotalDistanceMeters();
+        if(medEnhedsAngivelse)
+            return String.format("%.1f meter", distance);
+        return String.format("%.1f", distance);
     }
 
     public double getAverageSpeedFromStart()

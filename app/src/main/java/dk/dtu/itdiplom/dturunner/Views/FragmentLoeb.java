@@ -369,10 +369,6 @@ public class FragmentLoeb extends Fragment implements
         double distanceOld = 0;
         double speedSinceLast = 0;
 
-        double timeSinceStart = LocationUtils.getTimeMillisecondsSinceStart(SingletonDtuRunner.loebsStatus.locationList.get(0), SingletonDtuRunner.loebsStatus.locationList.get(size - 1)) / 1000;
-        textViewTimer.setText(timeSinceStart + "  sekunder");
-
-
         showLoebsParametre();
 
 //
@@ -381,13 +377,6 @@ public class FragmentLoeb extends Fragment implements
         // todo jan - er desværre pt. afhængig af disse værdier: De kunne nok beregnes et andet sted...
             distanceOld = LocationUtils.getDistanceBetweenPoints(SingletonDtuRunner.loebsStatus.locationList.get(size - 2), SingletonDtuRunner.loebsStatus.mCurrentLocation);
             speedSinceLast = LocationUtils.getSpeedBetweenPoints(SingletonDtuRunner.loebsStatus.locationList.get(size - 2), SingletonDtuRunner.loebsStatus.mCurrentLocation);
-//
-//            //distance = SingletonDtuRunner.loebsStatus.loebsAktivitet.getDistanceBetweenPoints(SingletonDtuRunner.loebsStatus.locationList.get(size - 2), SingletonDtuRunner.loebsStatus.mCurrentLocation);
-//
-//
-//  //          SingletonDtuRunner.loebsStatus.mDistanceAccumulated +=distanceOld;
-//
-//
         }
 
         // todo jan - working here... 9/11-15
@@ -398,8 +387,12 @@ public class FragmentLoeb extends Fragment implements
 
         savePointToDatabase(pointInfo);
 
-        // todo jan 22/11-15: Dette kan kan nok godt udgå senere...
-        showAllLocations();
+        // note jan - vises kun under udvikling
+        if(SingletonDtuRunner.erUnderUdviklingFlag)
+        {
+            // todo jan 22/11-15: Dette kan kan nok godt udgå senere...
+            showAllLocations();
+        }
     }
 
     private void showLoebsParametre() {
@@ -408,24 +401,31 @@ public class FragmentLoeb extends Fragment implements
 
         if(size > 0)
         {
-        double speedSinceLast = 0;
+            long timeSinceStartMilliSeconds = LocationUtils.getTimeMillisecondsSinceStart(SingletonDtuRunner.loebsStatus.locationList.get(0), SingletonDtuRunner.loebsStatus.locationList.get(size - 1));
+            textViewTimer.setText(LocationUtils.displayTimerFormat(timeSinceStartMilliSeconds));
 
-        // todo jan - dette er sådan skal være hvis det virker...
-        // todo jaman - distanceOld skal beregnes på en anden måde end før...
+            double speedSinceLast = 0;
 
-        speedSinceLast = SingletonDtuRunner.loebsStatus.loebsAktivitet.getCurrentSpeedSinceLastPoint();
-        double speedLatestPoints = SingletonDtuRunner.loebsStatus.loebsAktivitet.getAverageSpeedLatestPoints();
-        double speedSinceStartAverage = SingletonDtuRunner.loebsStatus.loebsAktivitet.getAverageSpeedFromStart();
+            // todo jan - dette er sådan skal være hvis det virker...
+            // todo jaman - distanceOld skal beregnes på en anden måde end før...
 
-        //textViewDistance.setText(( SingletonDtuRunner.loebsStatus.mDistanceAccumulated + " meter"));
-        final double totalDistance = SingletonDtuRunner.loebsStatus.loebsAktivitet.getTotalDistanceMeters();
-        textViewDistance.setText(( String.format("%.1f meter", totalDistance )));
+            speedSinceLast = SingletonDtuRunner.loebsStatus.loebsAktivitet.getCurrentSpeedSinceLastPoint();
+            double speedLatestPoints = SingletonDtuRunner.loebsStatus.loebsAktivitet.getAverageSpeedLatestPoints();
+            double speedSinceStartAverage = SingletonDtuRunner.loebsStatus.loebsAktivitet.getAverageSpeedFromStart();
 
-        String speedSinceLastWithDecimals = String.format("%.2f", speedSinceLast);
-        textViewSpeed.setText((String.format("%s m/s", speedSinceLastWithDecimals)));
-        String speedLatestPointsAverageWithDecimals = String.format("%.2f", speedLatestPoints);
-        String speedSinceStartAverageWithDecimals = String.format("%.2f", speedSinceStartAverage);
-        textViewSpeed2.setText((String.format("%s m/s avg (%s)", speedSinceStartAverageWithDecimals, speedLatestPointsAverageWithDecimals)));
+            //textViewDistance.setText(( SingletonDtuRunner.loebsStatus.mDistanceAccumulated + " meter"));
+            final double totalDistance = SingletonDtuRunner.loebsStatus.loebsAktivitet.getTotalDistanceMeters();
+            textViewDistance.setText(( String.format("%.1f meter", totalDistance )));
+
+            String speedSinceLastWithDecimals = String.format("%.2f", speedSinceLast);
+            textViewSpeed.setText((String.format("%s m/s", speedSinceLastWithDecimals)));
+            String speedLatestPointsAverageWithDecimals = String.format("%.2f", speedLatestPoints);
+            String speedSinceStartAverageWithDecimals = String.format("%.2f", speedSinceStartAverage);
+            textViewSpeed2.setText((String.format("%s m/s avg (%s)", speedSinceStartAverageWithDecimals, speedLatestPointsAverageWithDecimals)));
+        }
+        else
+        {
+            textViewTimer.setText(LocationUtils.displayTimerFormat(0));
         }
     }
 

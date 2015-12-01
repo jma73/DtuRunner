@@ -84,7 +84,7 @@ public class FragmentForside extends Fragment implements View.OnClickListener {
     public void buttonHandlerOm() {
 
         Log.d(LOGTAG, ":: i buttonHandlerOm.");
-        SingletonDtuRunner.buildDate = BuildInfo.GetBuildDate(getActivity());
+        // SingletonDtuRunner.buildDate = BuildInfo.GetBuildDate(getActivity());
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

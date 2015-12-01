@@ -157,8 +157,6 @@ public class DatabaseHelper {
                     loebsAktivitet.setLoebsDato(starttid);
                     loebsAktivitet.setStarttidspunkt(cursor.getLong(cursor.getColumnIndex(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_STARTTIDSPUNKT)));
 
-                    // todo jan - skal indlæse alle punkterne også!
-//                    List<PointInfo> pointInfoList = new List<>();
                     List<PointInfo> pointInfoList = hentPointInfoList(context, loebsAktivitetsUUID);
                     loebsAktivitet.pointInfoList = pointInfoList;
 
@@ -234,7 +232,6 @@ public class DatabaseHelper {
 
     public List<LoebsAktivitet> hentLoebsAktivitetListe(Context context)
     {
-
         DatabaseContract sqliteRepo = new DatabaseContract(context);
         SQLiteDatabase db = sqliteRepo.getReadableDatabase();
 
@@ -259,6 +256,10 @@ public class DatabaseHelper {
                     String starttid = cursor.getString(cursor.getColumnIndex(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_STARTTIDSPUNKT));
                     loebsAktivitet.setLoebsDato(starttid);
                     loebsAktivitet.setStarttidspunkt(cursor.getLong(cursor.getColumnIndex(LoebsAktivitetDb.COLUMN_NAME_LOEBSAKTIVITET_STARTTIDSPUNKT)));
+
+                    List<PointInfo> pointInfoList = hentPointInfoList(context, loebsAktivitetsUUID);
+                    loebsAktivitet.pointInfoList = pointInfoList;
+
                     liste.add(loebsAktivitet);
 
                 } while(cursor.moveToNext());

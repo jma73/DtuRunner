@@ -4,6 +4,7 @@ import android.location.Location;
 import android.util.Log;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import dk.dtu.itdiplom.dturunner.Model.PointInfo;
 
@@ -195,6 +196,17 @@ public class LocationUtils {
 
     public static long getTimeMillisecondsSinceStart(Location location0, Location locationN) {
         return locationN.getTime() - location0.getTime();
+    }
+
+    public static String displayTimerFormat(long millis)
+    {
+        // long millis = getTimeMillisecondsSinceStart(location0, locationN);
+        return String.format("%02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(millis),
+                TimeUnit.MILLISECONDS.toMinutes(millis) -
+                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                TimeUnit.MILLISECONDS.toSeconds(millis) -
+                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
     }
 
     public static long getTimeMillisecondsSinceStart(PointInfo location0, PointInfo locationN) {
