@@ -1,5 +1,7 @@
 package dk.dtu.itdiplom.dturunner.Views;
 
+import android.content.ComponentName;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
@@ -26,6 +28,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import dk.dtu.itdiplom.dturunner.Database.DatabaseHelper;
+import dk.dtu.itdiplom.dturunner.LoebsAktivitetService;
 import dk.dtu.itdiplom.dturunner.Model.Entities.GlobaleKonstanter;
 import dk.dtu.itdiplom.dturunner.Model.Entities.LoebsAktivitet;
 import dk.dtu.itdiplom.dturunner.Model.LocationHelper;
@@ -230,12 +233,10 @@ public class FragmentLoeb extends Fragment implements
             Toast.makeText(getActivity(), "Location updates stoppet!", Toast.LENGTH_LONG);
             setButtonsEnabledState();
             stopLocationUpdates();
-
+            stopService();
         }
     }
 
-    // todo jan old name: startUpdatesButtonHandler. rename til noget mere sigende!!!
-    //      public void startUpdatesButtonHandler(View view)
     public void startLoebsAktivitetOgLocationUpdates() {
         if(getActivity() == null)   // hvis activity context er null er vi allerede ude af fragment.
             return;
@@ -252,22 +253,35 @@ public class FragmentLoeb extends Fragment implements
         if (!SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates)
         {
             boolean googleApiStatus = startLocationUpdates();
-            opretLoebsAktivitet();
-            nulstilLoebsdata();
 
 
             if(googleApiStatus)
             {
+                opretLoebsAktivitet();
+                nulstilLoebsdata();
+
                 SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet = true;
                 SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates = true;
                 Toast.makeText(getActivity(), "Location updates startet!", Toast.LENGTH_LONG);
                 setButtonsEnabledState();
+
+                startService();
             }
             else
             {
+                SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet = false;
+                setButtonsEnabledState();
                 textViewTimer.setText("Du har ikke google play installeret. Så kan du desværre ikke anvende denne app.");
             }
         }
+    }
+
+    private void stopService() {
+        getActivity().stopService(new Intent(getActivity(), LoebsAktivitetService.class));
+    }
+
+    private void startService() {
+        getActivity().startService(new Intent(getActivity(), LoebsAktivitetService.class));
     }
 
     private void nulstilLoebsdata() {
@@ -276,12 +290,10 @@ public class FragmentLoeb extends Fragment implements
     }
 
     private void opretLoebsAktivitet() {
-        // opret løb:
 
         LoebsAktivitet loebsAktivitet = new LoebsAktivitet();
 
         SharedPreferences pref = getActivity().getPreferences(0);
-
 
         String navn = pref.getString(GlobaleKonstanter.PREF_PERSONNAVN, "");
         String email = pref.getString(GlobaleKonstanter.PREF_EMAIL, "");
