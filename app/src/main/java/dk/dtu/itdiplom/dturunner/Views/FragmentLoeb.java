@@ -409,11 +409,20 @@ public class FragmentLoeb extends Fragment implements
 
     private void showLoebsParametre() {
 
-        int size = SingletonDtuRunner.loebsStatus.loebsAktivitet.pointInfoList.size();
+        // todo jan - der er en fejl her!!!!
+        // Hvilken skal anvendes???    Det er fordi den ene er af typen Location...
+        // SingletonDtuRunner.loebsStatus.locationList
+//        int size = SingletonDtuRunner.loebsStatus.loebsAktivitet.pointInfoList.size();
+        int size = SingletonDtuRunner.loebsStatus.locationList.size();
 
         if(size > 0)
         {
-            long timeSinceStartMilliSeconds = LocationUtils.getTimeMillisecondsSinceStart(SingletonDtuRunner.loebsStatus.locationList.get(0), SingletonDtuRunner.loebsStatus.locationList.get(size - 1));
+            int previousIndex = size - 1;
+
+            if(size == 1)
+                previousIndex = 0;
+            long timeSinceStartMilliSeconds = LocationUtils.getTimeMillisecondsSinceStart(SingletonDtuRunner.loebsStatus.locationList.get(0),
+                    SingletonDtuRunner.loebsStatus.locationList.get(previousIndex));
             textViewTimer.setText(LocationUtils.displayTimerFormat(timeSinceStartMilliSeconds));
 
             double speedSinceLast = 0;
