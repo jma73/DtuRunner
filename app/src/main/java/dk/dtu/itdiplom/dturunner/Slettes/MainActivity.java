@@ -68,14 +68,14 @@
 //
 //    protected Button mStartUpdatesButton;
 //    protected Button mStopUpdatesButton;
-//    protected TextView mLastUpdateTimeTextView;
-//    protected TextView mLatitudeTextView;
-//    protected TextView mLongitudeTextView;
+//    protected TextView lastUpdateTimeTextView;
+//    protected TextView latitudeTextView;
+//    protected TextView longitudeTextView;
 //
 //    // Labels.
-//    protected String mLatitudeLabel;
-//    protected String mLongitudeLabel;
-//    protected String mLastUpdateTimeLabel;
+//    protected String latitudeLabel;
+//    protected String longitudeLabel;
+//    protected String lastUpdateTimeLabel;
 //
 //    /**
 //     * Holder styr på om lokationsopdateringer er slået til.
@@ -97,14 +97,14 @@
 //        mStartUpdatesButton = (Button) findViewById(R.id.buttonStart);
 //        mStopUpdatesButton = (Button) findViewById(R.id.buttonStop);
 //        buttonShow = (Button) findViewById(R.id.buttonShow);
-//        mLatitudeTextView = (TextView) findViewById(R.id.latitude_text);
-//        mLongitudeTextView = (TextView) findViewById(R.id.longitude_text);
-//        mLastUpdateTimeTextView = (TextView) findViewById(R.id.last_update_time_text);
+//        latitudeTextView = (TextView) findViewById(R.id.latitude_text);
+//        longitudeTextView = (TextView) findViewById(R.id.longitude_text);
+//        lastUpdateTimeTextView = (TextView) findViewById(R.id.last_update_time_text);
 //
 //        // Set labels.
-//        mLatitudeLabel = ("latitude_label");
-//        mLongitudeLabel = ("longitude_label");
-//        mLastUpdateTimeLabel = "last_update_time_label";
+//        latitudeLabel = ("latitude_label");
+//        longitudeLabel = ("longitude_label");
+//        lastUpdateTimeLabel = "last_update_time_label";
 //
 //        requestingLocationUpdates = false;
 //        mLastUpdateTime = "";
@@ -178,7 +178,7 @@
 //    public void onLocationChanged(Location location) {
 //
 //        // todo jan: ikke helt klar over hvornår den kaldes...
-//        mLatitudeTextView.setText("Hellllllooooo");
+//        latitudeTextView.setText("Hellllllooooo");
 //
 //
 //    }
@@ -249,11 +249,11 @@
 //
 //
 //    private void updateUI() {
-//        mLatitudeTextView.setText(String.format("%s: %f", mLatitudeLabel,
+//        latitudeTextView.setText(String.format("%s: %f", latitudeLabel,
 //                mCurrentLocation.getLatitude()));
-//        mLongitudeTextView.setText(String.format("%s: %f", mLongitudeLabel,
+//        longitudeTextView.setText(String.format("%s: %f", longitudeLabel,
 //                mCurrentLocation.getLongitude()));
-//        mLastUpdateTimeTextView.setText(String.format("%s: %s", mLastUpdateTimeLabel,
+//        lastUpdateTimeTextView.setText(String.format("%s: %s", lastUpdateTimeLabel,
 //                mLastUpdateTime));
 //    }
 //

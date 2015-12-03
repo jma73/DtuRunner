@@ -1,6 +1,5 @@
 package dk.dtu.itdiplom.dturunner.Views;
 
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -45,17 +44,18 @@ public class FragmentLoeb extends Fragment implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
     protected static final String TAG = "jjFragmentLoeb";
-    final String fragmentLoebTag = "FragmentLoeb";
+    // final String fragmentLoebTag = "FragmentLoeb";
 
     // Labels.
-    protected String mLatitudeLabel;
-    protected String mLongitudeLabel;
-    protected String mLastUpdateTimeLabel;
+    protected String latitudeLabel;  // kan udgå
+    protected String longitudeLabel;  // kan udgå
+    protected String lastUpdateTimeLabel;  // kan udgå
 
     // Views:
-    protected TextView mLastUpdateTimeTextView;
-    protected TextView mLatitudeTextView;
-    protected TextView mLongitudeTextView;
+    protected TextView lastUpdateTimeTextView;  // kan udgå
+    protected TextView latitudeTextView;  // kan udgå
+    protected TextView longitudeTextView;  // kan udgå
+
     private TextView textViewLocations;
     private TextView textViewDistance;
     private TextView textViewSpeed;
@@ -65,7 +65,6 @@ public class FragmentLoeb extends Fragment implements
     private Button buttonStartLoebsAktivitet;
     private Button buttonStopLoebsAktivitet;
     private Button buttonAfslut;
-    //private Button buttonShow;
 
     public FragmentLoeb() {
         // Required empty public constructor
@@ -94,7 +93,6 @@ public class FragmentLoeb extends Fragment implements
         if(SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet)
         {
             Log.d(TAG, "FragmentLoeb: Der er allerede et løb igang - indlæs data...???");
-
         }
 
         // todo jan 1/12-15: ikke færdig med dette:
@@ -129,9 +127,17 @@ public class FragmentLoeb extends Fragment implements
         textViewSpeed2 = (TextView) rod.findViewById(R.id.textViewSpeed2);
         textViewTimer = (TextView) rod.findViewById(R.id.textViewTimer);
 
-        mLatitudeTextView = (TextView) rod.findViewById(R.id.latitude_text);
-        mLongitudeTextView = (TextView) rod.findViewById(R.id.longitude_text);
-        mLastUpdateTimeTextView = (TextView) rod.findViewById(R.id.last_update_time_text);
+        latitudeTextView = (TextView) rod.findViewById(R.id.latitude_text);
+        longitudeTextView = (TextView) rod.findViewById(R.id.longitude_text);
+        lastUpdateTimeTextView = (TextView) rod.findViewById(R.id.last_update_time_text);
+
+        // vis kun dette View hvis udvikling er slået til:
+        if(SingletonDtuRunner.erUnderUdviklingFlag)
+        {
+            View linearLayoutLoebShowPositions = rod.findViewById(R.id.linearLayoutLoebShowPositions);
+            linearLayoutLoebShowPositions.setVisibility(View.VISIBLE);
+            rod.findViewById(R.id.linearlayoutCurrentLatLon).setVisibility(View.VISIBLE);
+        }
 
         // todo jan - statig under test:
         if(!SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet) {
@@ -141,9 +147,9 @@ public class FragmentLoeb extends Fragment implements
             Log.d(TAG, "isLoebsAktivitetStartet: false. Så initialiser løbs værdier...");
 
             // Set labels.
-            mLatitudeLabel = "latitude";
-            mLongitudeLabel = "longitude";
-            mLastUpdateTimeLabel = "opdateringstidspunkt";
+            latitudeLabel = "latitude";
+            longitudeLabel = "longitude";
+            lastUpdateTimeLabel = "opdateringstidspunkt";
 
             SingletonDtuRunner.loebsStatus.locationList = new ArrayList<Location>();
             SingletonDtuRunner.loebsStatus.loebsAktivitet = new LoebsAktivitet();
@@ -165,6 +171,8 @@ public class FragmentLoeb extends Fragment implements
         }
         else {
             // reload values...
+            setButtonsEnabledState();
+
             updateUIMedLatLonKoordinater();
             int size = SingletonDtuRunner.loebsStatus.locationList.size();
             Log.d(TAG, "- SingletonDtuRunner.loebsStatus.locationList.size() " + size);
@@ -246,6 +254,12 @@ public class FragmentLoeb extends Fragment implements
             Log.d(TAG, "løbsaktivitet er allerede startet! (SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet) ");
             // todo jan - aktiver knapper? mm
         }
+        else
+        {
+            // todo jan - nulstil værdier:
+            nulstilLoebsdata();
+
+        }
 
         SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet = true;
         Log.d(TAG, "SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet er nu sat til true!");
@@ -287,6 +301,7 @@ public class FragmentLoeb extends Fragment implements
     private void nulstilLoebsdata() {
         // nulstil data
         SingletonDtuRunner.loebsStatus.locationList.clear();
+        SingletonDtuRunner.loebsStatus.loebsAktivitet.nulstil();
     }
 
     private void opretLoebsAktivitet() {
@@ -299,13 +314,13 @@ public class FragmentLoeb extends Fragment implements
         String email = pref.getString(GlobaleKonstanter.PREF_EMAIL, "");
         String studienummer = pref.getString(GlobaleKonstanter.PREF_STUDIENUMMER, "");
 
+        loebsAktivitet.pointInfoList.clear();
         loebsAktivitet.setNavnAlias(navn + " " + studienummer);
         loebsAktivitet.setEmail(email);
         loebsAktivitet.setLoebsNote("Dette er et test løb! skal have input fra bruger...");
         loebsAktivitet.setPersonId(studienummer);
         //loebsAktivitet.setStarttidspunkt();
 
-        // todo jan kan det gøre pænere? dvs. uden new hver gang... eller static...
         DatabaseHelper databaseHelper = new DatabaseHelper();
         SingletonDtuRunner.loebsStatus.loebsAktivitetUUID = databaseHelper.insertLoebsAktivitet(loebsAktivitet, getActivity());
     }
@@ -556,12 +571,12 @@ public class FragmentLoeb extends Fragment implements
             return;
         }
 
-        Log.d(TAG, String.format("%s: %f", mLatitudeLabel,
+        Log.d(TAG, String.format("%s: %f", latitudeLabel,
                 SingletonDtuRunner.loebsStatus.mCurrentLocation.getLatitude()));
 
-        mLatitudeTextView.setText(String.format("%s: %f", mLatitudeLabel, SingletonDtuRunner.loebsStatus.mCurrentLocation.getLatitude()));
-        mLongitudeTextView.setText(String.format("%s: %f", mLongitudeLabel, SingletonDtuRunner.loebsStatus.mCurrentLocation.getLongitude()));
-        mLastUpdateTimeTextView.setText(String.format("%s: %s", mLastUpdateTimeLabel, SingletonDtuRunner.loebsStatus.mLastUpdateTime));
+        latitudeTextView.setText(String.format("%s: %f", latitudeLabel, SingletonDtuRunner.loebsStatus.mCurrentLocation.getLatitude()));
+        longitudeTextView.setText(String.format("%s: %f", longitudeLabel, SingletonDtuRunner.loebsStatus.mCurrentLocation.getLongitude()));
+        lastUpdateTimeTextView.setText(String.format("%s: %s", lastUpdateTimeLabel, SingletonDtuRunner.loebsStatus.mLastUpdateTime));
     }
 
     @Override

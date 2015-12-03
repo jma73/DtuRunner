@@ -152,7 +152,8 @@
         android:layout_weight="1"
         android:layout_gravity="center"
         android:background="#88888888"
-        android:id="@+id/layoutTextLocation"
+        android:visibility="gone"
+        android:id="@+id/linearlayoutCurrentLatLon"
         >
 
         <TextView
@@ -185,6 +186,8 @@
     android:layout_height="0px"
         android:layout_weight="1"
     android:background="#aaaaaaaa"
+        android:id="@+id/linearLayoutLoebShowPositions"
+        android:visibility="gone"
     android:layout_gravity="bottom"
     >
 

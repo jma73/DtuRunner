@@ -1,6 +1,5 @@
 package dk.dtu.itdiplom.dturunner.Model.Entities;
 
-//import java.sql.Time;
 import android.support.annotation.NonNull;
 import android.text.format.Time;
 import android.util.Log;
@@ -16,12 +15,19 @@ import dk.dtu.itdiplom.dturunner.Utils.LocationUtils;
 
 /**
  * Created by JanMøller on 09-11-2015.
- * Denne klasse skal indeholde de værdier som der er brug for ifb. med en løbsaktivitet.
+ * Denne klasse indeholder de værdier som der er brug for ifb. med en løbsaktivitet.
  */
 public class LoebsAktivitet {
 
     String email;
     String navnAlias;
+    String personId;    // fx. studienummer
+    String loebsNote;
+    String loebsDato;   // kan vel udgå
+    String loebsProgramType;        // kommer i en senere version
+    public List<PointInfo> pointInfoList;
+    long starttidspunkt;
+    UUID loebsAktivitetUuid;
 
     public String getPersonId() {
         return personId;
@@ -31,18 +37,11 @@ public class LoebsAktivitet {
         this.personId = personId;
     }
 
-    String personId;    // fx. studienummer
-    String loebsNote;
-    String loebsDato;   // kan vel udgå
-    String loebsProgramType;        // kommer i en senere version
-    public List<PointInfo> pointInfoList;
-    long starttidspunkt;
 
     public UUID getLoebsAktivitetUuid() {
         return loebsAktivitetUuid;
     }
 
-    UUID loebsAktivitetUuid;
 
     /*
         Denne konstructør skal anvendes når der startes et nyt løb.
@@ -206,5 +205,18 @@ public class LoebsAktivitet {
             return 0;
 
         return LocationUtils.getTimeMillisecondsSinceStart(pointInfoList.get(0), pointInfoList.get(pointInfoList.size() - 1));
+    }
+
+    public void nulstil() {
+//        email;
+//        navnAlias;
+//        personId;    // fx. studienummer
+//        loebsNote;
+
+//        loebsDato;
+//        loebsProgramType;
+        pointInfoList.clear();
+//        starttidspunkt;
+        //UUID loebsAktivitetUuid;
     }
 }
