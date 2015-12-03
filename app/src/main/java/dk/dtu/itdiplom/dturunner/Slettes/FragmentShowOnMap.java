@@ -1,4 +1,4 @@
-package dk.dtu.itdiplom.dturunner.Views;
+package dk.dtu.itdiplom.dturunner.Slettes;
 
 
 import android.os.Bundle;

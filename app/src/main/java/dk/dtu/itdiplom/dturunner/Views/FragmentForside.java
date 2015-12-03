@@ -49,9 +49,6 @@ public class FragmentForside extends Fragment implements View.OnClickListener {
 
         // todo jan 16/11-15: denne skal formentlig udgå igen!!!
 
-//        FragmentShowOnMap fragmentShowOnMap = new FragmentShowOnMap();
-//        FragmentShowOnMap2 fragmentShowOnMap2 = new FragmentShowOnMap2();
-
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
