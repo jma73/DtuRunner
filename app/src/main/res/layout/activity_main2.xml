@@ -28,18 +28,14 @@
         <!--android:layout_margin="@dimen/fab_margin"-->
         <!--android:src="@android:drawable/ic_dialog_email" />-->
 
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/frameLayoutContent"
-    android:background="#ffddddff"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/frameLayoutContent"
+        android:background="#ffddddff"
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
-</FrameLayout>
-
-
-
-
+    </FrameLayout>
 
 
 </LinearLayout>
