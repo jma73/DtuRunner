@@ -33,6 +33,6 @@ public class SingletonDtuRunner extends Application {
 
     // todo jan - til anvendelse fremover. taget fra
     public static final boolean EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator"); // false;
-    public static boolean erUnderUdviklingFlag = true;
+    public static boolean erUnderUdviklingFlag = false;
 
 }

@@ -43,8 +43,7 @@ public class FragmentLoeb extends Fragment implements
         View.OnClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
-    private static final String TAG = "jjFragmentLoeb";
-    // final String fragmentLoebTag = "FragmentLoeb";
+    final String TAG = getClass().getName();
 
     // Labels.
     private String latitudeLabel;  // kan udgå
@@ -70,14 +69,6 @@ public class FragmentLoeb extends Fragment implements
         // Required empty public constructor
     }
 
-//    @Override
-////    public void onAttach(Activity activity)   // This method was deprecated in API level 23... hvad så??? todo jan
-//    public void onAttach(Context activity)
-//    {
-////        super.onAttach(activity);
-//        minContext = activity;
-//    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -95,20 +86,7 @@ public class FragmentLoeb extends Fragment implements
             Log.d(TAG, "FragmentLoeb: Der er allerede et løb igang - indlæs data...???");
         }
 
-        // todo jan 1/12-15: ikke færdig med dette:
-        Timer timer = new Timer();
-        TimerTask timertask = new TimerTask() {
-            @Override
-            public void run() {
-                // todo jan: lav metode. til at opdatere tiden... og evt. andre views.
-                //      og task skal først startes når start knappen trykkes.
 
-                Log.d(TAG, "timertask");
-            }
-        };
-        int period = 991000;
-        timer.schedule(timertask, 1000, period);
-            //timertask.run();  ikke nødvendigt??
 
 
 
@@ -141,8 +119,6 @@ public class FragmentLoeb extends Fragment implements
 
         // todo jan - statig under test:
         if(!SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet) {
-            //return rod;
-            // todo jan ???
 
             Log.d(TAG, "isLoebsAktivitetStartet: false. Så initialiser løbs værdier...");
 
@@ -160,10 +136,6 @@ public class FragmentLoeb extends Fragment implements
 
             // todo jan - tester pop-up til aktivering af gps
             boolean isGpsEnabled = LocationHelper.checkForUserEnabledGpsSettings(getContext());
-//        if(!isGpsEnabled)
-//        {
-//            askToEnableGps();
-//        }
 
             // todo jan - skal ligge et andet sted...
             // Kick off the process of building a GoogleApiClient and requesting the LocationServices API.
@@ -180,28 +152,6 @@ public class FragmentLoeb extends Fragment implements
 
         return rod;
     }
-
-
-    //region overførte metoder
-    /**
-     * Builds a GoogleApiClient. Uses the {@code #addApi} method to request the
-     * LocationServices API.
-     *
-     */
-//    protected synchronized void buildGoogleApiClient() {
-//
-//        Log.i(TAG, "Building GoogleApiClient");
-//        SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient = new GoogleApiClient.Builder(getActivity())    // todo jan - måtte ændre fra this til getContext() eller getActivity(). brug getActivity() siger Jakob
-//                .addConnectionCallbacks(this)
-//                .addOnConnectionFailedListener(this)
-//                .addApi(LocationServices.API)               // todo jan - her vælges Location... Der er også en FusedLocationApi...
-//                .build();
-//        LocationHelper.createLocationRequest();
-//    }
-
-    //endregion
-
-
 
     @Override
     public void onClick(View v) {
@@ -226,12 +176,7 @@ public class FragmentLoeb extends Fragment implements
 //        }
     }
 
-    /**
-     *
-     * Handles the Stop Updates button, and requests removal of location updates. Does nothing if
-     * updates were not previously requested.
-     */
-    public void stopUpdatesButtonHandler(View view) {
+    private void stopUpdatesButtonHandler(View view) {
         if(getActivity() == null) return;   // hvis activity context er null er vi allerede ude af fragment.
 
         SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet = false;
@@ -245,7 +190,7 @@ public class FragmentLoeb extends Fragment implements
         }
     }
 
-    public void startLoebsAktivitetOgLocationUpdates() {
+    private void startLoebsAktivitetOgLocationUpdates() {
         if(getActivity() == null)   // hvis activity context er null er vi allerede ude af fragment.
             return;
 
@@ -256,9 +201,7 @@ public class FragmentLoeb extends Fragment implements
         }
         else
         {
-            // todo jan - nulstil værdier:
             nulstilLoebsdata();
-
         }
 
         SingletonDtuRunner.loebsStatus.isLoebsAktivitetStartet = true;
@@ -267,7 +210,6 @@ public class FragmentLoeb extends Fragment implements
         if (!SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates)
         {
             boolean googleApiStatus = startLocationUpdates();
-
 
             if(googleApiStatus)
             {
@@ -278,6 +220,22 @@ public class FragmentLoeb extends Fragment implements
                 SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates = true;
                 Toast.makeText(getActivity(), "Location updates startet!", Toast.LENGTH_LONG);
                 setButtonsEnabledState();
+
+                // todo jan 1/12-15: ikke færdig med dette:
+                Timer timer = new Timer();
+                TimerTask timertask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        // todo jan: lav metode. til at opdatere tiden... og evt. andre views.
+                        //      og task skal først startes når start knappen trykkes.
+
+                        opdaterTimer();
+                        Log.d(TAG, "timertask");
+                    }
+                };
+                int period = 1000;
+                //timer.schedule(timertask, 1000, period);
+                timertask.run();  //    ikke nødvendigt??
 
                 startService();
             }
@@ -336,7 +294,8 @@ public class FragmentLoeb extends Fragment implements
         {
             LocationServices.FusedLocationApi.requestLocationUpdates(
                     SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient,
-                    SingletonDtuRunner.loebsStatus.locationGoogleApi.locationRequest, this);
+                    SingletonDtuRunner.loebsStatus.locationGoogleApi.locationRequest,
+                    this);
             return true;
         }
         catch (Exception exception)
@@ -349,7 +308,9 @@ public class FragmentLoeb extends Fragment implements
 
     protected void stopLocationUpdates() {
 
-        LocationServices.FusedLocationApi.removeLocationUpdates(SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient, this);
+        LocationServices.FusedLocationApi.removeLocationUpdates(
+                SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient,
+                this);
     }
 
     private void setButtonsEnabledState() {
@@ -368,11 +329,9 @@ public class FragmentLoeb extends Fragment implements
         SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient.connect();
     }
 
-
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged " + location.getLatitude() + ", " + location.getLongitude());
-        // todo jan - her skal bla gemmes placeringen. og laves beregninger...
 
         if(getActivity() == null)   // hvis activity context er null er vi allerede ude af fragment.
         {
@@ -424,21 +383,12 @@ public class FragmentLoeb extends Fragment implements
 
     private void showLoebsParametre() {
 
-        // todo jan - der er en fejl her!!!!
-        // Hvilken skal anvendes???    Det er fordi den ene er af typen Location...
-        // SingletonDtuRunner.loebsStatus.locationList
-//        int size = SingletonDtuRunner.loebsStatus.loebsAktivitet.pointInfoList.size();
+
         int size = SingletonDtuRunner.loebsStatus.locationList.size();
 
         if(size > 0)
         {
-            int previousIndex = size - 1;
-
-            if(size == 1)
-                previousIndex = 0;
-            long timeSinceStartMilliSeconds = LocationUtils.getTimeMillisecondsSinceStart(SingletonDtuRunner.loebsStatus.locationList.get(0),
-                    SingletonDtuRunner.loebsStatus.locationList.get(previousIndex));
-            textViewTimer.setText(LocationUtils.displayTimerFormat(timeSinceStartMilliSeconds));
+            opdaterTimer();
 
             double speedSinceLast = 0;
 
@@ -463,6 +413,23 @@ public class FragmentLoeb extends Fragment implements
         {
             textViewTimer.setText(LocationUtils.displayTimerFormat(0));
         }
+    }
+
+    private void opdaterTimer() {
+        int size = SingletonDtuRunner.loebsStatus.locationList.size();
+        if(size == 0)
+        {
+            textViewTimer.setText(LocationUtils.displayTimerFormat(0));
+            return;
+        }
+
+        int previousIndex = size - 1;
+        if(previousIndex < 0)
+            previousIndex = 0;
+
+        long timeSinceStartMilliSeconds = LocationUtils.getTimeMillisecondsSinceStart(SingletonDtuRunner.loebsStatus.locationList.get(0),
+                SingletonDtuRunner.loebsStatus.locationList.get(previousIndex));
+        textViewTimer.setText(LocationUtils.displayTimerFormat(timeSinceStartMilliSeconds));
     }
 
     private void savePointToDatabase(PointInfo pointInfo) {
@@ -537,26 +504,12 @@ public class FragmentLoeb extends Fragment implements
     public void onConnected(Bundle bundle) {
         Log.i(TAG, " * * * Connected to GoogleApiClient * * * ");
 
-        // If the initial location was never previously requested, we use
-        // FusedLocationApi.getLastLocation() to get it. If it was previously requested, we store
-        // its value in the Bundle and check for it in onCreate(). We
-        // do not request it again unless the user specifically requests location updates by pressing
-        // the Start Updates button.
-        //
-        // Because we cache the value of the initial location in the Bundle, it means that if the
-        // user launches the activity,
-        // moves to a new location, and then changes the device orientation, the original location
-        // is displayed as the activity is re-created.
         if (SingletonDtuRunner.loebsStatus.mCurrentLocation == null) {
             SingletonDtuRunner.loebsStatus.mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient);
-//            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(singletonDtuRunner.googleApiClient);
             SingletonDtuRunner.loebsStatus.mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
             updateUIMedLatLonKoordinater();
         }
 
-        // If the user presses the Start Updates button before GoogleApiClient connects, we set
-        // requestingLocationUpdates to true (see startUpdatesButtonHandler()). Here, we check
-        // the value of requestingLocationUpdates and if it is true, we start location updates.
         if (SingletonDtuRunner.loebsStatus.locationGoogleApi.requestingLocationUpdates) {
             startLocationUpdates();
         }
@@ -581,17 +534,15 @@ public class FragmentLoeb extends Fragment implements
 
     @Override
     public void onConnectionSuspended(int cause) {
-        // The connection to Google Play services was lost for some reason. We call connect() to
-        // attempt to re-establish the connection.
+        // Hvis forbindelsen til Google Play services er mistet, kalder vi connect()
+        // for at forsøge at genetablere forbindelsen.
         Log.i(TAG, "Connection suspended " + cause);
         SingletonDtuRunner.loebsStatus.locationGoogleApi.googleApiClient.connect();
-//        singletonDtuRunner.googleApiClient.connect();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
-        // onConnectionFailed.
+
         Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorCode());
     }
     //endregion Connection Callbacks

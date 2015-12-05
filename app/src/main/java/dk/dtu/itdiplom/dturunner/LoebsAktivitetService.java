@@ -15,8 +15,6 @@ public class LoebsAktivitetService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        // throw new UnsupportedOperationException("Not yet implemented");
         Log.d(TAG, "in onBind");
 
         return null;
@@ -40,8 +38,8 @@ public class LoebsAktivitetService extends Service {
         String tekst = " onStartCommand("+ flags + " " + startId;
         Log.d(TAG, "in onStartCommand : " + tekst);
 
-
-        if (intent!=null && intent.getExtras()!=null) tekst+="\n"+intent.getExtras().get("nøgle");
+//        if (intent!=null && intent.getExtras()!=null)
+//            tekst+="\n"+intent.getExtras().get("key");
         Toast.makeText(this, TAG + tekst, Toast.LENGTH_LONG).show();
         return START_STICKY; // eller START_REDELIVER_INTENT hvis intent skal overleve procesgenstart
     }
