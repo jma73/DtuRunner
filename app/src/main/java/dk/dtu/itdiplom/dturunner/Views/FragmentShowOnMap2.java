@@ -28,15 +28,12 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import dk.dtu.itdiplom.dturunner.R;
 
 /*
-    Eksempel på
+    Eksempel på brug af maps. som det kunne se ud når man optegner en rute på kortet.
  */
 public class FragmentShowOnMap2 extends Fragment
         implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
-
-    LocationRequest mLocationRequest;
-    GoogleApiClient mGoogleApiClient;
     LatLng latLng;
     private SupportMapFragment mapFragment;
     private GoogleMap mapGoogleMap;
