@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import dk.dtu.itdiplom.dturunner.Views.FragmentAbout;
 import dk.dtu.itdiplom.dturunner.Views.FragmentForside;
-import dk.dtu.itdiplom.dturunner.Views.FragmentLoebsHistorik;
 import dk.dtu.itdiplom.dturunner.Views.FragmentPersonInfo;
 
 public class Main2Activity extends AppCompatActivity implements FragmentAbout.OnFragmentInteractionListener

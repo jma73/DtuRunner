@@ -43,18 +43,18 @@ public class FragmentLoeb extends Fragment implements
         View.OnClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
-    protected static final String TAG = "jjFragmentLoeb";
+    private static final String TAG = "jjFragmentLoeb";
     // final String fragmentLoebTag = "FragmentLoeb";
 
     // Labels.
-    protected String latitudeLabel;  // kan udgå
-    protected String longitudeLabel;  // kan udgå
-    protected String lastUpdateTimeLabel;  // kan udgå
+    private String latitudeLabel;  // kan udgå
+    private String longitudeLabel;  // kan udgå
+    private String lastUpdateTimeLabel;  // kan udgå
 
     // Views:
-    protected TextView lastUpdateTimeTextView;  // kan udgå
-    protected TextView latitudeTextView;  // kan udgå
-    protected TextView longitudeTextView;  // kan udgå
+    private TextView lastUpdateTimeTextView;  // kan udgå
+    private TextView latitudeTextView;  // kan udgå
+    private TextView longitudeTextView;  // kan udgå
 
     private TextView textViewLocations;
     private TextView textViewDistance;

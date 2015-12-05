@@ -13,7 +13,6 @@ import android.widget.Button;
 
 import dk.dtu.itdiplom.dturunner.R;
 import dk.dtu.itdiplom.dturunner.SingletonDtuRunner;
-import dk.dtu.itdiplom.dturunner.Utils.BuildInfo;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,7 +44,7 @@ public class FragmentForside extends Fragment implements View.OnClickListener {
         return inflate;
     }
 
-    public void buttonHandlerTestLocation() {
+    private void buttonHandlerTestLocation() {
 
         // todo jan 16/11-15: denne skal formentlig udgå igen!!!
 
@@ -58,7 +57,7 @@ public class FragmentForside extends Fragment implements View.OnClickListener {
         fragmentTransaction.commit();
     }
 
-    public void buttonHandlerLoeb() {
+    private void buttonHandlerLoeb() {
 
         Log.d(LOGTAG, ":: i buttonHandlerLoeb.");
 
@@ -78,7 +77,7 @@ public class FragmentForside extends Fragment implements View.OnClickListener {
         fragmentTransaction.commit();
     }
 
-    public void buttonHandlerOm() {
+    private void buttonHandlerOm() {
 
         Log.d(LOGTAG, ":: i buttonHandlerOm.");
         // SingletonDtuRunner.buildDate = BuildInfo.GetBuildDate(getActivity());
@@ -91,7 +90,7 @@ public class FragmentForside extends Fragment implements View.OnClickListener {
         fragmentTransaction.commit();
     }
 
-    public void buttonHandlerLoebsHistorik() {
+    private void buttonHandlerLoebsHistorik() {
         Log.d(LOGTAG, ":: i buttonHandlerLoebsHistorik.");
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();

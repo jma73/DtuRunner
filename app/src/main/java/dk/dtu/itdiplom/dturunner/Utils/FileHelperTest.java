@@ -2,7 +2,6 @@ package dk.dtu.itdiplom.dturunner.Utils;
 
 import android.content.Context;
 import android.media.MediaScannerConnection;
-import android.net.Uri;
 import android.util.Log;
 
 import java.io.BufferedWriter;
@@ -16,6 +15,9 @@ import java.io.InputStream;
 
 /**
  * Created by JanMøller on 16-11-2015.
+ *
+ * Denne klasse var kun til test af at gemme en fil.
+ *  burde selvfølgelig bare blive slettet.
  */
 public class FileHelperTest {
 

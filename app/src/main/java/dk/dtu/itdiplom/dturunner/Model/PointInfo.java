@@ -1,7 +1,5 @@
 package dk.dtu.itdiplom.dturunner.Model;
 
-import java.sql.Timestamp;
-
 /**
  * Created by JanMøller on 08-11-2015.
  *
