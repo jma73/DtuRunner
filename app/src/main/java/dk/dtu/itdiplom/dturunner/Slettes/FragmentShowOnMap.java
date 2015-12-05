@@ -29,7 +29,7 @@
 //        Log.d("jjTest", "onCreateView in FragmentShowOnMap");
 //
 //        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_show_on_map, container, false);
+//        return inflater.inflate(R.layout.slet_fragment_show_on_map, container, false);
 //    }
 //
 //
