@@ -15,19 +15,19 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDp24izz1A57NmFAC3bnucOEfMduUG_rA4" />
 
-        <activity android:name=".Slettes.MainActivity">
+        <!--<activity android:name=".Slettes.MainActivity">-->
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!--&lt;!&ndash; <intent-filter> &ndash;&gt;-->
+            <!--&lt;!&ndash; <action android:name="android.intent.action.MAIN" /> &ndash;&gt;-->
 
 
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
-        <activity
-            android:name=".MapActivity"
-            android:label="@string/title_activity_map"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            <!--&lt;!&ndash; <category android:name="android.intent.category.LAUNCHER" /> &ndash;&gt;-->
+            <!--&lt;!&ndash; </intent-filter> &ndash;&gt;-->
+        <!--</activity>-->
+        <!--<activity-->
+            <!--android:name=".MapActivity"-->
+            <!--android:label="@string/title_activity_map"-->
+            <!--android:theme="@style/AppTheme.NoActionBar"></activity>-->
 
         <!-- todo jan: slåes til igen:  android:screenOrientation="portrait" -->
         <activity
@@ -36,7 +36,6 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
