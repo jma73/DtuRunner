@@ -67,8 +67,9 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
 
         //if (Build.VERSION.SDK_INT>=19) menu.add(0, 115, 0, "*Fuldskærm");
 
-        menu.add(0, 102, 0, "*Vælg fil");
-        menu.add(0, 110, 0, "Indtast personoplysninger");
+        menu.add(0, 10, 0, "Indstillinger");
+        //menu.add(0, 102, 0, "*Vælg fil");
+        //menu.add(0, 110, 0, "Indtast personoplysninger");
         menu.add(0, 200, 0, "Til hovedskærm...");
         return true;
     }
@@ -81,7 +82,7 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         }
         else if (item.getItemId() == 110) {
 //            visMainMenuFragment(false);
-            visPersonInfo();        // todo jan NB der bliver flere hele tiden.
+            visPersonInfo();
         }
 
 //    else if (item.getItemId() == 115) {
@@ -171,7 +172,6 @@ public class Main2Activity extends AppCompatActivity implements FragmentAbout.On
         FragmentManager fm = getSupportFragmentManager();
         fm.popBackStackImmediate();
     }
-
 
     // denne skulle implementeres ifb. med FragmentAbout.OnFragmentInteractionListener.
     @Override

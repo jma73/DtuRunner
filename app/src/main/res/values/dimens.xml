@@ -13,6 +13,7 @@
     <dimen name="text_size_xxxtralarge">30sp</dimen>
 
     <dimen name="small_margin">10dp</dimen>
+    <dimen name="small_margin20">20dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="paddingLoeb">16dp</dimen>
 </resources>

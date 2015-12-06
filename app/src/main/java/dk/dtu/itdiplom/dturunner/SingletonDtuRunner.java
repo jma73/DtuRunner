@@ -14,7 +14,6 @@ public class SingletonDtuRunner extends Application {
     private static SingletonDtuRunner ourInstance = new SingletonDtuRunner();
 
     public static String fragmentLoebTag = "FragmentLoeb";
-
     public static String buildDate;
     public static LoebsStatus loebsStatus = new LoebsStatus();
 

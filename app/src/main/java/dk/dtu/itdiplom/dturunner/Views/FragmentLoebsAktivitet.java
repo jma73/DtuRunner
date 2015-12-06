@@ -1,6 +1,7 @@
 package dk.dtu.itdiplom.dturunner.Views;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import java.io.File;
 import java.util.UUID;
 
 import dk.dtu.itdiplom.dturunner.Database.DatabaseHelper;
+import dk.dtu.itdiplom.dturunner.Model.Entities.GlobaleKonstanter;
 import dk.dtu.itdiplom.dturunner.Utils.FileHelper;
 import dk.dtu.itdiplom.dturunner.Model.Entities.LoebsAktivitet;
 import dk.dtu.itdiplom.dturunner.R;
@@ -77,9 +79,12 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
         return rod;
     }
 
+    // todo jan - metoden skal flyttes ud.
     private void sendEmail() {
-        // todo hent email fra SharedPrefs
-        String emailTo = "jma73android@gmail.com";
+        SharedPreferences pref = getActivity().getPreferences(0);
+        String email = pref.getString(GlobaleKonstanter.PREF_EMAIL, "");
+
+        String emailTo = email;
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("message/rfc822");
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{emailTo});
@@ -87,35 +92,10 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
         intent.putExtra(Intent.EXTRA_TEXT, "Løbsdata fra ... dags dato.");
         //  intent.putExtra(Intent.EXTRA_CC, new String[]{"jma73android@gmail.com"});   // mulighed for cc adresse.
 
+        File file = FileHelper.saveFileExternalStorage2(getActivity(), this.loebsAktivitetSelected);
+        Uri uri = Uri.fromFile(file);
 
-        // todo jan 16/11-15: test af attach fil. Ser ud til at virke. dog kommer filen ikke videre, end at det ligner at den er vedhæftet i mail programmet.
-        String filename = "dtuRunner.txt";
-
-//        FileHelperTest.testSaveFile(getActivity(), " points points.....");
-//        File file = new File(getActivity().getFilesDir(), filename);
-//        Uri uri = Uri.fromFile(file);
-
-
-        // ny til external
-//        File fff = FileHelperTest.testSaveFileExternalStorage(getActivity(), "some content...");
-
-//        File fff = FileHelper.saveFileToExternalStorageLobsAktivitet(getActivity(), this.loebsAktivitetSelected);
-        File fff = FileHelper.saveFileExternalStorage2(getActivity(), this.loebsAktivitetSelected);
-
-
-        //File externalFilesDir = getActivity().getExternalFilesDir(null);
-        Uri uri2 = Uri.fromFile(fff);
-
-//        try {
-//            inputStream = getActivity().openFileInput(filename);
-//            intent.putExtra(Intent.EXTRA_STREAM, new FileHelperTest().testReadFile(getActivity()));
-//
-//        } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//        }
-
-
-        intent.putExtra(Intent.EXTRA_STREAM, uri2);
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
         intent.setType("text/plain");
 
         startActivity(Intent.createChooser(intent, "Send løbsdata med e-post..."));

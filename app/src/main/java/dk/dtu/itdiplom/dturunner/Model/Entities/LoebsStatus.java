@@ -16,9 +16,6 @@ public class LoebsStatus {
     public UUID loebsAktivitetUUID;
     public LocationGoogleApi locationGoogleApi;
 
-    public String mLastUpdateTime;
-    public Location mCurrentLocation;
-    //public double mDistanceAccumulated;          // denne kan måske godt udgå
 
     /*
         Liste med typen Location. Gemmes for at have alle de muligheder der er i Lokation typen.
@@ -26,4 +23,6 @@ public class LoebsStatus {
     public ArrayList<Location> locationList;     // obs: denne skal kun være her under udvikling. Brug PointInfo under LoebsAktivitet.
     public LoebsAktivitet loebsAktivitet;          // denne introduceres, og skal erstatte flere variabler
 
+    public String mLastUpdateTime;
+    public Location mCurrentLocation;
 }
