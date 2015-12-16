@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
     LoebsAktivitet loebsAktivitetSelected;
     Button buttonSendLoebsdataEmail, buttonSletLoebsAkt;
     private String uuid;
+    private Button buttonVisLoebsAkt;
 
     public FragmentLoebsAktivitet() {
         // Required empty public constructor
@@ -76,6 +78,11 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
         buttonSletLoebsAkt.setOnClickListener(this);
         buttonSendLoebsdataEmail = (Button) rod.findViewById(R.id.buttonSendLoebsdataEmail);
         buttonSendLoebsdataEmail.setOnClickListener(this);
+        buttonVisLoebsAkt = (Button) rod.findViewById(R.id.buttonVisLoebsAkt);
+        buttonVisLoebsAkt.setOnClickListener(this);
+
+
+
         return rod;
     }
 
@@ -115,8 +122,11 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
         }
         if(v == buttonSletLoebsAkt)
         {
-            // todo jan - hent, gem til fil og send løbsdata...
             sletLoebsAktivitet();
+        }
+        if(v == buttonVisLoebsAkt)
+        {
+            visRutePaaKort();
         }
     }
 
@@ -125,7 +135,11 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
         boolean sqlResult = new DatabaseHelper().sletLoebsAktivitet(getActivity(), UUID.fromString(uuid));
         if(sqlResult)
         {
+            sqlResult = new DatabaseHelper().sletPointInfos(getActivity(), UUID.fromString(uuid));
+
             Toast.makeText(getActivity(), "Aktiviteten blev slettet", Toast.LENGTH_SHORT).show();
+
+            // todo jan 16/12-15: slet også alle PointInfoDb where
 
             // tving Fragmentet til at "lukke":
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -135,4 +149,20 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
             Toast.makeText(getActivity(), "Aktiviteten blev IKKE slettet", Toast.LENGTH_LONG).show();
         }
     }
+
+    private void visRutePaaKort(){
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        Fragment fragment = new FragmentShowOnMap2();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("Uuid", String.valueOf(uuid));
+        fragment.setArguments(bundle);
+
+        fragmentTransaction.replace(R.id.frameLayoutContent, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
 }

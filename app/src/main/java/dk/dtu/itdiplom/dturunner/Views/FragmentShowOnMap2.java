@@ -24,18 +24,25 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
+import java.util.UUID;
+
+import dk.dtu.itdiplom.dturunner.Database.DatabaseHelper;
+import dk.dtu.itdiplom.dturunner.Model.Entities.LoebsAktivitet;
 import dk.dtu.itdiplom.dturunner.R;
 
 /*
     Eksempel på brug af maps. som det kunne se ud når man optegner en rute på kortet.
  */
 public class FragmentShowOnMap2 extends Fragment
-        implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
+        //implements
+        //GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
     LatLng latLng;
     private SupportMapFragment mapFragment;
     private GoogleMap mapGoogleMap;
+
+    private String uuid = "N/A";
 
     public FragmentShowOnMap2() {
         // Required empty public constructor
@@ -53,6 +60,13 @@ public class FragmentShowOnMap2 extends Fragment
         // pga. man ikke kan skabe et SupportFragment i onCreateView, løses det på denne måde:
         //  http://stackoverflow.com/questions/14047257/how-do-i-know-the-map-is-ready-to-get-used-when-using-the-supportmapfragment/14956903#14956903
         //          ref.: http://stackoverflow.com/questions/25051246/how-to-use-supportmapfragment-inside-a-fragment
+
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            uuid = bundle.getString("Uuid");
+        }
+
 
         mapFragment = new SupportMapFragment() {
             @Override
@@ -89,6 +103,51 @@ public class FragmentShowOnMap2 extends Fragment
      */
     private void setupMap() {
         //mGoogleMap = mFragment.getMap();
+
+        if(uuid == "N/A") {
+            lavTestPlotAfMarkersPaaKort();
+        }
+        else
+        {
+            // plot et rigtig aktivitet
+            lavLoebsAktivitetPaaKort(uuid);
+        }
+    }
+
+    private void lavLoebsAktivitetPaaKort(String uuid) {
+        LoebsAktivitet loebsAktivitetSelected = new DatabaseHelper().hentLoebsAktivitet(getActivity(), UUID.fromString(uuid));
+
+        ArrayList<LatLng> latLngArrayList = new ArrayList<>();
+
+
+        for (int i = 0; i < loebsAktivitetSelected.pointInfoList.size(); i++     ) {
+            LatLng latLng = new LatLng(loebsAktivitetSelected.pointInfoList.get(i).getLatitude(), loebsAktivitetSelected.pointInfoList.get(i).getLongitude());
+
+            latLngArrayList.add(latLng);
+
+            if(i==0)
+            {
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                markerOptions.title("Start - Position" + i);
+                mapGoogleMap.addMarker(markerOptions);
+            }
+
+        }
+
+        PolylineOptions rectOptions = new PolylineOptions()
+                .width(3)
+                .color(Color.BLUE)
+                .addAll(latLngArrayList);
+//                .add(latLngArrayList                );
+        mapGoogleMap.addPolyline(rectOptions);
+
+        // Zoom - 1 = langt ude, 15 tæt på.
+        mapGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngArrayList.get(0), 15));
+
+    }
+
+    private void lavTestPlotAfMarkersPaaKort() {
         LatLng dtuCampus = new LatLng(55.731345, 12.395785);
         LatLng lautrupVang4 = new LatLng(55.731405, 12.392751);
         LatLng lautrupVang1 = new LatLng(55.732011, 12.389959);
@@ -105,9 +164,9 @@ public class FragmentShowOnMap2 extends Fragment
         mapGoogleMap.addMarker(markerOptions2);
 
         Marker marker = mapGoogleMap.addMarker(new MarkerOptions()
-                .position(lautrupVang4)
-                .title("lautrupVang4")
-                .snippet("LautrupVang 4")
+                        .position(lautrupVang4)
+                        .title("lautrupVang4")
+                        .snippet("LautrupVang 4")
 //                .icon(BitmapDescriptorFactory                       .fromResource(R.drawable.mr_ic_play_dark)
 //                )
         );
@@ -123,46 +182,45 @@ public class FragmentShowOnMap2 extends Fragment
 
         // Zoom - 1 = langt ude, 15 tæt på.
         mapGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dtuCampus, 15));
-
     }
 
 
-    @Override
-    public void onConnected(Bundle bundle) {
-        Log.d("jjTest", "onConnected");
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.d("jjTest", "onConnectionSuspended");
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-        Log.d("jjTest", "onLocationChanged");
-
-//place marker at current position
-        mapGoogleMap.clear();
-        latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.title("Current Position");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-        Marker m = mapGoogleMap.addMarker(markerOptions);
-
-        Toast.makeText(getActivity(), "Location Changed", Toast.LENGTH_SHORT).show();
-
-        //If you only need one location, unregister the listener
-        //LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d("jjTest", "onConnectionFailed");
-
-    }
+//    @Override
+//    public void onConnected(Bundle bundle) {
+//        Log.d("jjTest", "onConnected");
+//
+//    }
+//
+//    @Override
+//    public void onConnectionSuspended(int i) {
+//        Log.d("jjTest", "onConnectionSuspended");
+//
+//    }
+//
+//    @Override
+//    public void onLocationChanged(Location location) {
+//
+//        Log.d("jjTest", "onLocationChanged");
+//
+////place marker at current position
+//        mapGoogleMap.clear();
+//        latLng = new LatLng(location.getLatitude(), location.getLongitude());
+//        MarkerOptions markerOptions = new MarkerOptions();
+//        markerOptions.position(latLng);
+//        markerOptions.title("Current Position");
+//        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+//        Marker m = mapGoogleMap.addMarker(markerOptions);
+//
+//        Toast.makeText(getActivity(), "Location Changed", Toast.LENGTH_SHORT).show();
+//
+//        //If you only need one location, unregister the listener
+//        //LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+//
+//    }
+//
+//    @Override
+//    public void onConnectionFailed(ConnectionResult connectionResult) {
+//        Log.d("jjTest", "onConnectionFailed");
+//
+//    }
 }

@@ -133,6 +133,22 @@ public class DatabaseHelper {
         return rows > 0;
     }
 
+
+    public boolean sletPointInfos(Context context, UUID uuid)
+    {
+        Log.d(LOGTAG, "sletPointInfos");
+
+        DatabaseContract sqliteRepo = new DatabaseContract(context);
+        SQLiteDatabase db = sqliteRepo.getWritableDatabase();
+
+        int rows = db.delete(PointInfoDb.TABLE_NAME, PointInfoDb.COLUMN_NAME_LOEBS_ID + " = '" + uuid + "'", null);
+        db.close();
+
+        Log.d(LOGTAG, "sletPointInfos: Der blev slettet " + rows +" punkter hørende til aktiviteten.");
+
+        return rows >= 0;  // der behøver ikke være nogle punkter pt. Skal nok sørge for at en løbsaktivitet uden punkter ikke bliver gemt.
+    }
+
     // todo sql til hent af løbsaktivitet pr. uuid
     public LoebsAktivitet hentLoebsAktivitet(Context context, UUID uuid)
     {
