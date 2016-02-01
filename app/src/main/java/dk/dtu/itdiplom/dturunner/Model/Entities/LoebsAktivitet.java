@@ -217,9 +217,9 @@ public class LoebsAktivitet {
 
         if(medEnhedsAngivelse)
         {
-            return avgSpeedInKmPerHour + " km/t";
+            return String.format("%.2f km/t", avgSpeedInKmPerHour);
         }
-        return avgSpeedInKmPerHour + "";
+        return String.format("%.2f", avgSpeedInKmPerHour);
     }
 
     /*
@@ -235,11 +235,12 @@ public class LoebsAktivitet {
         if(totalDistanceMeters == 0)
             return "0";
 
+        final double avgMinutesPerKilometer = minutes / totalDistanceKiloMeters;
         if(medEnhedsAngivelse)
         {
-            return minutes / totalDistanceKiloMeters + " m/km";
+            return String.format("%.2f  min/km", avgMinutesPerKilometer);
         }
-        return String.valueOf(minutes / totalDistanceKiloMeters);
+        return String.format("%.2f", avgMinutesPerKilometer);
     }
 
     public long getTimeMillisecondsSinceStart()

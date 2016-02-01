@@ -20,9 +20,11 @@ import java.util.UUID;
 
 import dk.dtu.itdiplom.dturunner.Database.DatabaseHelper;
 import dk.dtu.itdiplom.dturunner.Model.Entities.GlobaleKonstanter;
+import dk.dtu.itdiplom.dturunner.Model.PointInfo;
 import dk.dtu.itdiplom.dturunner.Utils.FileHelper;
 import dk.dtu.itdiplom.dturunner.Model.Entities.LoebsAktivitet;
 import dk.dtu.itdiplom.dturunner.R;
+import dk.dtu.itdiplom.dturunner.Utils.LocationUtils;
 
 
 /**
@@ -60,10 +62,18 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
         loebsAktivitetSelected = new DatabaseHelper().hentLoebsAktivitet(getActivity(), UUID.fromString(uuid));
         //loebsAktivitetSelected.pointInfoList    // todo jan - mangler at indlæse punkterne.
 
+        PointInfo firstPointInfo = null, lastPointInfo = null;
+        if(loebsAktivitetSelected.pointInfoList.size() > 0)
+        {
+            firstPointInfo = loebsAktivitetSelected.pointInfoList.get(0);
+            lastPointInfo = loebsAktivitetSelected.pointInfoList.get(loebsAktivitetSelected.pointInfoList.size()-1);
+        }
         String loebsAktivitetInfoString = String.format("Dato: %s \n" +
                 "\tStarttidspunkt: %s \n\tDistance: %s \n\tTid: %s \n " +
                 "\tGennemsnitshastighed: %s " +
                         "\n\tTid pr. km: %s " +
+                        "\n\tStartsted:  %s " +
+                        "\n\tSlutsted:   %s " +
                         "\n\n Uuid %s ",
                 loebsAktivitetSelected.getStarttimeFormatted(),
                 //loebsAktivitetSelected.getStarttidspunkt(),
@@ -75,6 +85,8 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
                 // loebsAktivitetSelected.getTimeMillisecondsSinceStart() / (60 / 60 * 1000),  // todo jan skal vises pænt. pt. i sekunder.
                 loebsAktivitetSelected.getAverageSpeedFromStartFormatted(true),
                 loebsAktivitetSelected.getAverageMinutesPerKilometer(true),
+                LocationUtils.getAdress(firstPointInfo, getContext()),
+                LocationUtils.getAdress(lastPointInfo, getContext()),
                 uuid);
 
         tv.setText(loebsAktivitetInfoString);
