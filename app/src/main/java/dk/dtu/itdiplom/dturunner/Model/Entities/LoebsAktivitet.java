@@ -232,7 +232,7 @@ public class LoebsAktivitet {
         long milliseconds = this.getTimeMillisecondsSinceStart();
         long minutes = milliseconds / (1000 * 60);
 
-        if(totalDistanceKiloMeters == 0)
+        if(totalDistanceMeters == 0)
             return "0";
 
         if(medEnhedsAngivelse)
