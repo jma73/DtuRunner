@@ -83,7 +83,8 @@ public class LocationUtils {
     }
 
     /*
-        Med PointInfo
+        Med PointInfo.
+        Enhed: meter(?)
      */
     public static double getDistanceBetweenPoints(PointInfo location1, PointInfo location2){
 
@@ -95,6 +96,9 @@ public class LocationUtils {
         return getDistanceBetweenPoints(lat1, lng1, lat2, lng2);
     }
 
+    /*
+        Enhed: m/s (meter pr. sekund)
+     */
     public static double getSpeedBetweenPoints(PointInfo location1, PointInfo location2){
 
         // todo jan - 8/11-15: Stadig under test!!!
@@ -116,7 +120,13 @@ public class LocationUtils {
         return distanceInMeters / secondsPassed;
     }
 
+    /*
+        Enhed: m/s (meter pr. sekund)
 
+        Denne metode udregner gennemsnitshastigheden for de seneste x punkter.
+        Foreløbig er x = 4, men dette er valgt ret tilfældigt, så det kan overvejes om det skal ændres.
+        Jo højere tal, jo længere tid går der inden der kan beregnes en hastighed. jo færre -> jo mere upræcist.
+     */
     public static double getAverageSpeedLatestPoints(List<PointInfo> pointInfoListe)
     {
         int size = pointInfoListe.size();
@@ -137,7 +147,9 @@ public class LocationUtils {
         return avgSpeed / (maxNumberOfPointToGoThrugh - 1);
     }
 
-
+    /*
+    * udregner gennemsnitsfarten for alle punkter siden start.
+    * */
     public static double getAverageSpeedFromStart(List<PointInfo> pointInfoList)
     {
         if(pointInfoList.size() == 0)
@@ -216,6 +228,11 @@ public class LocationUtils {
         return locationN.getTimestamp() - location0.getTimestamp();
     }
 
+    /*
+    * Løber alle punkter igennem og beregner afstanden mellem hvert punkt, som akkumuleres.
+    * Enhed: meter
+    *
+     */
     public static double getTotalDistance(List<PointInfo> pointInfoList) {
 
         PointInfo point1 = null, point2 = null;

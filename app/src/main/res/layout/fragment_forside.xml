@@ -2,8 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context=".Views.FragmentForside">
 
+    <!--//        husk også at rette version i FragmentAbout.java -->
     <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="DTURunner beta 0.2.1" />
+        android:text="DTURunner beta 0.2.2.2" />
 
     <LinearLayout
         android:layout_width="match_parent"

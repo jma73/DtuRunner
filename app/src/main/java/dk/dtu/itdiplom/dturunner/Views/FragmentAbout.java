@@ -95,7 +95,8 @@ public class FragmentAbout extends Fragment implements View.OnClickListener
 
         String sdkBuildVersion =  "Build.VERSION.SDK_INT: " + Build.VERSION.SDK_INT;
 
-        String displaySysInfoText = "0.1.2.1, " + SingletonDtuRunner.buildDate + "\n" + sdkBuildVersion + "\n";
+//        husk også at rette version i fragment_forside.xml
+        String displaySysInfoText = "0.2.2.2, " + SingletonDtuRunner.buildDate + "\n" + sdkBuildVersion + "\n";
         String displaySysInfoText2 = " - " + Build.PRODUCT + "\t" + Build.DEVICE + "\t" + Build.MODEL + "\n";
         textViewVersion.setText(displaySysInfoText + "\n" + displaySysInfoText2+  navn);
 

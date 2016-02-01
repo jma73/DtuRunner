@@ -57,19 +57,24 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
         TextView tv = (TextView) rod.findViewById(R.id.textViewLoebsAktId);
         tv.setText(uuid);
 
-        // todo jan: hent og vis løbsAktivitet
-
-
         loebsAktivitetSelected = new DatabaseHelper().hentLoebsAktivitet(getActivity(), UUID.fromString(uuid));
         //loebsAktivitetSelected.pointInfoList    // todo jan - mangler at indlæse punkterne.
 
         String loebsAktivitetInfoString = String.format("Dato: %s \n" +
-                " Starttidspunkt %s \n\tDistance: %s meter \n\tTid: %s (sekunder!)minutter \n " +
-                        "\n Uuid %s ",
+                "\tStarttidspunkt: %s \n\tDistance: %s \n\tTid: %s \n " +
+                "\tGennemsnitshastighed: %s " +
+                        "\n\tTid pr. km: %s " +
+                        "\n\n Uuid %s ",
                 loebsAktivitetSelected.getStarttimeFormatted(),
-                loebsAktivitetSelected.getStarttidspunkt(),
-                loebsAktivitetSelected.getTotalDistanceMeters(),
-                loebsAktivitetSelected.getTimeMillisecondsSinceStart() / (60 / 60 * 1000),  // todo jan skal vises pænt. pt. i sekunder.
+                //loebsAktivitetSelected.getStarttidspunkt(),
+                loebsAktivitetSelected.displayFormattedTime(loebsAktivitetSelected.getStarttidspunkt()),
+                // loebsAktivitetSelected.getTotalDistanceMeters(),
+                loebsAktivitetSelected.getTotalDistanceMetersFormatted(true),
+
+                loebsAktivitetSelected.getTimeSinceStartFormatted(),
+                // loebsAktivitetSelected.getTimeMillisecondsSinceStart() / (60 / 60 * 1000),  // todo jan skal vises pænt. pt. i sekunder.
+                loebsAktivitetSelected.getAverageSpeedFromStartFormatted(true),
+                loebsAktivitetSelected.getAverageMinutesPerKilometer(true),
                 uuid);
 
         tv.setText(loebsAktivitetInfoString);
@@ -80,8 +85,6 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
         buttonSendLoebsdataEmail.setOnClickListener(this);
         buttonVisLoebsAkt = (Button) rod.findViewById(R.id.buttonVisLoebsAkt);
         buttonVisLoebsAkt.setOnClickListener(this);
-
-
 
         return rod;
     }
@@ -99,7 +102,8 @@ public class FragmentLoebsAktivitet extends Fragment implements View.OnClickList
         intent.putExtra(Intent.EXTRA_TEXT, "Løbsdata fra ... dags dato.");
         //  intent.putExtra(Intent.EXTRA_CC, new String[]{"jma73android@gmail.com"});   // mulighed for cc adresse.
 
-        File file = FileHelper.saveFileExternalStorage2(getActivity(), this.loebsAktivitetSelected);
+        boolean copyToFileWithDate = true;      // todo jan 1/2-2016: bruger bør kunne slå dette til/fra!
+        File file = FileHelper.saveFileExternalStorage2(getActivity(), this.loebsAktivitetSelected, copyToFileWithDate);
         Uri uri = Uri.fromFile(file);
 
         intent.putExtra(Intent.EXTRA_STREAM, uri);

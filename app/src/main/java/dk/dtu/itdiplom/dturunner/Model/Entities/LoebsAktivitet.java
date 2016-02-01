@@ -79,6 +79,11 @@ public class LoebsAktivitet {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(milliseconds));
     }
 
+    public String getLoebsDateFormattedToFileNaming() {
+        long milliseconds = Long.parseLong(loebsDato);
+        return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date(milliseconds));
+    }
+
     public String getTextLog()
     {
         String date = getStarttimeFormatted();
@@ -127,6 +132,12 @@ public class LoebsAktivitet {
 
     public long getStarttidspunkt() {
         return starttidspunkt;
+    }
+
+    public String displayFormattedTime(long timestampMilliseconds)
+    {
+        String dateTimeFormatted = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(timestampMilliseconds));
+        return dateTimeFormatted;
     }
 
     public void setStarttidspunkt(long starttidspunkt) {
@@ -199,12 +210,51 @@ public class LoebsAktivitet {
         return LocationUtils.getAverageSpeedFromStart(pointInfoList);
     }
 
+    public String getAverageSpeedFromStartFormatted(boolean medEnhedsAngivelse)
+    {
+        double avgSpeedInMetersPerSecond = LocationUtils.getAverageSpeedFromStart(pointInfoList);
+        double avgSpeedInKmPerHour = avgSpeedInMetersPerSecond * 3.6;
+
+        if(medEnhedsAngivelse)
+        {
+            return avgSpeedInKmPerHour + " km/t";
+        }
+        return avgSpeedInKmPerHour + "";
+    }
+
+    /*
+    * Ny metode pr. 1/2-2016: udregner minutter pr. kilometer.
+    * */
+    public String getAverageMinutesPerKilometer(boolean medEnhedsAngivelse)
+    {
+        double totalDistanceMeters = LocationUtils.getTotalDistance(pointInfoList);
+        double totalDistanceKiloMeters = totalDistanceMeters / 1000;
+        long milliseconds = this.getTimeMillisecondsSinceStart();
+        long minutes = milliseconds / (1000 * 60);
+
+        if(totalDistanceKiloMeters == 0)
+            return "0";
+
+        if(medEnhedsAngivelse)
+        {
+            return minutes / totalDistanceKiloMeters + " m/km";
+        }
+        return String.valueOf(minutes / totalDistanceKiloMeters);
+    }
+
     public long getTimeMillisecondsSinceStart()
     {
         if(pointInfoList.size() == 0)
             return 0;
 
         return LocationUtils.getTimeMillisecondsSinceStart(pointInfoList.get(0), pointInfoList.get(pointInfoList.size() - 1));
+    }
+
+    public String getTimeSinceStartFormatted()
+    {
+        // todo jan 1/2-2016: Lav pænere tid
+        long milliseconds = this.getTimeMillisecondsSinceStart();
+        return LocationUtils.displayTimerFormat(milliseconds);
     }
 
     public void nulstil() {
