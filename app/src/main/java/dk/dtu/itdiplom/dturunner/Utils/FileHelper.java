@@ -151,6 +151,7 @@ public class FileHelper {
             String headerTypes = String.format("%s%s%s%s%s%s%s%s%s%s",
                     "Tid(millisekunder)", separator, "Tid", separator, "Latitude", separator, "Longitude", separator, "Distance", separator, "Heartrate", separator);
             writer.write(headerTypes);
+            writer.write("\n");
 
             String line = "";
             for (PointInfo pointInfo: loebsAktivitet.pointInfoList) {
