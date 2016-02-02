@@ -103,7 +103,11 @@ public class FileHelper {
         String loebsDatoTime = loebsAktivitet.getLoebsDateFormattedToFileNaming();
         String navnAlias = loebsAktivitet.getNavnAlias();
         if(navnAlias == "")
-            navnAlias = "noname";
+            navnAlias = "noname1";
+        if(navnAlias == "N/A")
+            navnAlias = "noname2";
+        if(navnAlias == "null")
+            navnAlias = "noname3";
 
         String filenameWithDate = "dtuRunner_" + navnAlias + "_" + loebsDatoTime + ".txt";
         // udvid til at lave 2 filer! hvor den ene får en dato.
@@ -124,8 +128,8 @@ public class FileHelper {
                 fullFilename1.createNewFile();
             BufferedWriter writer = new BufferedWriter(new FileWriter(fullFilename1, false /*append*/));
 
-            writer.write("Header info skal være her 2...");
-            writer.write("\n");
+//            writer.write("Header info skal være her 2...");
+//            writer.write("\n");
             writer.write("Navn/Alias: " + loebsAktivitet.getNavnAlias());
             writer.write(separator);
             writer.write("Gennnemsnitsfart: " + loebsAktivitet.getAverageSpeedFromStart() + " m/s.");
@@ -140,7 +144,10 @@ public class FileHelper {
             writer.write(separator);
             writer.write("" + loebsAktivitet.getTextHeader());
             writer.write(separator);
+            writer.write("\n");
             writer.write("" + loebsAktivitet.getLoebsNote());
+            writer.write(separator);
+            writer.write("\n");
             writer.write("uuid: " + loebsAktivitet.getLoebsAktivitetUuid());
             writer.write("\n");
             writer.write("\n");
