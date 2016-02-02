@@ -97,6 +97,8 @@ public class LoebsAktivitet {
     }
 
     public String getNavnAlias() {
+        if(navnAlias == null)
+            return "N/A";
         return navnAlias;
     }
 
