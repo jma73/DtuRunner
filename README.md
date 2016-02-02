@@ -1,17 +1,21 @@
 # DtuRunner
 
-Only in Danish for now.
+This app is only in Danish for now.
 
 Løbeapp ifb. med studie på DTU.
+App'en skal anvendes af de studerende på sundheds teknologi studiet.
 
-Vejledning
+Vejledning:
+
 
 
 ## Info til evt. nye studerende som vil arbejde videre med appen.
 
+Grundlæggende så virker app'en til at tracke en løbe tur.
 
-
-
+Det store ting som mangler er:
+* Forbinde til bluetooth pulsmåler
+* Løbeplander (se beskrivelser fra DTU Sundheds Teknologi studiet)
 
 
 
@@ -29,5 +33,5 @@ Vejledning
 * Kan udvide med beregning af afstand, tid? og hastighed? (mellem hvert punkt).
 
 ### Udvidelser:
-*
+* 
 *
